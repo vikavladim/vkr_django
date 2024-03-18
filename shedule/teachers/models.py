@@ -7,6 +7,8 @@ class Teacher(models.Model):
     fio = models.TextField()
     photo=models.ImageField(upload_to='teachers/', null=True)
     room = models.IntegerField()
+    date_create=models.DateField(auto_now_add=True)
+    date_update=models.DateField(auto_now=True)
 
 class Class(models.Model):
     digit = models.IntegerField()
