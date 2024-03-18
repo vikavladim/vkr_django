@@ -27,4 +27,4 @@ def page_not_found(request, exception):
     return HttpResponseNotFound('Page not found', status=404)
 
 def all(request):
-    return HttpResponse('all teachers') #
+    return HttpResponse('all teachers')
