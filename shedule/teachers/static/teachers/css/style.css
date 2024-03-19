@@ -1,0 +1,80 @@
+:root {
+    --content-width: 280px;
+    --top-height: 100px;
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+td[contenteditable="true"] {
+    background-color: lightyellow;
+}
+
+
+#t1 td {
+    contenteditable: true;
+}
+
+
+.container {
+    display: flex;
+    margin-top: var(--top-height);
+}
+
+.sidebar {
+    position: fixed;
+    /*margin-top: var(--top-height);*/
+    width: var(--content-width);
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-top: auto;
+    /*margin-top: 300px;*/
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: white;
+    width: 100%;
+    height: var(--top-height);
+}
+
+/*main{*/
+/*     display: flex;*/
+/*    margin-left: var(--content-width);*/
+/*    margin-top: var(--top-height);*/
+/*}*/
+
+.content {
+    display: flex;
+    margin-left: var(--content-width);
+    margin-top: var(--top-height);
+}

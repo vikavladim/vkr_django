@@ -1,6 +1,21 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 
+upper_menu = [
+    {"text": "Home", "url": "#"},
+    {"text": "Features", "url": "#"},
+    {"text": "Pricing", "url": "#"},
+    {"text": "FAQs", "url": "#"},
+    {"text": "About", "url": "#"}
+]
+
+sidebar_menu=[
+    {"text": "Teachers", "url": "/teachers"},
+    {"text": "Dashboard", "url": "#"},
+    {"text": "Orders", "url": "#"},
+    {"text": "Products", "url": "#"},
+    {"text": "Customers", "url": "#"}
+]
 
 def create(request):
     return HttpResponse('creating teacher')
