@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Teachers</h1>
-{{ table | safe }}
+<!--{{ table | safe }}-->
 <!--<table>-->
 <!--  {% for row in table %}-->
 <!--  <tr>-->
@@ -13,4 +13,23 @@
 <!--  </tr>-->
 <!--  {% endfor %}-->
 <!--</table>-->
+<table>
+    <thead>
+    <tr>
+        {% for name in fields %}
+        <th>name</th>
+        {% endfor %}
+    </tr>
+    </thead>
+        {% for row in posts %}
+    <tr>
+        {% for cell in row %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+        <td>
+            <button onclick="deleteRow(this)">Удалить</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}

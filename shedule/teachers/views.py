@@ -1,6 +1,8 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 
+from teachers.models import Teacher
+
 upper_menu = [
     {"text": "Home", "url": "#"},
     {"text": "Features", "url": "#"},
@@ -42,4 +44,22 @@ def page_not_found(request, exception):
     return HttpResponseNotFound('Page not found', status=404)
 
 def all(request):
-    return render(request, 'teachers/teachers.html')
+    # new_teacher = Teacher.objects.create(
+    #     fio="Петров Петр Петрович",
+    #     photo="teachers/1.jpg",
+    #     room=505,
+    # )
+    #
+    # new_teacher.save()
+    # fields=[f for f in Teacher._meta.fields.values()]
+    fields=list(Teacher._meta.fields)
+    posts=[val for val in Teacher.objects.all().values()]
+    # posts=Teacher.objects.all()
+    # print(Teacher._meta.fields)
+    context={
+        'upper_menu': upper_menu,
+        'sidebar_menu': sidebar_menu,
+        'posts':posts,
+        'fields':fields,
+    }
+    return render(request, 'teachers/teachers.html', context)
