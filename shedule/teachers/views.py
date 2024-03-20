@@ -1,27 +1,11 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
-
 from teachers.models import Teacher
-
-upper_menu = [
-    {"text": "Home", "url": "#"},
-    {"text": "Features", "url": "#"},
-    {"text": "Pricing", "url": "#"},
-    {"text": "FAQs", "url": "#"},
-    {"text": "About", "url": "#"}
-]
-
-sidebar_menu = [
-    {"text": "Teachers", "url": "/teachers"},
-    {"text": "Dashboard", "url": "#"},
-    {"text": "Orders", "url": "#"},
-    {"text": "Products", "url": "#"},
-    {"text": "Customers", "url": "#"}
-]
+from menus import *
 
 
-def create(request):
-    return HttpResponse('creating teacher')
+# def create(request):
+#     return HttpResponse('creating teacher')
 
 
 def read(request, id):
@@ -32,8 +16,8 @@ def read(request, id):
     return HttpResponse(f'reading teacher {id}')
 
 
-def update(request, id):
-    return HttpResponse(f'updating teacher {id}')
+# def update(request, id):
+#     return HttpResponse(f'updating teacher {id}')
 
 
 def delete(request, id):
@@ -41,7 +25,7 @@ def delete(request, id):
 
 
 def page_not_found(request, exception):
-    print('ggggggggggggg')
+    print('exception', exception)
     return HttpResponseNotFound('Page not found', status=404)
 
 
@@ -53,14 +37,27 @@ def all(request):
     # )
     #
     # new_teacher.save()
+    sidebar_menu.
 
-    fields=[f.name for f in Teacher._meta.fields]
-    posts = [val.values for val in Teacher.objects.all().values()]
+    context = {
+        'title': 'Teachers',
+        'upper_menu': upper_menu,
+        'sidebar_menu': sidebar_menu,
+        'posts': [val.values for val in Teacher.objects.all().values()],
+        'fields': [f.name for f in Teacher._meta.fields],
+    }
+    return render(request, 'teachers/teachers.html', context)
 
+def update(request, id):
     context = {
         'upper_menu': upper_menu,
         'sidebar_menu': sidebar_menu,
-        'posts': posts,
-        'fields': fields,
     }
-    return render(request, 'teachers/teachers.html', context)
+    return render(request, 'teachers/update.html', context)
+
+def create(request):
+    context = {
+        'upper_menu': upper_menu,
+        'sidebar_menu': sidebar_menu,
+    }
+    return render(request, 'teachers/create.html', context)

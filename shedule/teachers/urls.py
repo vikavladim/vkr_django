@@ -20,7 +20,7 @@ from django.urls import path, include
 from teachers.views import *
 
 urlpatterns = [
-    path('', all, name='home'),
+    path('', all, name='teachers'),
     path('create/', create),
     path('<int:id>/', read),
     path('<int:id>/update', update),

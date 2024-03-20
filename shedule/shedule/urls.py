@@ -21,11 +21,13 @@ from django.urls import path, include
 
 # import settings
 from shedule import settings
+from shedule.views import home
 
 from teachers.views import page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home, name='home'),
     path('teachers/', include('teachers.urls')),
 ]
 
