@@ -11,13 +11,14 @@ upper_menu = [
     {"text": "About", "url": "#"}
 ]
 
-sidebar_menu=[
+sidebar_menu = [
     {"text": "Teachers", "url": "/teachers"},
     {"text": "Dashboard", "url": "#"},
     {"text": "Orders", "url": "#"},
     {"text": "Products", "url": "#"},
     {"text": "Customers", "url": "#"}
 ]
+
 
 def create(request):
     return HttpResponse('creating teacher')
@@ -43,6 +44,7 @@ def page_not_found(request, exception):
     print('ggggggggggggg')
     return HttpResponseNotFound('Page not found', status=404)
 
+
 def all(request):
     # new_teacher = Teacher.objects.create(
     #     fio="Петров Петр Петрович",
@@ -51,15 +53,14 @@ def all(request):
     # )
     #
     # new_teacher.save()
-    # fields=[f for f in Teacher._meta.fields.values()]
-    fields=list(Teacher._meta.fields)
-    posts=[val for val in Teacher.objects.all().values()]
-    # posts=Teacher.objects.all()
-    # print(Teacher._meta.fields)
-    context={
+
+    fields=[f.name for f in Teacher._meta.fields]
+    posts = [val.values for val in Teacher.objects.all().values()]
+
+    context = {
         'upper_menu': upper_menu,
         'sidebar_menu': sidebar_menu,
-        'posts':posts,
-        'fields':fields,
+        'posts': posts,
+        'fields': fields,
     }
     return render(request, 'teachers/teachers.html', context)
