@@ -1,5 +1,5 @@
 """
-URL configuration for shedule project.
+URL configuration for schedule project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -21,9 +21,9 @@ from teachers.views import *
 
 urlpatterns = [
     path('', all, name='teachers'),
-    path('create/', create),
-    path('<int:id>/', read),
-    path('<int:id>/update', update),
-    path('<int:id>/delete', delete),
+    path('create/', create,name='teacher_create'),
+    path('<int:id>/', read, name='teacher_read'),
+    path('<int:id>/update', update, name='teacher_update'),
+    path('<int:id>/delete', delete, name='teacher_delete'),
 ]
 

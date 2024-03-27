@@ -1,5 +1,5 @@
 """
-URL configuration for shedule project.
+URL configuration for schedule project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -20,8 +20,8 @@ from django.template.context_processors import static
 from django.urls import path, include
 
 # import settings
-from shedule import settings
-from shedule.views import home
+from schedule import settings
+from schedule.views import home
 
 from teachers.views import page_not_found
 
