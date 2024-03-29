@@ -1,65 +1,51 @@
 {% extends "main_base.html" %}
+{%load static%}
 
 {% block content %}
-<h1>{{title}}</h1>
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-          {% for teacher in teachers %}
-        <div class="col">
-          <div class="card shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-<!--                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>-->
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Удалить</button>
-                </div>
-                <small class="text-body-secondary">9 mins</small>
-              </div>
-            </div>
-          </div>
-        </div>
-          {% endfor %}
-<!--        <div class="col">-->
-<!--          <div class="card shadow-sm">-->
-<!--            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>-->
-<!--            <div class="card-body">-->
-<!--              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
-<!--              <div class="d-flex justify-content-between align-items-center">-->
-<!--                <div class="btn-group">-->
-<!--                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>-->
-<!--                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>-->
-<!--                </div>-->
-<!--                <small class="text-body-secondary">9 mins</small>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="col">-->
-<!--          <div class="card shadow-sm">-->
-<!--            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>-->
-<!--            <div class="card-body">-->
-<!--              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
-<!--              <div class="d-flex justify-content-between align-items-center">-->
-<!--                <div class="btn-group">-->
-<!--                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>-->
-<!--                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>-->
-<!--                </div>-->
-<!--                <small class="text-body-secondary">9 mins</small>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
+<link rel="stylesheet" type="text/css"
+      href="{% static 'schedule/css/style.css' %}?v={{ generate_unique_hash_or_timestamp }}">
 
-      </div>
+<section class="section">
+
+<div class="layout-buttons">
+    <span class="active icon icon-list"></span>
+    <span class="icon icon-table"></span>
+</div>
+
+    <div class="container">
+        <h1 class="section__heading">{{title}}</h1>
+        <ul class="grid">
+
+            <li class="grid__item">
+                <a class="link" href="/classes">
+                    <article class="product">
+                        <img class="product__image" src="{%static 'schedule/img/plus.svg'%}" alt="Кроссовки"/>
+                        <p class="product__price">Добавить нового учителя</p>
+                        <p class="product__price">Добавить нового учителя</p>
+                        <p class="product__price">Добавить нового учителя</p>
+                    </article>
+                </a>
+            </li>
+
+
+            {% for teacher in teachers %}
+
+            <li class="grid__item">
+                <a class="link" href="/classes">
+                    <article class="product">
+                        <img class="product__image"
+                             src="https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-product-2_large.png?format=webp&v=1530129318"
+                             alt="Кроссовки"/>
+                        <h2 class="product__name">{{teacher.fio}}</h2>
+                        <p class="product__price">Price: 200 credits</p>
+                    </article>
+                </a>
+            </li>
+
+            {% endfor %}
+
+        </ul>
     </div>
-  </div>
-<!--<div class="teacher-block">-->
-<!--    <h2>Имя учителя</h2>-->
-<!--    <p>Закрепленные классы: 5A, 6B, 7C</p>-->
-<!--    <p>Предметы: Математика, Физика, Химия</p>-->
-<!--</div>-->
+</section>
 
 {% endblock %}

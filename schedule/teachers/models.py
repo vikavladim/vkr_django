@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 
-
+# нужно добавить сокращения предметов
 class Teacher(models.Model):
     fio = models.TextField()
     photo = models.ImageField(upload_to='teachers/', null=True)

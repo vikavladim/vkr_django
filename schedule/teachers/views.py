@@ -60,13 +60,13 @@ def page_not_found(request, exception):
 
 
 def all(request):
-    new_teacher = Teacher.objects.create(
-        fio="Петров Петр Петрович",
-        photo="teachers/1.jpg",
-        room=505,
-    )
-
-    new_teacher.save()
+    # new_teacher = Teacher.objects.create(
+    #     fio="Петров Петр Петрович",
+    #     photo="teachers/1.jpg",
+    #     room=505,
+    # )
+    #
+    # new_teacher.save()
     # temp=Menu(sidebar_menu)
 
     # for i in temp.items:
@@ -76,7 +76,7 @@ def all(request):
         'title': 'Teachers',
         'upper_menu': upper_menu,
         'sidebar_menu': sidebar_menu_base,
-        'teachers': [val.values for val in Teacher.objects.all().values()],
+        'teachers': [val for val in Teacher.objects.all()],
         'fields': [f.name for f in Teacher._meta.fields],
     }
     # return render(request, 'teachers/teachers.html', context)

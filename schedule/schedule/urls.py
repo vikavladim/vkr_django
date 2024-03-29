@@ -21,7 +21,7 @@ from django.urls import path, include
 
 # import settings
 from schedule import settings
-from schedule.views import home
+from schedule.views import *
 
 from teachers.views import page_not_found
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('teachers/', include('teachers.urls')),
+    path('classes/', classes),
 ]
 
 # if settings.DEBUG:
