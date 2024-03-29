@@ -1,5 +1,36 @@
-{% extends "teachers/base.html" %}
+{% extends "main_base.html" %}
+{%load static%}
 
 {% block content %}
-<h1>{{title}}</h1>
+<link rel="stylesheet" type="text/css"
+      href="{% static 'schedule/css/style.css' %}?v={{ generate_unique_hash_or_timestamp }}">
+<script src="{%static 'schedule/js/script.js'%}?v={{ generate_unique_hash_or_timestamp }}"></script>
+
+<section class="section">
+    <form>
+    <label for="first-name">Имя:</label>
+    <input type="text" id="first-name" name="first-name" required>
+
+    <label for="last-name">Фамилия:</label>
+    <input type="text" id="last-name" name="last-name" required>
+
+    <label for="middle-name">Отчество:</label>
+    <input type="text" id="middle-name" name="middle-name" required>
+
+    <label for="selected-subjects">Выбранные предметы:</label>
+    <div id="selected-subjects"></div>
+
+    <label for="subjects">Добавить предмет:</label>
+    <select id="subjects" name="subjects">
+        <option value="math">Математика</option>
+        <option value="science">Наука</option>
+        <option value="history">История</option>
+        <!-- Добавьте другие предметы по аналогии -->
+    </select>
+
+    <button type="button" id="add-subject" onclick="addSubject()">Добавить предмет</button>
+
+    <button type="submit">Отправить</button>
+</form>
+</section>
 {% endblock %}
