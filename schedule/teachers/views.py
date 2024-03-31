@@ -1,5 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
+
+from schedule.views import menus
 from teachers.models import Teacher
 from menus import *
 
@@ -71,13 +73,12 @@ def all(request):
 
     # for i in temp.items:
     #     print(i.text)
-
+    print(request.path)
     context = {
         'title': 'Teachers',
-        'upper_menu': upper_menu,
-        'sidebar_menu': sidebar_menu_base,
         'teachers': [val for val in Teacher.objects.all()],
         'fields': [f.name for f in Teacher._meta.fields],
+        'menu_selected': request.path,
     }
     # return render(request, 'teachers/teachers.html', context)
     return render(request, 'teachers/all.html', context)

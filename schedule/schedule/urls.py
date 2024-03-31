@@ -27,9 +27,11 @@ from teachers.views import page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
+    path('home/', home, name='home'),
     path('teachers/', include('teachers.urls')),
     path('classes/', classes),
+    path('subjects/', subjects),
+    path('schedule/', schedule),
 ]
 
 # if settings.DEBUG:

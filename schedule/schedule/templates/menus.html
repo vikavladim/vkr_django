@@ -1,0 +1,7 @@
+{% for menu in menus %}
+{% if menu.url in menu_selected %}
+        <li class="nav-item"><a href="{{menu.url}}" class="nav-link active">{{menu.title}}</a></li>
+{% else %}
+        <li class="nav-item"><a href="{{menu.url}}" class="nav-link">{{menu.title}}</a></li>
+{% endif %}
+{% endfor %}

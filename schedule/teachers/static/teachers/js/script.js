@@ -17,17 +17,17 @@ function deleteRow(btn) {
     row.parentNode.removeChild(row); // Удаляем строку из таблицы
 }
 
-function handleMenuItemClick(this_item) {
-        const menuItems = document.querySelectorAll('.nav-link');
-        menuItems.forEach(item => {
-            item.classList.remove('active');
-            item.classList.remove('nav-item');
-            item.classList.add('link-body-emphasis');
-        });
-        this_item.classList.remove('link-body-emphasis');
-        this_item.classList.add('active');
-        this_item.classList.add('nav-item');
-    }
+// function handleMenuItemClick(this_item) {
+//         const menuItems = document.querySelectorAll('.nav-link');
+//         menuItems.forEach(item => {
+//             item.classList.remove('active');
+//             item.classList.remove('nav-item');
+//             item.classList.add('link-body-emphasis');
+//         });
+//         this_item.classList.remove('link-body-emphasis');
+//         this_item.classList.add('active');
+//         this_item.classList.add('nav-item');
+//     }
     // document.addEventListener('DOMContentLoaded', function () {
     //     const menuItems = document.querySelectorAll('.nav-link');
     //     let selectedMenuItem = localStorage.getItem('selectedMenuItem');
