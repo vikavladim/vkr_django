@@ -2,29 +2,56 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
+from pytils.translit import slugify
+
 
 # нужно добавить сокращения предметов
 class Teacher(models.Model):
-    fio = models.TextField(verbose_name='ФИО')
+    fio = models.TextField(verbose_name='ФИО', max_length=255)
+    slug = models.SlugField(max_length=255, unique=False, db_index=True, verbose_name='URL')
     photo = models.ImageField(upload_to='teachers/', null=True, verbose_name='Фото')
     room = models.IntegerField(verbose_name='Кабинет')
     date_create = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     date_update = models.DateField(auto_now=True, verbose_name='Дата обновления')
+    subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
+
+    class Meta:
+        verbose_name = 'Учитель'
+        verbose_name_plural = 'Учителя'
+        ordering = ['fio']
+
+    def get_absolute_url(self):
+        return f'/teachers/{self.slug}/'
+
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.fio)
+    #     super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.fio
 
 
 class Class(models.Model):
     digit = models.IntegerField(verbose_name='Цифра')
     letter = models.CharField(max_length=1, verbose_name='Буква')
 
+    class Meta:
+        verbose_name = 'Класс'
+        verbose_name_plural = 'Классы'
 
-# class Timing(models.Model):
-#     class_id = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
-#     lesson_number = models.IntegerField(verbose_name='Номер урока')
-#     start_time = models.TimeField(verbose_name='Начало')
-#     end_time = models.TimeField(verbose_name='Конец')
+    def __str__(self):
+        return f'{self.digit}{self.letter}'
+
 
 class Discipline(models.Model):
     name = models.TextField(verbose_name='Название')
+
+    class Meta:
+        verbose_name = 'Дисциплина'
+        verbose_name_plural = 'Дисциплины'
+
+    def __str__(self):
+        return self.name
 
 
 class Subgroup(models.Model):
@@ -33,8 +60,22 @@ class Subgroup(models.Model):
     discipline_id = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
     teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='Преподаватель')
 
+    class Meta:
+        verbose_name = 'Подгруппа'
+        verbose_name_plural = 'Подгруппы'
+
+    def __str__(self):
+        return f'{self.class_id} - {self.discipline_id} - Group {self.group_number}'
+
 
 class Program(models.Model):
     class_id = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
     discipline_id = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
     load = models.IntegerField(verbose_name='Нагрузка')
+
+    class Meta:
+        verbose_name = 'Программа'
+        verbose_name_plural = 'Программы'
+
+    def __str__(self):
+        return f'{self.class_id} - {self.discipline_id} ({self.load} hours)'
