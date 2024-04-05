@@ -8,14 +8,25 @@ from menus import *
 
 
 def create(request):
-    # return HttpResponse('creating teacher')
-    # print('hello', sidebar_menu_base)
-    # print('hellooooooooooooooooooooooooooooooooooooooooooo')
+    # context = {
+    #     'title': 'creating teacher',
+    #     'upper_menu': upper_menu,
+    #     'sidebar_menu': sidebar_menu_base,
+    #     'form': AddTeacherForm(),
+    # }
+    # return render(request, 'teachers/create.html', context)
+    if request.method == 'POST':
+        form = AddTeacherForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = AddTeacherForm()
     context = {
         'title': 'creating teacher',
         'upper_menu': upper_menu,
         'sidebar_menu': sidebar_menu_base,
-        'form': AddTeacherForm(),
+        'form': form,
     }
     return render(request, 'teachers/create.html', context)
 
