@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 
 from schedule.views import menus
+from teachers.forms import AddTeacherForm
 from teachers.models import Teacher
 from menus import *
 
@@ -14,6 +15,7 @@ def create(request):
         'title': 'creating teacher',
         'upper_menu': upper_menu,
         'sidebar_menu': sidebar_menu_base,
+        'form': AddTeacherForm(),
     }
     return render(request, 'teachers/create.html', context)
 
