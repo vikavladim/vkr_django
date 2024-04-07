@@ -4,10 +4,11 @@
 {% block content %}
 <link rel="stylesheet" type="text/css"
       href="{% static 'schedule/css/style.css' %}?v={{ generate_unique_hash_or_timestamp }}">
-<script src="{%static 'schedule/js/script.js'%}?v={{ generate_unique_hash_or_timestamp }}"></script>
+<!--<script src="{%static 'schedule/js/script.js'%}?v={{ generate_unique_hash_or_timestamp }}"></script>-->
 
 <section class="section">
-    <form action="" method="post">
+        <h1 class="section__heading">{{title}}</h1>
+    <form action="" method="post" enctype="multipart/form-data">
         <!--    <label for="first-name">Имя:</label>-->
         <!--    <input type="text" id="first-name" name="first-name" required>-->
 

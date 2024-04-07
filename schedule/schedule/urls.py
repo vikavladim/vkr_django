@@ -24,11 +24,11 @@ from django.conf.urls.static import static
 from schedule import settings
 from schedule.views import *
 
-from teachers.views import page_not_found
+from teachers.views import * #page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', home, name='home'),
+    path('home/', HomeView.as_view(), name='home'),
     path('teachers/', include('teachers.urls')),
     path('classes/', classes),
     path('subjects/', subjects),

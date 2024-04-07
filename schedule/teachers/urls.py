@@ -20,10 +20,9 @@ from django.urls import path, include
 from teachers.views import *
 
 urlpatterns = [
-    path('', all, name='teachers'),
-    path('create/', create,name='teacher_create'),
-    path('<int:id>/', read, name='teacher_read'),
-    path('<int:id>/update', update, name='teacher_update'),
+    path('', TeacherListView.as_view(), name='teachers'),
+    path('create/', AddTeacher.as_view(), name='teacher_create'),
+    path('<slug:slug>/read', DetailTeacher.as_view(), name='teacher_read'),
+    path('<slug:slug>/update', UpdateTeacher.as_view(), name='teacher_update'),
     path('<int:id>/delete', delete, name='teacher_delete'),
 ]
-

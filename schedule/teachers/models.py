@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
+from django.urls import reverse
 from pytils.translit import slugify
 
 
@@ -9,7 +10,7 @@ from pytils.translit import slugify
 class Teacher(models.Model):
     fio = models.TextField(verbose_name='ФИО', max_length=255)
     slug = models.SlugField(max_length=255, unique=False, db_index=True, verbose_name='URL')
-    photo = models.ImageField(upload_to='images', null=True, verbose_name='Фото')
+    photo = models.ImageField(upload_to='images/%Y/%m/%d', null=True, verbose_name='Фото')
     room = models.IntegerField(verbose_name='Кабинет')
     date_create = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     date_update = models.DateField(auto_now=True, verbose_name='Дата обновления')
@@ -20,8 +21,10 @@ class Teacher(models.Model):
         verbose_name_plural = 'Учителя'
         ordering = ['fio']
 
+    # def get_absolute_url(self):
+    #     return f'/teachers/{self.slug}/'
     def get_absolute_url(self):
-        return f'/teachers/{self.slug}/'
+        return reverse('teacher_read', kwargs={'slug': self.slug})
 
     # def save(self, *args, **kwargs):
     #     self.slug = slugify(self.fio)
