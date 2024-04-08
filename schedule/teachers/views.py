@@ -1,99 +1,54 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views import View
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 
-from schedule.views import menus
-from teachers.forms import AddTeacherForm
 from teachers.models import Teacher
 from menus import *
+from teachers.utils import DateMixin
 
 
-# class AddTeacher(View):
-#     def get(self, request):
-#         form = AddTeacherForm()
-#
-#         context = {
-#             'title': 'creating teacher',
-#             'upper_menu': upper_menu,
-#             'sidebar_menu': sidebar_menu_base,
-#             'form': form,
-#             'menu_selected': request.path,
-#         }
-#         return render(request, 'teachers/create.html', context)
-#
-#     def post(self, request):
-#         form = AddTeacherForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('home')
-
-# class AddTeacher(FormView):
-#     template_name = 'teachers/create.html'
-#     form_class = AddTeacherForm
-#     success_url = reverse_lazy('teachers')
-#     extra_context = {
-#         'title': 'creating teacher',
-#     }
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['menu_selected'] = self.request.path
-#         return context
-#
-#     def form_valid(self, form):
-#         form.save()
-#         return super().form_valid(form)
-
-class AddTeacher(CreateView):
+class AddTeacher(DateMixin, CreateView):
     template_name = 'teachers/create.html'
     model = Teacher
     fields = ['fio', 'slug', 'room', 'photo', 'subject']
-    extra_context = {
-        'title': 'creating teacher',
-    }
+    # extra_context = {
+    #     'title': 'Создание учителя',
+    # }
+    title = 'Создание учителя'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu_selected'] = self.request.path
-        return context
+        return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
+        # context['menu_selected'] = self.request.path
+        # return context
 
 
-
-class DetailTeacher(DetailView):
+class DetailTeacher(DateMixin, DetailView):
     model = Teacher
     template_name = 'teachers/update.html'
     context_object_name = 'teacher'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu_selected'] = self.request.path
-        context['title'] = context['teacher'].fio
-        return context
+        return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
+        # context['menu_selected'] = self.request.path
+        # context['title'] = context['teacher'].fio
+        # return context
 
 
-
-# def update(request, id):
-#     # return HttpResponse(f'updating teacher {id}')
-#     context = {
-#         'title': f'updating teacher {id}',
-#         'upper_menu': upper_menu,
-#         'sidebar_menu': sidebar_menu_base,
-#         # 'posts': [val.values for val in Teacher.objects.all().values()],
-#         # 'fields': [f.name for f in Teacher._meta.fields],
-#     }
-#     return render(request, 'teachers/update.html', context)
-
-class UpdateTeacher(UpdateView):
+class UpdateTeacher(DateMixin, UpdateView):
     model = Teacher
     fields = ['fio', 'slug', 'room', 'photo', 'subject']
     template_name = 'teachers/create.html'
     success_url = reverse_lazy('teachers')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu_selected'] = self.request.path
-        context['title'] = context['teacher'].fio
-        return context
+        return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
+        # context['menu_selected'] = self.request.path
+        # context['title'] = context['teacher'].fio
+        # return context
 
 
 def delete(request, id):
@@ -110,15 +65,17 @@ def page_not_found(request, exception):
     return HttpResponseNotFound('Page not found', status=404)
 
 
-class TeacherListView(ListView):
+class TeacherListView(DateMixin, ListView):
     model = Teacher
     template_name = 'teachers/all.html'
     context_object_name = 'teachers'
-    extra_context = {
-        'title': 'Учителя',
-    }
+    # extra_context = {
+    #     'title': 'Учителя',
+    # }
+    title = 'Учителя'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu_selected'] = self.request.path
-        return context
+        return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
+        # context['menu_selected'] = self.request.path
+        # return context
