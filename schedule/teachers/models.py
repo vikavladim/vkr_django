@@ -21,14 +21,8 @@ class Teacher(models.Model):
         verbose_name_plural = 'Учителя'
         ordering = ['fio']
 
-    # def get_absolute_url(self):
-    #     return f'/teachers/{self.slug}/'
     def get_absolute_url(self):
         return reverse('teacher_read', kwargs={'slug': self.slug})
-
-    # def save(self, *args, **kwargs):
-    #     self.slug = slugify(self.fio)
-    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.fio

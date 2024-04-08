@@ -12,16 +12,11 @@ class AddTeacher(DateMixin, CreateView):
     template_name = 'teachers/create.html'
     model = Teacher
     fields = ['fio', 'slug', 'room', 'photo', 'subject']
-    # extra_context = {
-    #     'title': 'Создание учителя',
-    # }
     title = 'Создание учителя'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
-        # context['menu_selected'] = self.request.path
-        # return context
 
 
 class DetailTeacher(DateMixin, DetailView):
@@ -32,9 +27,6 @@ class DetailTeacher(DateMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
-        # context['menu_selected'] = self.request.path
-        # context['title'] = context['teacher'].fio
-        # return context
 
 
 class UpdateTeacher(DateMixin, UpdateView):
@@ -46,9 +38,7 @@ class UpdateTeacher(DateMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
-        # context['menu_selected'] = self.request.path
-        # context['title'] = context['teacher'].fio
-        # return context
+
 
 
 def delete(request, id):
@@ -69,13 +59,9 @@ class TeacherListView(DateMixin, ListView):
     model = Teacher
     template_name = 'teachers/all.html'
     context_object_name = 'teachers'
-    # extra_context = {
-    #     'title': 'Учителя',
-    # }
     title = 'Учителя'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
-        # context['menu_selected'] = self.request.path
-        # return context
+
