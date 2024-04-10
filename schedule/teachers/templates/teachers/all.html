@@ -1,0 +1,75 @@
+{% extends "main_base.html" %}
+{%load static%}
+
+{% block content %}
+<link rel="stylesheet" type="text/css"
+      href="{% static 'schedule/css/style.css' %}?v={{ generate_unique_hash_or_timestamp }}">
+
+<section class="section">
+
+    <div class="layout-buttons">
+        <span class="active icon icon-list"></span>
+        <span class="icon icon-table"></span>
+    </div>
+
+    <div class="container">
+        <h1 class="section__heading">{{title}}</h1>
+        <ul class="grid">
+
+            <li class="grid__item">
+                <a class="link" href="/teachers/create">
+                    <article class="product">
+                        <img class="product__image" src="{%static 'schedule/img/plus.svg'%}" alt="Кроссовки"/>
+                        <p class="product__price">Добавить нового учителя</p>
+                        <p class="product__price">Добавить нового учителя</p>
+                        <p class="product__price">Добавить нового учителя</p>
+                    </article>
+                </a>
+            </li>
+
+
+            <!--                             src="{% static 'teachers/images/1.jpg' %}"-->
+            {% for teacher in teachers %}
+
+            <li class="grid__item">
+                <a class="link" href="/classes">
+                    <article class="product">
+                        <img class="product__image"
+                             src="{{ teacher.photo.url }}"
+                             alt="Кроссовки"/>
+                        <h2 class="product__name">{{teacher.fio}}</h2>
+                        <p class="product__price">Price: 200 credits</p>
+                    </article>
+                </a>
+            </li>
+
+            {% endfor %}
+
+        </ul>
+    </div>
+</section>
+
+{% endblock %}
+{% block navigation %}
+{%if page_obj.has_other_pages%}
+<nav class="list-pages">
+    <ul>
+        {%if page_obj.has_previous%}
+        <li class="page-num"><a href="?page={{page_obj.previous_page_number}}">&lt;</a></li>
+        {%endif%}
+
+        {%for p in paginator.page_range%}
+        {%if p == page_obj.number%}
+        <li class="page-num page-num-selected">{{p}}</li>
+        {%elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2%}
+        <li class="page-num"><a href="?page={{p}}">{{p}}</a></li>
+        {%endif%}
+        {%endfor%}
+
+        {%if page_obj.has_next%}
+        <li class="page-num"><a href="?page={{page_obj.next_page_number}}">&gt;</a></li>
+        {%endif%}
+    </ul>
+</nav>
+{%endif%}
+{% endblock %}
