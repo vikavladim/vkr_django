@@ -7,11 +7,14 @@ from pytils.translit import slugify
 
 
 # нужно добавить сокращения предметов
+from django.db import models
+from django.urls import reverse
+
 class Teacher(models.Model):
     fio = models.CharField(verbose_name='ФИО', max_length=255)
     slug = models.SlugField(max_length=255, unique=False, db_index=True, verbose_name='URL')
-    photo = models.ImageField(upload_to='images/%Y/%m/%d', null=True, verbose_name='Фото')
-    room = models.IntegerField(verbose_name='Кабинет')
+    photo = models.ImageField(upload_to='images/%Y/%m/%d', null=True, blank=True, verbose_name='Фото')
+    room = models.PositiveIntegerField(verbose_name='Кабинет')
     date_create = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     date_update = models.DateField(auto_now=True, verbose_name='Дата обновления')
     subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
@@ -27,10 +30,11 @@ class Teacher(models.Model):
     def __str__(self):
         return self.fio
 
-
 class Class(models.Model):
     digit = models.IntegerField(verbose_name='Цифра')
     letter = models.CharField(max_length=1, verbose_name='Буква')
+    subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
+
 
     class Meta:
         verbose_name = 'Класс'
@@ -42,6 +46,8 @@ class Class(models.Model):
 
 class Discipline(models.Model):
     name = models.TextField(verbose_name='Название')
+    short_name = models.CharField(max_length=50, verbose_name='Краткое название')
+    slug = models.SlugField(max_length=255, unique=True, verbose_name='Slug')
 
     class Meta:
         verbose_name = 'Дисциплина'
@@ -49,6 +55,7 @@ class Discipline(models.Model):
 
     def __str__(self):
         return self.name
+
 
 
 class Subgroup(models.Model):

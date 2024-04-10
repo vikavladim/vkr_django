@@ -19,6 +19,7 @@ from django.contrib import admin
 # from django.template.context_processors import static
 from django.urls import path, include
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
 # import settings
 from schedule import settings
@@ -28,12 +29,14 @@ from teachers.views import * #page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='/home/', permanent=True)),
     path('home/', HomeView.as_view(), name='home'),
     path('teachers/', include('teachers.urls')),
     path('classes/', classes),
     path('subjects/', subjects),
     path('schedule/', schedule),
     path("__debug__/", include("debug_toolbar.urls")),
+    path('export_to_excel/', export_to_excel),
 ]
 
 if settings.DEBUG:

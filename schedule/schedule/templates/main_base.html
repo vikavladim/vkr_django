@@ -16,17 +16,30 @@
 <body>
 <header class="d-flex justify-content-center py-3">
     <ul class="nav nav-pills">
-        <!--        <li class="nav-item"><a href="/teachers" class="nav-link active" aria-current="page">Учителя</a></li>-->
-        <!--        <li class="nav-item"><a href="/classes" class="nav-link">Классы</a></li>-->
-        <!--        <li class="nav-item"><a href="#" class="nav-link">Предметы</a></li>-->
-        <!--        <li class="nav-item"><a href="#" class="nav-link">Расписание</a></li>-->
         {% get_menu menu_selected %}
     </ul>
 </header>
 
-<div class="content"
      {% block content %}
-     {% endblock %}
+<section class="section">
+    <div class="container">
+        <h1 class="section__heading">{{title}}</h1>
+        <ul class="grid">
+            <li class="grid__item">
+                <a class="link" href="/export_to_excel">
+                    <article class="product">
+                        <img class="product__image" src="{%static 'schedule/img/plus.svg'%}" alt="Кнопка экспорта"/>
+                        <p class="product__price">Скачать файл</p>
+                    </article>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block navigation %}
+{% endblock %}
 </content>
 </body>
 </html>
