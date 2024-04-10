@@ -46,8 +46,8 @@ class Class(models.Model):
 
 class Discipline(models.Model):
     name = models.TextField(verbose_name='Название')
-    short_name = models.CharField(max_length=50, verbose_name='Краткое название')
-    slug = models.SlugField(max_length=255, unique=True, verbose_name='Slug')
+    short_name = models.CharField(max_length=50, verbose_name='Краткое название', null=True, blank=True)
+    slug = models.SlugField(max_length=255,  verbose_name='Slug',null=True, blank=True, unique=False)
 
     class Meta:
         verbose_name = 'Дисциплина'

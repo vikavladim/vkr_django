@@ -36,7 +36,9 @@ urlpatterns = [
     path('subjects/', subjects),
     path('schedule/', schedule),
     path("__debug__/", include("debug_toolbar.urls")),
+    #
     path('export_to_excel/', export_to_excel),
+    path('create_class/', create_class),
 ]
 
 if settings.DEBUG:

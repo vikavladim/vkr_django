@@ -6,7 +6,8 @@ from django.views.generic import TemplateView
 from xlsxwriter import Workbook
 
 from menus import *
-from teachers.models import Teacher
+from schedule.forms import AddClassForm, ClassFormSet
+from teachers.models import Teacher, Class
 
 import pandas as pd
 
@@ -17,6 +18,7 @@ menus = [
     {'url': '/subjects', 'title': 'Предметы'},
     {'url': '/schedule', 'title': 'Расписание'},
 ]
+
 
 # def home(request):
 #     context = {
@@ -32,6 +34,7 @@ class HomeView(TemplateView):
         'menu_selected': menus[0]['url'],
     }
 
+
 def classes(request):
     print(request.path)
     context = {
@@ -41,6 +44,7 @@ def classes(request):
     }
     return render(request, 'classes.html', context)
 
+
 def subjects(request):
     print(request.path)
     context = {
@@ -48,12 +52,14 @@ def subjects(request):
     }
     return render(request, 'main_base.html', context)
 
+
 def schedule(request):
     print(request.path)
     context = {
         'menu_selected': request.path,
     }
     return render(request, 'main_base.html', context)
+
 
 def export_to_excel(request):
     elements = Teacher.objects.all()
@@ -92,3 +98,33 @@ def export_to_excel(request):
     file_name = 'my_table'
     response['Content-Disposition'] = "attachment; filename=" + file_name + ".xlsx"
     return response
+
+
+def create_class(request):
+    if request.method == 'POST':
+        print('принято')
+        form = ClassFormSet(request.POST)
+        if form.is_valid():
+            print('валидно')
+            form.save()
+            return redirect('home')
+        else:
+            print(form.errors)
+            # for field, errors in form.errors:
+            #     for error in errors:
+            #         print(f'Ошибка в поле {field}: {error}')
+    else:
+        form = ClassFormSet()
+    # context = {
+    #     'title': 'creating teacher',
+    #     'upper_menu': upper_menu,
+    #     'sidebar_menu': sidebar_menu_base,
+    #     'form': form,
+    # }
+    # return render(request, 'teachers/create.html', context)
+    context = {
+        # 'object_list': Class.objects.all(),
+        'form': AddClassForm(),
+        'formset': ClassFormSet
+    }
+    return render(request, 'rubbish/create_class.html', context=context)
