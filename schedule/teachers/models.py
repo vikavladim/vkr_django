@@ -5,10 +5,10 @@ from django.db import models
 from django.urls import reverse
 from pytils.translit import slugify
 
-
 # нужно добавить сокращения предметов
 from django.db import models
 from django.urls import reverse
+
 
 class Teacher(models.Model):
     fio = models.CharField(verbose_name='ФИО', max_length=255)
@@ -30,11 +30,12 @@ class Teacher(models.Model):
     def __str__(self):
         return self.fio
 
+
 class Class(models.Model):
     digit = models.IntegerField(verbose_name='Цифра')
     letter = models.CharField(max_length=1, verbose_name='Буква')
     subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
-
+    slug = models.SlugField(max_length=255, unique=False, verbose_name='URL', null=True, blank=True, db_index=True)
 
     class Meta:
         verbose_name = 'Класс'
@@ -43,11 +44,20 @@ class Class(models.Model):
     def __str__(self):
         return f'{self.digit}{self.letter}'
 
+    def save(self, *args, **kwargs):
+        # if not self.slug:
+        self.slug = slugify(self.__str__())
+
+        super(Class, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('class_read', kwargs={'slug': self.slug})
+
 
 class Discipline(models.Model):
     name = models.TextField(verbose_name='Название')
     short_name = models.CharField(max_length=50, verbose_name='Краткое название', null=True, blank=True)
-    slug = models.SlugField(max_length=255,  verbose_name='Slug',null=True, blank=True, unique=False)
+    slug = models.SlugField(max_length=255, verbose_name='URL', null=True, blank=True, unique=False)
 
     class Meta:
         verbose_name = 'Дисциплина'
@@ -55,7 +65,6 @@ class Discipline(models.Model):
 
     def __str__(self):
         return self.name
-
 
 
 class Subgroup(models.Model):

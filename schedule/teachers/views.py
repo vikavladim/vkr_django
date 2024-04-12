@@ -40,7 +40,6 @@ class UpdateTeacher(DateMixin, UpdateView):
         return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
 
 
-
 def delete(request, id):
     context = {
         'title': f'deleting teacher {id}',

@@ -10,4 +10,4 @@ class AddClassForm(forms.ModelForm):
         fields = ['id', 'digit', 'letter']
 
 ClassFormSet = modelformset_factory(Class, form=AddClassForm,
-                                    extra=0)  # Установите extra=0 для отображения форм только существующих объектов
+                                    extra=1)  # Установите extra=0 для отображения форм только существующих объектов

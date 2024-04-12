@@ -4,38 +4,9 @@
 {% block content %}
 <link rel="stylesheet" type="text/css"
       href="{% static 'schedule/css/style.css' %}?v={{ generate_unique_hash_or_timestamp }}">
-<!--<script src="{%static 'schedule/js/script.js'%}?v={{ generate_unique_hash_or_timestamp }}"></script>-->
-
 <section class="section">
-        <h1 class="section__heading">{{title}}</h1>
+    <h1 class="section__heading">{{title}}</h1>
     <form action="" method="post" enctype="multipart/form-data">
-        <!--    <label for="first-name">Имя:</label>-->
-        <!--    <input type="text" id="first-name" name="first-name" required>-->
-
-        <!--    <label for="last-name">Фамилия:</label>-->
-        <!--    <input type="text" id="last-name" name="last-name" required>-->
-
-        <!--    <label for="middle-name">Отчество:</label>-->
-        <!--    <input type="text" id="middle-name" name="middle-name" required>-->
-
-        <!--    <label for="selected-subjects">Выбранные предметы:</label>-->
-        <!--    <div id="selected-subjects"></div>-->
-
-        <!--    <label for="subjects">Добавить предмет:</label>-->
-        <!--    <select id="subjects" name="subjects">-->
-        <!--        <option value="math">Математика</option>-->
-        <!--        <option value="science">Наука</option>-->
-        <!--        <option value="history">История</option>-->
-        <!--        &lt;!&ndash; Добавьте другие предметы по аналогии &ndash;&gt;-->
-        <!--    </select>-->
-
-        <!--    <button type="button" id="add-subject" onclick="addSubject()">Добавить предмет</button>-->
-
-        <!--    <button type="submit">Отправить</button>-->
-
-
-        <!--        новое-->
-
         {% csrf_token %}
         {{ form.as_p }}
 

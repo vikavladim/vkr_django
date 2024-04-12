@@ -1,0 +1,29 @@
+{% extends "main_base.html" %}
+
+
+{% block content %}
+<form action="" method="post">
+    <table>
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <tr>
+            <th>Id</th>
+            {% for field in formset.empty_form.visible_fields %}
+            {% if field.label %}
+            <th>{{ field.label }}</th>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% for form in formset %}
+        <tr>
+    <td><a href="{% url 'class_update' slug=form.instance.slug %}">{{ form.instance.id }}</a></td>
+            {% for field in form %}
+            <td>{{ field }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <button type="submit">Сохранить</button>
+</form>
+
+{% endblock %}

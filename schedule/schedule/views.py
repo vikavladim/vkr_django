@@ -2,7 +2,8 @@ import io
 
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
+from pytils.translit import slugify
 from xlsxwriter import Workbook
 
 from menus import *
@@ -10,6 +11,8 @@ from schedule.forms import AddClassForm, ClassFormSet
 from teachers.models import Teacher, Class
 
 import pandas as pd
+
+from teachers.utils import DateMixin
 
 menus = [
     {'url': '/home', 'title': 'Главная'},
@@ -102,29 +105,29 @@ def export_to_excel(request):
 
 def create_class(request):
     if request.method == 'POST':
-        print('принято')
         form = ClassFormSet(request.POST)
         if form.is_valid():
-            print('валидно')
             form.save()
-            return redirect('home')
+            return redirect('/classes')
         else:
             print(form.errors)
-            # for field, errors in form.errors:
-            #     for error in errors:
-            #         print(f'Ошибка в поле {field}: {error}')
     else:
         form = ClassFormSet()
-    # context = {
-    #     'title': 'creating teacher',
-    #     'upper_menu': upper_menu,
-    #     'sidebar_menu': sidebar_menu_base,
-    #     'form': form,
-    # }
-    # return render(request, 'teachers/create.html', context)
+
     context = {
-        # 'object_list': Class.objects.all(),
         'form': AddClassForm(),
-        'formset': ClassFormSet
+        'formset': form,
+        'menu_selected': request.path,
     }
-    return render(request, 'rubbish/create_class.html', context=context)
+    return render(request, 'classes/create_class.html', context=context)
+
+
+class DetailClass(DateMixin, DetailView):
+    model = Class
+    template_name = 'classes/update.html'
+    context_object_name = 'class'
+    fields = ['letter', 'slug', 'digit', ]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(context, title=context['class'], menu_selected=self.request.path, **kwargs)

@@ -21,8 +21,8 @@
 </header>
 
 <div class="content">
-    {% block content %}
     <section class="section">
+    {% block content %}
         <div class="container">
             <h1 class="section__heading">{{title}}</h1>
             <ul class="grid">
@@ -36,8 +36,8 @@
                 </li>
             </ul>
         </div>
-    </section>
     {% endblock %}
+    </section>
 </div>
 
 {% block navigation %}

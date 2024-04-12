@@ -32,13 +32,14 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/home/', permanent=True)),
     path('home/', HomeView.as_view(), name='home'),
     path('teachers/', include('teachers.urls')),
-    path('classes/', classes),
+    path('classes/', create_class,name='classes'),
     path('subjects/', subjects),
     path('schedule/', schedule),
     path("__debug__/", include("debug_toolbar.urls")),
     #
     path('export_to_excel/', export_to_excel),
-    path('create_class/', create_class),
+    # path('create_class/', create_class),
+    path('classes/<slug:slug>/update', DetailClass.as_view(), name='class_update'),
 ]
 
 if settings.DEBUG:

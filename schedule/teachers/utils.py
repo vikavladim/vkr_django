@@ -1,5 +1,5 @@
 class DateMixin:
-    title=None
+    title = None
     selected_menu = None
     paginate_by = 2
     extra_context = {}
