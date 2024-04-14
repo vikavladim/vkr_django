@@ -1,6 +1,9 @@
 {%extends "main_base.html"%}
 {%load static%}
 
+{%block exta_head%}
+{% include 'classes/admin_includes.html' %}
+{% endblock %}
 
 {% block content %}
 <h1 class="section__heading">{{title}}</h1>
@@ -13,4 +16,10 @@
     </p>
 
 </form>
+
+<script type="text/javascript">
+    $(window).on('load', function (e) {
+        SelectFilter.init("id_subject", "subject", 0, "/static/admin/");
+    });
+</script>
 {% endblock %}

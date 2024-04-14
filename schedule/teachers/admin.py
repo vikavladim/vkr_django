@@ -36,3 +36,12 @@ class TeacherAdmin(admin.ModelAdmin):
         if not obj.photo:
             return 'Нет фото'
         return mark_safe(f'<img src="{obj.photo.url}" width="50">')
+
+# @admin.register(Class)
+# class ClassAdmin(admin.ModelAdmin):
+#     class Meta:
+#         model = Class
+#         fields = ['letter', 'slug', 'digit', 'subject']
+#         widgets = {
+#             'subject': forms.SelectMultiple(attrs={'class': 'filter_horizontal'}),
+#         }

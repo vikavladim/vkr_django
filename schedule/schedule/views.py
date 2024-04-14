@@ -1,14 +1,15 @@
 import io
 
+from django.forms import forms, widgets
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, UpdateView
 from pytils.translit import slugify
 from xlsxwriter import Workbook
 
 from menus import *
 from schedule.forms import AddClassForm, ClassFormSet
-from teachers.models import Teacher, Class
+from teachers.models import Teacher, Class, Discipline
 
 import pandas as pd
 
@@ -21,15 +22,6 @@ menus = [
     {'url': '/subjects', 'title': 'Предметы'},
     {'url': '/schedule', 'title': 'Расписание'},
 ]
-
-
-# def home(request):
-#     context = {
-#         # 'upper_menu': upper_menu,
-#         # 'sidebar_menu': sidebar_menu_base,
-#         'menu_selected': menus[0]['url'],
-#     }
-#     return render(request, 'main_base.html', context)
 
 class HomeView(TemplateView):
     template_name = 'main_base.html'
@@ -115,18 +107,18 @@ def create_class(request):
         form = ClassFormSet()
 
     context = {
-        'form': AddClassForm(),
         'formset': form,
         'menu_selected': request.path,
     }
     return render(request, 'classes/create_class.html', context=context)
 
 
-class DetailClass(DateMixin, DetailView):
+class UpdateClass(DateMixin, UpdateView):
     model = Class
     template_name = 'classes/update.html'
     context_object_name = 'class'
-    fields = ['letter', 'slug', 'digit', ]
+    fields = ['letter', 'slug', 'digit', 'subject']
+    # form_class = UpdateClassForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
