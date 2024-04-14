@@ -40,6 +40,7 @@ class Class(models.Model):
     class Meta:
         verbose_name = 'Класс'
         verbose_name_plural = 'Классы'
+        ordering = ['digit','letter']
 
     def __str__(self):
         return f'{self.digit}{self.letter}'

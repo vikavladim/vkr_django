@@ -1,5 +1,25 @@
-{% extends "main_base.html" %}
+{%extends "main_base.html"%}
+{%load static%}
+
+{%block exta_head%}
+{% include 'classes/admin_includes.html' %}
+{% endblock %}
 
 {% block content %}
-<h1>{{title}}</h1>
+<h1 class="section__heading">{{title}}</h1>
+<form action="" method="post" enctype="multipart/form-data">
+    <img src="{{ form.photo.url }}" alt="{{ teacher.fio }} photo">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>
+        <button type="submit">Отправить</button>
+    </p>
+
+</form>
+
+<script type="text/javascript">
+    $(window).on('load', function (e) {
+        SelectFilter.init("id_subject", "subject", 0, "/static/admin/");
+    });
+</script>
 {% endblock %}

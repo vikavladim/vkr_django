@@ -13,31 +13,33 @@ class AddTeacher(DateMixin, CreateView):
     model = Teacher
     fields = ['fio', 'slug', 'room', 'photo', 'subject']
     title = 'Создание учителя'
+    success_url = reverse_lazy('teachers')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
 
 
-class DetailTeacher(DateMixin, DetailView):
-    model = Teacher
-    template_name = 'teachers/update.html'
-    context_object_name = 'teacher'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
+# class DetailTeacher(DateMixin, DetailView):
+#     model = Teacher
+#     template_name = 'teachers/update.html'
+#     context_object_name = 'teacher'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
 
 
 class UpdateTeacher(DateMixin, UpdateView):
     model = Teacher
     fields = ['fio', 'slug', 'room', 'photo', 'subject']
-    template_name = 'teachers/create.html'
+    template_name = 'teachers/update.html'
     success_url = reverse_lazy('teachers')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
+        return self.get_mixin_context(context, teacher=context['teacher'], title=context['teacher'].fio,
+                                      menu_selected=self.request.path, **kwargs)
 
 
 def delete(request, id):
@@ -63,4 +65,3 @@ class TeacherListView(DateMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
-

@@ -32,11 +32,13 @@
             {% for teacher in teachers %}
 
             <li class="grid__item">
-                <a class="link" href="/classes">
+                <a class="link" href="{% url 'teacher_update' slug=teacher.slug %}">
                     <article class="product">
+                        {%if teacher.photo%}
                         <img class="product__image"
                              src="{{ teacher.photo.url }}"
-                             alt="Кроссовки"/>
+                             alt="{{ teacher.fio }} photo"/>
+                        {%endif%}
                         <h2 class="product__name">{{teacher.fio}}</h2>
                         <p class="product__price">Price: 200 credits</p>
                     </article>
@@ -50,6 +52,8 @@
 </section>
 
 {% endblock %}
+
+
 {% block navigation %}
 {%if page_obj.has_other_pages%}
 <nav class="list-pages">
