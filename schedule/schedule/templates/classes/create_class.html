@@ -3,6 +3,7 @@
 
 {% block content %}
 <form action="" method="post">
+    <button type="submit">Сохранить</button>
     <table>
         {% csrf_token %}
         {{ formset.management_form }}
@@ -16,7 +17,13 @@
         </tr>
         {% for form in formset %}
         <tr>
-    <td><a href="{% url 'class_update' slug=form.instance.slug %}">{{ form.instance.id }}</a></td>
+
+            {% if form.instance.slug %}
+            <td><a href="{% url 'class_update' slug=form.instance.slug %}">{{ form.instance.slug }}</a></td>
+            {% else %}
+            <td>{{ form.instance.id }}</td>
+            {% endif %}
+
             {% for field in form %}
             <td>{{ field }}</td>
             {% endfor %}

@@ -4,14 +4,13 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 
 from teachers.models import Teacher
-from menus import *
 from teachers.utils import DateMixin
 
 
 class AddTeacher(DateMixin, CreateView):
     template_name = 'teachers/create.html'
     model = Teacher
-    fields = ['fio', 'slug', 'room', 'photo', 'subject']
+    fields = ['fio', 'room', 'photo', 'subject']
     title = 'Создание учителя'
     success_url = reverse_lazy('teachers')
 
@@ -32,7 +31,7 @@ class AddTeacher(DateMixin, CreateView):
 
 class UpdateTeacher(DateMixin, UpdateView):
     model = Teacher
-    fields = ['fio', 'slug', 'room', 'photo', 'subject']
+    fields = ['fio', 'room', 'photo', 'subject']
     template_name = 'teachers/update.html'
     success_url = reverse_lazy('teachers')
 
@@ -45,8 +44,6 @@ class UpdateTeacher(DateMixin, UpdateView):
 def delete(request, id):
     context = {
         'title': f'deleting teacher {id}',
-        'upper_menu': upper_menu,
-        'sidebar_menu': sidebar_menu_base,
     }
     return render(request, 'teachers/update.html', context)
 

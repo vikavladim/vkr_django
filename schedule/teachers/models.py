@@ -12,9 +12,9 @@ from django.urls import reverse
 
 class Teacher(models.Model):
     fio = models.CharField(verbose_name='ФИО', max_length=255)
-    slug = models.SlugField(max_length=255, unique=False, db_index=True, verbose_name='URL')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     photo = models.ImageField(upload_to='images/%Y/%m/%d', null=True, blank=True, verbose_name='Фото')
-    room = models.PositiveIntegerField(verbose_name='Кабинет')
+    room = models.PositiveIntegerField(verbose_name='Кабинет', null=True, blank=True)
     date_create = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     date_update = models.DateField(auto_now=True, verbose_name='Дата обновления')
     subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
@@ -30,17 +30,22 @@ class Teacher(models.Model):
     def __str__(self):
         return self.fio
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.__str__())
+
+        super(Teacher, self).save(*args, **kwargs)
+
 
 class Class(models.Model):
     digit = models.IntegerField(verbose_name='Цифра')
     letter = models.CharField(max_length=1, verbose_name='Буква')
     subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
-    slug = models.SlugField(max_length=255, unique=False, verbose_name='URL', null=True, blank=True, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, verbose_name='URL', db_index=True)
 
     class Meta:
         verbose_name = 'Класс'
         verbose_name_plural = 'Классы'
-        ordering = ['digit','letter']
+        ordering = ['digit', 'letter']
 
     def __str__(self):
         return f'{self.digit}{self.letter}'

@@ -7,7 +7,6 @@ from django.views.generic import TemplateView, DetailView, UpdateView
 from pytils.translit import slugify
 from xlsxwriter import Workbook
 
-from menus import *
 from schedule.forms import AddClassForm, ClassFormSet
 from teachers.models import Teacher, Class, Discipline
 
@@ -21,6 +20,7 @@ menus = [
     {'url': '/classes', 'title': 'Классы'},
     {'url': '/subjects', 'title': 'Предметы'},
     {'url': '/schedule', 'title': 'Расписание'},
+    {'url': '/admin', 'title': 'Админка'},
 ]
 
 class HomeView(TemplateView):
@@ -96,6 +96,8 @@ def export_to_excel(request):
 
 
 def create_class(request):
+    Class(digit=1,letter='k').save()
+
     if request.method == 'POST':
         form = ClassFormSet(request.POST)
         if form.is_valid():
