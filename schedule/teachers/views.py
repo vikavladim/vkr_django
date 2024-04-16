@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from django.urls import reverse, reverse_lazy
-from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 
 from teachers.models import Teacher
@@ -83,11 +82,7 @@ class TeacherListView(DateMixin, ListView):
 #     }
 #     return render(request, 'teachers/create_list.html', context=context)
 
-# @csrf_protect
 def getDataFromDB(request):
-    # csrfContext = RequestContext(request)
-    print('get:', request.GET)
-    # print('post:', request.POST)
     selectedValue = request.GET.getlist('selectedValue[]')
     print(selectedValue)
     return HttpResponse(selectedValue)

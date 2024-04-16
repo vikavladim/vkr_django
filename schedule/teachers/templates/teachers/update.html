@@ -3,6 +3,7 @@
 
 {%block exta_head%}
 {% include 'classes/admin_includes.html' %}
+<script type="text/javascript" src="{% static '/teachers/js/script.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -23,7 +24,7 @@
     });
 </script>
 <!---->
-<!--{% csrf_token %}-->
+
 <select id="yourSelectId" multiple onchange="handleListItemClick(event)">
     <option value="option1">Опция 1</option>
     <option value="option2">Опция 2</option>
@@ -33,17 +34,32 @@
 <script>
     // Функция handleListItemClick для обработки выбранных вариантов в списке с выбором
     function handleListItemClick(event) {
+        console.log("Мы зашли в обработчик")
+        // if (event.type === 'DOMNodeInserted') {
+        //     console.log('Элемент добавлен:', event.target);
+        //     // Вызов функции handleListItemClick для добавленного элемента
+        //     handleListItemClick(event.target);
+        // } else if (event.type === 'DOMNodeRemoved') {
+        //     console.log('Элемент удалён:', event.target);
+        //     // Дополнительные действия по удалению элемента
+        // }
+        //
+        // if (event.target.selectedOptions) {
+        //     console.log("зашёл в иф")
+        //     // selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
+        // } else {
+        //     console.log("не зашёл в иф")
+        // }
         var selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
         // Вы можете выполнить действия с выбранными вариантами, например, отправить их на сервер
         console.log('Выбранные варианты:', selectedOptions);
 
         $.ajax({
             type: 'GET',
-            url: '/teachers/getDataFromDB/', // URL для обработки запроса на сервере
+            url: '/teachers/getDataFromDB/',
             data: {
                 selectedValue: selectedOptions,
-                // csrfmiddlewaretoken: '{{ csrf_token }}'
-            }, // Данные для отправки на сервер
+            },
             success: function (response) {
                 console.log('Данные из базы данных:', response);
             },
@@ -52,5 +68,39 @@
             }
         });
     }
+
+    // var listItems = document.querySelectorAll('#id_subject_to');
+    var listItems = document.querySelectorAll('#id_subject_to');
+    console.log(listItems)
+    // listItems.addEventListener('change', handleListItemClick);
+    // listItems.addEventListener('DOMNodeRemoved', handleListItemClick);
+    // console.log(listItems);
+    listItems.forEach(function (item) {
+        // item.addEventListener('change', handleListItemClick);
+
+        item.addEventListener('click', handleListItemClick);
+    });
+
+    //  var listItemsMy1 = document.querySelectorAll('#id_subject_to');
+    // console.log("вот мы типа вошли в ту",listItemsMy1);
+    //
+    //  var listItemsMy = document.querySelectorAll('#id_subject_from');
+    // console.log("а вот в эту",listItemsMy);
+    // listItemsMy.forEach(function (item) {
+    //     item.addEventListener('dblclick', function (event) {
+    //         const selectedValue = this.value;
+    //         const selectedText = this.options[this.selectedIndex].text;
+    //
+    //         // Добавьте вашу логику обработки двойного нажатия здесь
+    //         console.log(`Выбранное значение: ${selectedValue}`);
+    //         console.log(`Выбранный текст: ${selectedText}`);
+    //
+    //         // Например, добавление выбранного элемента к списку 'id_subject_to'
+    //         // const selectedOption = document.createElement('option');
+    //         // selectedOption.value = selectedValue;
+    //         // selectedOption.text = selectedText;
+    //         // document.querySelector('#id_subject_to').appendChild(selectedOption);
+    //     });
+    // });
 </script>
 {% endblock %}

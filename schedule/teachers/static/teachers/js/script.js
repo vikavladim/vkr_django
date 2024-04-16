@@ -42,9 +42,13 @@
 //         }
 //     });
 // }
-//
-// // Найти все элементы списка и добавить обработчик события для каждого элемента
+
+// Найти все элементы списка и добавить обработчик события для каждого элемента
 // var listItems = document.querySelectorAll('#yourListId li');
 // listItems.forEach(function(item) {
 //     item.addEventListener('click', handleListItemClick);
 // });
+window.onload = function () {
+    // console.log("вот мы типа вошли");
+
+}
