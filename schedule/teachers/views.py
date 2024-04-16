@@ -1,6 +1,8 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template import RequestContext
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 
 from teachers.models import Teacher
@@ -62,3 +64,30 @@ class TeacherListView(DateMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
+
+
+# def create_second_lists(request):
+#     if request.method == 'POST':
+#         form = TeacherFormSet(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('/teachers')
+#         else:
+#             print(form.errors)
+#     else:
+#         form = TeacherFormSet()
+#
+#     context = {
+#         'formset': form,
+#         'menu_selected': request.path,
+#     }
+#     return render(request, 'teachers/create_list.html', context=context)
+
+# @csrf_protect
+def getDataFromDB(request):
+    # csrfContext = RequestContext(request)
+    print('get:', request.GET)
+    # print('post:', request.POST)
+    selectedValue = request.GET.getlist('selectedValue[]')
+    print(selectedValue)
+    return HttpResponse(selectedValue)

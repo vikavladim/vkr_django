@@ -1,60 +1,50 @@
-// window.onload = function() {
-//     console.log(document)
-// var table = document.getElementById('t1')
-// var tbody = table.getElementsByTagName('tbody')[0];
-// var rows = table.getElementsByTagName('tr');
 //
-// for (var i = 0; i < rows.length; i++) {
-//     var cells = rows[i].getElementsByTagName('td');
-//     for (var j = 0; j < cells.length; j++) {
-//         cells[j].setAttribute('contenteditable', true);
-//     }
-// }
-// }
-
-function deleteRow(btn) {
-    var row = btn.parentNode.parentNode; // Получаем родительскую строку
-    row.parentNode.removeChild(row); // Удаляем строку из таблицы
-}
-
-// function handleMenuItemClick(this_item) {
-//         const menuItems = document.querySelectorAll('.nav-link');
-//         menuItems.forEach(item => {
-//             item.classList.remove('active');
-//             item.classList.remove('nav-item');
-//             item.classList.add('link-body-emphasis');
+// function createLists() {
+//     var selectedValue = $('#firstList').val();
+//     // Отправить запрос на сервер для получения отфильтрованных значений на основе selectedValue
+//     $.get('/getFilteredValues', { selectedValue: selectedValue }, function(filteredValues) {
+//         // Очистить второй список
+//         $('#secondList').empty();
+//         // Добавить отфильтрованные значения во второй список
+//         $.each(filteredValues, function(index, value) {
+//             $('#secondList').append($('<option>').text(value).attr('value', value));
 //         });
-//         this_item.classList.remove('link-body-emphasis');
-//         this_item.classList.add('active');
-//         this_item.classList.add('nav-item');
-//     }
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     const menuItems = document.querySelectorAll('.nav-link');
-    //     let selectedMenuItem = localStorage.getItem('selectedMenuItem');
-    //
-    //     // Восстановление состояния выбранного элемента, если он сохранен в localStorage
-    //     if (selectedMenuItem) {
-    //         menuItems.forEach(item => {
-    //             item.classList.remove('active');
-    //             item.classList.remove('nav-item');
-    //             item.classList.add('link-body-emphasis');
-    //         });
-    //         document.querySelector(selectedMenuItem).classList.add('active');
-    //     }
-    //
-    //     // Обработчик клика по элементу меню
-    //     menuItems.forEach(item => {
-    //         item.addEventListener('click', function () {
-    //             menuItems.forEach(item => {
-    //                 item.classList.remove('active');
-    //                 item.classList.remove('nav-item');
-    //                 item.classList.add('link-body-emphasis');
-    //             });
-    //
-    //             this.classList.add('active');
-    //
-    //             // Сохранение выбранного элемента в localStorage
-    //             localStorage.setItem('selectedMenuItem', `#${this.id}`);
-    //         });
-    //     });
-    // });
+//     });
+// }
+//
+// function updateSecondList() {
+//     var selectedValue = $('#firstList').val();
+//     // Отправить запрос на сервер для получения отфильтрованных значений на основе selectedValue
+//     $.get('/getFilteredValues', { selectedValue: selectedValue }, function(filteredValues) {
+//         // Очистить второй список
+//         $('#secondList').empty();
+//         // Добавить отфильтрованные значения во второй список
+//         $.each(filteredValues, function(index, value) {
+//             $('#secondList').append($('<option>').text(value).attr('value', value));
+//         });
+//     });
+// }
+
+// Обработчик события для нажатия на элемент списка
+// function handleListItemClick(event) {
+//     var selectedValue = event.target.textContent;
+//
+//     // Отправка запроса на сервер с использованием AJAX
+//     $.ajax({
+//         type: 'POST',
+//         url: '/getDataFromDB', // URL для обработки запроса на сервере
+//         data: { selectedValue: selectedValue }, // Данные для отправки на сервер
+//         success: function(response) {
+//             console.log('Данные из базы данных:', response);
+//         },
+//         error: function(err) {
+//             console.error('Произошла ошибка при получении данных из базы данных');
+//         }
+//     });
+// }
+//
+// // Найти все элементы списка и добавить обработчик события для каждого элемента
+// var listItems = document.querySelectorAll('#yourListId li');
+// listItems.forEach(function(item) {
+//     item.addEventListener('click', handleListItemClick);
+// });

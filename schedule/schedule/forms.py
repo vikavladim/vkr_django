@@ -9,20 +9,14 @@ class AddClassForm(forms.ModelForm):
         model = Class
         fields = ['id', 'digit', 'letter']
 
+class AddSubjectForm(forms.ModelForm):
+    class Meta:
+        model = Discipline
+        fields = ['id', 'name', 'short_name']
+
 
 ClassFormSet = modelformset_factory(Class, form=AddClassForm,
-                                    extra=1)  # Установите extra=0 для отображения форм только существующих объектов
+                                    extra=1)
+SubjectFormSet = modelformset_factory(Discipline, form=AddSubjectForm,
+                                    extra=3)
 
-
-# class UpdateClassForm(forms.ModelForm):
-#     linked_bars = forms.ModelMultipleChoiceField(queryset=Discipline.objects.all(),
-#                                                  widget=widgets.SelectMultiple(
-#                                                      Discipline._meta.verbose_name_plural,
-#                                                      False),attrs={'class': 'Discipline'})
-#
-#     class Meta:
-#         model = Class
-#         fields = ['letter', 'slug', 'digit', 'subject', 'linked_bars']
-#         # widgets = {
-#         #     'subject': forms.SelectMultiple(attrs={'class': 'filter_horizontal'}),
-#         # }

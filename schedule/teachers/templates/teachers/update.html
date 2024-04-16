@@ -22,4 +22,35 @@
         SelectFilter.init("id_subject", "subject", 0, "/static/admin/");
     });
 </script>
+<!---->
+<!--{% csrf_token %}-->
+<select id="yourSelectId" multiple onchange="handleListItemClick(event)">
+    <option value="option1">Опция 1</option>
+    <option value="option2">Опция 2</option>
+    <option value="option3">Опция 3</option>
+</select>
+
+<script>
+    // Функция handleListItemClick для обработки выбранных вариантов в списке с выбором
+    function handleListItemClick(event) {
+        var selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
+        // Вы можете выполнить действия с выбранными вариантами, например, отправить их на сервер
+        console.log('Выбранные варианты:', selectedOptions);
+
+        $.ajax({
+            type: 'GET',
+            url: '/teachers/getDataFromDB/', // URL для обработки запроса на сервере
+            data: {
+                selectedValue: selectedOptions,
+                // csrfmiddlewaretoken: '{{ csrf_token }}'
+            }, // Данные для отправки на сервер
+            success: function (response) {
+                console.log('Данные из базы данных:', response);
+            },
+            error: function (err) {
+                console.error('Произошла ошибка при получении данных из базы данных');
+            }
+        });
+    }
+</script>
 {% endblock %}

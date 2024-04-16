@@ -1,6 +1,11 @@
 {% extends "main_base.html" %}
 {%load static%}
 
+{%block exta_head%}
+{% include 'classes/admin_includes.html' %}
+
+{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" type="text/css"
       href="{% static 'schedule/css/style.css' %}?v={{ generate_unique_hash_or_timestamp }}">
@@ -16,4 +21,10 @@
 
     </form>
 </section>
+
+<script type="text/javascript">
+    $(window).on('load', function (e) {
+        SelectFilter.init("id_subject", "subject", 0, "/static/admin/");
+    });
+</script>
 {% endblock %}

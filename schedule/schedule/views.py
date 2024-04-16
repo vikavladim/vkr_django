@@ -3,11 +3,12 @@ import io
 from django.forms import forms, widgets
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, UpdateView
 from pytils.translit import slugify
 from xlsxwriter import Workbook
 
-from schedule.forms import AddClassForm, ClassFormSet
+from schedule.forms import AddClassForm, ClassFormSet, SubjectFormSet
 from teachers.models import Teacher, Class, Discipline
 
 import pandas as pd
@@ -96,8 +97,6 @@ def export_to_excel(request):
 
 
 def create_class(request):
-    Class(digit=1,letter='k').save()
-
     if request.method == 'POST':
         form = ClassFormSet(request.POST)
         if form.is_valid():
@@ -120,8 +119,30 @@ class UpdateClass(DateMixin, UpdateView):
     template_name = 'classes/update.html'
     context_object_name = 'class'
     fields = ['letter', 'slug', 'digit', 'subject']
+    success_url = reverse_lazy('classes')
     # form_class = UpdateClassForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, title=context['class'], menu_selected=self.request.path, **kwargs)
+
+def create_subject(request):
+    for o in Discipline.objects.all():
+        o.slug = slugify(o.name)
+        o.save()
+
+    if request.method == 'POST':
+        form = SubjectFormSet(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/subjects')
+        else:
+            print(form.errors)
+    else:
+        form = SubjectFormSet()
+
+    context = {
+        'formset': form,
+        'menu_selected': request.path,
+    }
+    return render(request, 'subjects/all.html', context=context)

@@ -61,16 +61,27 @@ class Class(models.Model):
 
 
 class Discipline(models.Model):
-    name = models.TextField(verbose_name='Название')
-    short_name = models.CharField(max_length=50, verbose_name='Краткое название', null=True, blank=True)
-    slug = models.SlugField(max_length=255, verbose_name='URL', null=True, blank=True, unique=False)
+    name = models.CharField(verbose_name='Название', max_length=255)
+    short_name = models.CharField(max_length=50, verbose_name='Краткое название',blank=True)
+    slug = models.SlugField(max_length=255, verbose_name='URL', unique=True,blank=True, db_index=True)
 
     class Meta:
         verbose_name = 'Дисциплина'
         verbose_name_plural = 'Дисциплины'
+        ordering = ['name',]
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.short_name:
+            self.short_name = self.name
+        self.slug = slugify(self.__str__())
+
+        super(Discipline, self).save(*args, **kwargs)
+
+    # def get_absolute_url(self):
+    #     return reverse('subject_read', kwargs={'slug': self.slug})
 
 
 class Subgroup(models.Model):
