@@ -48,7 +48,15 @@
 // listItems.forEach(function(item) {
 //     item.addEventListener('click', handleListItemClick);
 // });
-window.onload = function () {
-    // console.log("вот мы типа вошли");
+// window.onload = function () {
+//     window.document.body.onload = doThis; // note removed parentheses
+// };
 
-}
+// function doThis() {
+    console.log("вот мы типа вошли");
+
+    setTimeout(function () {
+    element = document.querySelector('#id_subject_from');
+    console.log('вот такие элементы во фроме', element);
+    }, 200);
+// }
