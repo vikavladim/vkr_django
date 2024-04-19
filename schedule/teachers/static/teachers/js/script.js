@@ -53,7 +53,29 @@
 // };
 
 
-setTimeout(setListeners, 200);
+const targetElement = document.getElementById('id_subject_to');
+
+const observer = new MutationObserver((mutationsList, observer) => {
+    mutationsList.forEach(mutation => {
+        if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject_to')) {
+                console.log('Элемент с id "id_subject_to" появился на странице!');
+            setListeners();
+            }
+        }
+    });
+});
+
+// Настройка конфигурации MutationObserver
+const config = { childList: true, subtree: true };
+
+// Начинаем наблюдение за целевым элементом с заданной конфигурацией
+observer.observe(document, config);
+
+
+
+
+// setTimeout(setListeners, 200);
 
 function handleListItemClick(event) {
     console.log("Мы зашли в обработчик")
@@ -77,46 +99,7 @@ function handleListItemClick(event) {
 }
 
 function setListeners() {
-    // elements = document.querySelectorAll('#id_subject_from, #id_subject_to');
-    // // elements = elements.concat(Array.from(document.querySelectorAll('#id_subject_to')));
-    // console.log('вот такие элементы во фроме', elements);
-    // elements.forEach(function (item) {
-    //     item.addEventListener('change', handleListItemClick);
-    // });
-
     const selectorTo = document.querySelector('#id_subject_to');
-
-    // function handleSelectChanges(mutationsList, observer) {
-    //     // const addedNodes = [];
-    //     // const removedNodes = [];
-    //
-    //
-    //     mutationsList.forEach(function (mutation) {
-    //         console.log("мы зашли")
-    //         //
-    //         // const addedOptions = addedNodes.filter(el_A => !removedNodes.includes(el_A));
-    //         // const removedOptions = removedNodes.filter(el_A => !addedNodes.includes(el_A));
-    //         //
-    //         // console.log('addedOptions', addedOptions);
-    //         // console.log('removedOptions', removedOptions);
-    //         if (mutation.type === 'childList') {
-    //             mutation.removedNodes.forEach(function (node) {
-    //                 if (node.tagName === 'OPTION') {
-    //                     console.log('Удалена опция:', node);
-    //                     // options.pop(node)
-    //                 }
-    //             });
-    //
-    //             mutation.addedNodes.forEach(function (node) {
-    //                 if (node.tagName === 'OPTION') {
-    //                     console.log('Добавлена новая опция:', node);
-    //                     // options.push(node)
-    //                 }
-    //
-    //             });
-    //         }
-    //     });
-    // }
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
@@ -150,6 +133,8 @@ function setListeners() {
     }
 
     const observerTo = new MutationObserver(handleSelectTo);
-
     observerTo.observe(selectorTo, {childList: true});
 }
+
+
+
