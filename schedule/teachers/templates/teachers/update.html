@@ -33,41 +33,41 @@
 
 <script>
     // Функция handleListItemClick для обработки выбранных вариантов в списке с выбором
-    function handleListItemClick(event) {
-        console.log("Мы зашли в обработчик")
-        // if (event.type === 'DOMNodeInserted') {
-        //     console.log('Элемент добавлен:', event.target);
-        //     // Вызов функции handleListItemClick для добавленного элемента
-        //     handleListItemClick(event.target);
-        // } else if (event.type === 'DOMNodeRemoved') {
-        //     console.log('Элемент удалён:', event.target);
-        //     // Дополнительные действия по удалению элемента
-        // }
-        //
-        // if (event.target.selectedOptions) {
-        //     console.log("зашёл в иф")
-        //     // selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
-        // } else {
-        //     console.log("не зашёл в иф")
-        // }
-        var selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
-        // Вы можете выполнить действия с выбранными вариантами, например, отправить их на сервер
-        console.log('Выбранные варианты:', selectedOptions);
-
-        $.ajax({
-            type: 'GET',
-            url: '/teachers/getDataFromDB/',
-            data: {
-                selectedValue: selectedOptions,
-            },
-            success: function (response) {
-                console.log('Данные из базы данных:', response);
-            },
-            error: function (err) {
-                console.error('Произошла ошибка при получении данных из базы данных');
-            }
-        });
-    }
+    // function handleListItemClick(event) {
+    //     console.log("Мы зашли в обработчик")
+    //     // if (event.type === 'DOMNodeInserted') {
+    //     //     console.log('Элемент добавлен:', event.target);
+    //     //     // Вызов функции handleListItemClick для добавленного элемента
+    //     //     handleListItemClick(event.target);
+    //     // } else if (event.type === 'DOMNodeRemoved') {
+    //     //     console.log('Элемент удалён:', event.target);
+    //     //     // Дополнительные действия по удалению элемента
+    //     // }
+    //     //
+    //     // if (event.target.selectedOptions) {
+    //     //     console.log("зашёл в иф")
+    //     //     // selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
+    //     // } else {
+    //     //     console.log("не зашёл в иф")
+    //     // }
+    //     var selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
+    //     // Вы можете выполнить действия с выбранными вариантами, например, отправить их на сервер
+    //     console.log('Выбранные варианты:', selectedOptions);
+    //
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: '/teachers/getDataFromDB/',
+    //         data: {
+    //             selectedValue: selectedOptions,
+    //         },
+    //         success: function (response) {
+    //             console.log('Данные из базы данных:', response);
+    //         },
+    //         error: function (err) {
+    //             console.error('Произошла ошибка при получении данных из базы данных');
+    //         }
+    //     });
+    // }
 
     // var listItems = document.querySelectorAll('#id_subject_to');
     var listItems = document.querySelectorAll('#id_subject_from');
