@@ -9,6 +9,6 @@ urlpatterns = [
     # path('<slug:slug>/read', DetailTeacher.as_view(), name='teacher_read'),
     path('<slug:slug>/update', UpdateTeacher.as_view(), name='teacher_update'),
     path('<int:id>/delete', delete, name='teacher_delete'),
-#
-    path('getDataFromDB/', getDataFromDB,name='getDataFromDB'),
+    #
+    path('getDataFromDB/', getDataFromDB, name='getDataFromDB'),
 ]

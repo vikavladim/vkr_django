@@ -1,10 +1,10 @@
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.http import HttpResponse, HttpResponseNotFound, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 
-from teachers.models import Teacher, Class
+from teachers.models import Teacher, Class, Discipline
 from teachers.utils import DateMixin
 
 
@@ -94,6 +94,24 @@ class TeacherListView(DateMixin, ListView):
 #     return render(request, 'teachers/create_list.html', context=context)
 
 def getDataFromDB(request):
-    selectedValue = request.GET.getlist('selectedValue[]')
+    print("Мы зашли в getDataFromDB")
+    selectedValue = request.GET.getlist('selectedValue')
+    # selectedValue = request.GET.getlist('selectedValue[]')
     print(selectedValue)
-    return HttpResponse(selectedValue)
+    classes_by_subjects = {
+        'array': [],
+    }
+    subject = get_object_or_404(Discipline, id=selectedValue[0])
+    classes_with_subject = Class.objects.filter(subject=subject)
+    # print(classes_with_subject)
+    subject_data = {
+        'subject': subject.serializable,
+        'classes': [cls.serializable for cls in classes_with_subject]
+    }
+
+    classes_by_subjects['array'].append(subject_data)
+    # print(classes_by_subjects)
+    # for subject in subjects:
+    #     classes = Class.objects.filter(subject=subject)
+    #     classes_by_subjects[subject] = list(classes)
+    return JsonResponse(classes_by_subjects)

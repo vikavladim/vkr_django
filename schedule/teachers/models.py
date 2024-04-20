@@ -59,6 +59,16 @@ class Class(models.Model):
     def get_absolute_url(self):
         return reverse('class_read', kwargs={'slug': self.slug})
 
+    @property
+    def serializable(self):
+        return {
+            'id': self.id,
+            'digit': self.digit,
+            'letter': self.letter,
+            'slug': self.slug,
+            'str': self.__str__()
+        }
+
 
 class Discipline(models.Model):
     name = models.CharField(verbose_name='Название', max_length=255)
@@ -82,6 +92,16 @@ class Discipline(models.Model):
 
     # def get_absolute_url(self):
     #     return reverse('subject_read', kwargs={'slug': self.slug})
+
+    @property
+    def serializable(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'short_name': self.short_name,
+            'slug': self.slug,
+            'str': self.__str__()
+        }
 
 
 class Subgroup(models.Model):

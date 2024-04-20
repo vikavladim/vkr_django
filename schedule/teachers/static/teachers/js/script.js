@@ -1,49 +1,4 @@
-//
-// function createLists() {
-//     var selectedValue = $('#firstList').val();
-//     // Отправить запрос на сервер для получения отфильтрованных значений на основе selectedValue
-//     $.get('/getFilteredValues', { selectedValue: selectedValue }, function(filteredValues) {
-//         // Очистить второй список
-//         $('#secondList').empty();
-//         // Добавить отфильтрованные значения во второй список
-//         $.each(filteredValues, function(index, value) {
-//             $('#secondList').append($('<option>').text(value).attr('value', value));
-//         });
-//     });
-// }
-//
-// function updateSecondList() {
-//     var selectedValue = $('#firstList').val();
-//     // Отправить запрос на сервер для получения отфильтрованных значений на основе selectedValue
-//     $.get('/getFilteredValues', { selectedValue: selectedValue }, function(filteredValues) {
-//         // Очистить второй список
-//         $('#secondList').empty();
-//         // Добавить отфильтрованные значения во второй список
-//         $.each(filteredValues, function(index, value) {
-//             $('#secondList').append($('<option>').text(value).attr('value', value));
-//         });
-//     });
-// }
-
-// Обработчик события для нажатия на элемент списка
-// function handleListItemClick(event) {
-//     var selectedValue = event.target.textContent;
-//
-//     // Отправка запроса на сервер с использованием AJAX
-//     $.ajax({
-//         type: 'POST',
-//         url: '/getDataFromDB', // URL для обработки запроса на сервере
-//         data: { selectedValue: selectedValue }, // Данные для отправки на сервер
-//         success: function(response) {
-//             console.log('Данные из базы данных:', response);
-//         },
-//         error: function(err) {
-//             console.error('Произошла ошибка при получении данных из базы данных');
-//         }
-//     });
-// }
-
-
+// Ожидание появление списка предметов на странице
 const targetElement = document.getElementById('id_subject_to');
 
 const observer = new MutationObserver((mutationsList, observer) => {
@@ -59,20 +14,37 @@ const observer = new MutationObserver((mutationsList, observer) => {
 const config = {childList: true, subtree: true};
 observer.observe(document, config);
 
-function handleListItemClick(event) {
-    console.log("Мы зашли в обработчик")
-    var selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
-    // // Вы можете выполнить действия с выбранными вариантами, например, отправить их на сервер
-    console.log('Выбранные варианты:', selectedOptions);
-    //
+//Отправка выбранных функций и изменение контента
+function addOptions(options) {
     $.ajax({
         type: 'GET',
         url: '/teachers/getDataFromDB/',
         data: {
-            selectedValue: selectedOptions,
+            selectedValue: options[0].value,
         },
         success: function (response) {
-            console.log('Данные из базы данных:', response);
+            // console.log(response);
+            response['array'].forEach(function (elem) {
+                subject = elem.subject;
+                classes = elem.classes;
+
+                var pElement = $('<p id="p-select-' + subject.id + '">');
+                var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
+                var selectElement = $('<select name="select-' + subject.id + '" multiple id="id_select-' + subject.id + '">');
+
+                classes.forEach(function (classObj) {
+                    var optionElement = $('<option value="' + classObj.id + '">' + classObj.str + '</option>');
+                    selectElement.append(optionElement);
+                });
+
+                container = document.getElementById("form");
+
+                pElement.append(labelElement);
+                pElement.append(selectElement);
+
+                $('#form').append(pElement);
+                SelectFilter.init("id_select-" + subject.id, "select-" + subject.id, 0, "/static/admin/");
+            });
         },
         error: function (err) {
             console.error('Произошла ошибка при получении данных из базы данных');
@@ -80,12 +52,15 @@ function handleListItemClick(event) {
     });
 }
 
+
+// Основная функция программы
 function setListeners() {
     const selectorTo = document.querySelector('#id_subject_to');
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
 
+    // Обработчик выбора предметов в списке
     function handleSelectTo(mutationsList, observer) {
         newOptions = selectorTo.querySelectorAll('option');
         newOptions = Array.from(newOptions);
@@ -106,19 +81,22 @@ function setListeners() {
         })
 
         if (addedOptions.length > 0) {
-            console.log('addedOptions', addedOptions);
+            addOptions(addedOptions);
         }
         if (removedOptions.length > 0) {
-            console.log('removedOptions', removedOptions);
-            console.log(removedOptions[0].value,"p-select-"+removedOptions[0].value);
-            console.log(document.getElementById("p-select-"+removedOptions[0].value));
-            document.getElementById("p-select-"+removedOptions[0].value).remove();
+            removedOptions.forEach(option => {
+                document.getElementById("p-select-" + option.value).remove();
+            });
         }
         oldOptions = newOptions;
     }
 
     const observerTo = new MutationObserver(handleSelectTo);
     observerTo.observe(selectorTo, {childList: true});
+
+    document.querySelectorAll('#id_subject_to').forEach(function (selectorTo) {
+        addOptions(selectorTo);
+    });
 }
 
 
