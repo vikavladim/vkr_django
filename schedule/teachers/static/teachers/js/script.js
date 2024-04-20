@@ -16,11 +16,17 @@ observer.observe(document, config);
 
 //Отправка выбранных функций и изменение контента
 function addOptions(options) {
+    values=[];
+    options = Array.from(options);
+    options.forEach(function (option) {
+        values.push(option.value)
+    });
+    console.log(values);
     $.ajax({
         type: 'GET',
         url: '/teachers/getDataFromDB/',
         data: {
-            selectedValue: options[0].value,
+            selectedValues: values
         },
         success: function (response) {
             // console.log(response);
