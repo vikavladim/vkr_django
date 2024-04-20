@@ -12,6 +12,23 @@
     <img src="{{ form.photo.url }}" alt="{{ teacher.fio }} photo">
     {% csrf_token %}
     {{ form.as_p }}
+
+    {% for subject,classes in classes_by_subjects.items %}
+    <p id="p-select-{{ subject.id }}">
+    <label for="select-{{ subject.id }}">{{ subject }}</label>
+    <select name="select-{{ subject.id }}" multiple id="id_select-{{ subject.id }}">
+        {% for class in classes %}
+        <option value="{{ class.id }}">{{ class }}</option>
+        {% endfor %}
+    </select>
+    </p>
+        <script type="text/javascript">
+        $(window).on('load', function (e) {
+            SelectFilter.init("id_select-{{ subject.id }}", "select-{{ subject.id }}", 0, "/static/admin/");
+        });
+        </script>
+    {% endfor %}
+
     <p>
         <button type="submit">Отправить</button>
     </p>
@@ -23,84 +40,5 @@
         SelectFilter.init("id_subject", "subject", 0, "/static/admin/");
     });
 </script>
-<!---->
 
-<select id="yourSelectId" multiple onchange="handleListItemClick(event)">
-    <option value="option1">Опция 1</option>
-    <option value="option2">Опция 2</option>
-    <option value="option3">Опция 3</option>
-</select>
-
-<script>
-    // Функция handleListItemClick для обработки выбранных вариантов в списке с выбором
-    // function handleListItemClick(event) {
-    //     console.log("Мы зашли в обработчик")
-    //     // if (event.type === 'DOMNodeInserted') {
-    //     //     console.log('Элемент добавлен:', event.target);
-    //     //     // Вызов функции handleListItemClick для добавленного элемента
-    //     //     handleListItemClick(event.target);
-    //     // } else if (event.type === 'DOMNodeRemoved') {
-    //     //     console.log('Элемент удалён:', event.target);
-    //     //     // Дополнительные действия по удалению элемента
-    //     // }
-    //     //
-    //     // if (event.target.selectedOptions) {
-    //     //     console.log("зашёл в иф")
-    //     //     // selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
-    //     // } else {
-    //     //     console.log("не зашёл в иф")
-    //     // }
-    //     var selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
-    //     // Вы можете выполнить действия с выбранными вариантами, например, отправить их на сервер
-    //     console.log('Выбранные варианты:', selectedOptions);
-    //
-    //     $.ajax({
-    //         type: 'GET',
-    //         url: '/teachers/getDataFromDB/',
-    //         data: {
-    //             selectedValue: selectedOptions,
-    //         },
-    //         success: function (response) {
-    //             console.log('Данные из базы данных:', response);
-    //         },
-    //         error: function (err) {
-    //             console.error('Произошла ошибка при получении данных из базы данных');
-    //         }
-    //     });
-    // }
-
-    // var listItems = document.querySelectorAll('#id_subject_to');
-    var listItems = document.querySelectorAll('#id_subject_from');
-    // console.log('вот такие элементы во фроме',listItems)
-    // listItems.addEventListener('change', handleListItemClick);
-    // listItems.addEventListener('DOMNodeRemoved', handleListItemClick);
-    // console.log(listItems);
-    listItems.forEach(function (item) {
-        // item.addEventListener('change', handleListItemClick);
-
-        item.addEventListener('click', handleListItemClick);
-    });
-
-    //  var listItemsMy1 = document.querySelectorAll('#id_subject_to');
-    // console.log("вот мы типа вошли в ту",listItemsMy1);
-    //
-    //  var listItemsMy = document.querySelectorAll('#id_subject_from');
-    // console.log("а вот в эту",listItemsMy);
-    // listItemsMy.forEach(function (item) {
-    //     item.addEventListener('dblclick', function (event) {
-    //         const selectedValue = this.value;
-    //         const selectedText = this.options[this.selectedIndex].text;
-    //
-    //         // Добавьте вашу логику обработки двойного нажатия здесь
-    //         console.log(`Выбранное значение: ${selectedValue}`);
-    //         console.log(`Выбранный текст: ${selectedText}`);
-    //
-    //         // Например, добавление выбранного элемента к списку 'id_subject_to'
-    //         // const selectedOption = document.createElement('option');
-    //         // selectedOption.value = selectedValue;
-    //         // selectedOption.text = selectedText;
-    //         // document.querySelector('#id_subject_to').appendChild(selectedOption);
-    //     });
-    // });
-</script>
 {% endblock %}

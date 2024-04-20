@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 
-from teachers.models import Teacher
+from teachers.models import Teacher, Class
 from teachers.utils import DateMixin
 
 
@@ -38,7 +38,18 @@ class UpdateTeacher(DateMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        classes_by_subjects = {}
+        subjects = context['teacher'].subject.all()
+
+        for subject in subjects:
+            classes = Class.objects.filter(subject=subject)
+            classes_by_subjects[subject] = list(classes)
+
+        # print(classes_by_subjects)
+
         return self.get_mixin_context(context, teacher=context['teacher'], title=context['teacher'].fio,
+                                      classes_by_subjects=classes_by_subjects,
                                       menu_selected=self.request.path, **kwargs)
 
 

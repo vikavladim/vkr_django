@@ -43,15 +43,6 @@
 //     });
 // }
 
-// Найти все элементы списка и добавить обработчик события для каждого элемента
-// var listItems = document.querySelectorAll('#yourListId li');
-// listItems.forEach(function(item) {
-//     item.addEventListener('click', handleListItemClick);
-// });
-// window.onload = function () {
-//     window.document.body.onload = doThis; // note removed parentheses
-// };
-
 
 const targetElement = document.getElementById('id_subject_to');
 
@@ -59,43 +50,34 @@ const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach(mutation => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
             if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject_to')) {
-                console.log('Элемент с id "id_subject_to" появился на странице!');
-            setListeners();
+                setListeners();
             }
         }
     });
 });
 
-// Настройка конфигурации MutationObserver
-const config = { childList: true, subtree: true };
-
-// Начинаем наблюдение за целевым элементом с заданной конфигурацией
+const config = {childList: true, subtree: true};
 observer.observe(document, config);
-
-
-
-
-// setTimeout(setListeners, 200);
 
 function handleListItemClick(event) {
     console.log("Мы зашли в обработчик")
-    // var selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
+    var selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value);
     // // Вы можете выполнить действия с выбранными вариантами, например, отправить их на сервер
-    // console.log('Выбранные варианты:', selectedOptions);
+    console.log('Выбранные варианты:', selectedOptions);
     //
-    // $.ajax({
-    //     type: 'GET',
-    //     url: '/teachers/getDataFromDB/',
-    //     data: {
-    //         selectedValue: selectedOptions,
-    //     },
-    //     success: function (response) {
-    //         console.log('Данные из базы данных:', response);
-    //     },
-    //     error: function (err) {
-    //         console.error('Произошла ошибка при получении данных из базы данных');
-    //     }
-    // });
+    $.ajax({
+        type: 'GET',
+        url: '/teachers/getDataFromDB/',
+        data: {
+            selectedValue: selectedOptions,
+        },
+        success: function (response) {
+            console.log('Данные из базы данных:', response);
+        },
+        error: function (err) {
+            console.error('Произошла ошибка при получении данных из базы данных');
+        }
+    });
 }
 
 function setListeners() {
@@ -111,7 +93,6 @@ function setListeners() {
         const addedOptions = [];
         const removedOptions = [];
 
-        // const addedOptions = newOptions.filter(el_A => !oldOptions.includes(el_A));
         newOptions.forEach(el_A => {
             if (!oldOptions.some(el_B => el_B.value === el_A.value)) {
                 addedOptions.push(el_A);
@@ -123,11 +104,15 @@ function setListeners() {
                 removedOptions.push(el_A);
             }
         })
+
         if (addedOptions.length > 0) {
             console.log('addedOptions', addedOptions);
         }
         if (removedOptions.length > 0) {
             console.log('removedOptions', removedOptions);
+            console.log(removedOptions[0].value,"p-select-"+removedOptions[0].value);
+            console.log(document.getElementById("p-select-"+removedOptions[0].value));
+            document.getElementById("p-select-"+removedOptions[0].value).remove();
         }
         oldOptions = newOptions;
     }
