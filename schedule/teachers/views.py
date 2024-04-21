@@ -52,6 +52,14 @@ class UpdateTeacher(DateMixin, UpdateView):
                                       classes_by_subjects=classes_by_subjects,
                                       menu_selected=self.request.path, **kwargs)
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        form_values = {field: getattr(form.instance, field) for field in form.fields}
+
+        print(form_values)
+
+        return response
+
 
 def delete(request, id):
     context = {
@@ -94,24 +102,19 @@ class TeacherListView(DateMixin, ListView):
 #     return render(request, 'teachers/create_list.html', context=context)
 
 def getDataFromDB(request):
-    print("Мы зашли в getDataFromDB")
-    selectedValue = request.GET.getlist('selectedValue')
-    # selectedValue = request.GET.getlist('selectedValue[]')
-    print(selectedValue)
-    classes_by_subjects = {
-        'array': [],
-    }
-    subject = get_object_or_404(Discipline, id=selectedValue[0])
-    classes_with_subject = Class.objects.filter(subject=subject)
-    # print(classes_with_subject)
-    subject_data = {
-        'subject': subject.serializable,
-        'classes': [cls.serializable for cls in classes_with_subject]
-    }
+    selectedValues = request.GET.getlist('selectedValues[]')
 
-    classes_by_subjects['array'].append(subject_data)
-    # print(classes_by_subjects)
-    # for subject in subjects:
-    #     classes = Class.objects.filter(subject=subject)
-    #     classes_by_subjects[subject] = list(classes)
+    classes_by_subjects = {'array': [], }
+
+    for selectedValue in selectedValues:
+        subject = get_object_or_404(Discipline, id=selectedValue)
+        classes_with_subject = Class.objects.filter(subject=subject)
+
+        subject_data = {
+            'subject': subject.serializable,
+            'classes': [cls.serializable for cls in classes_with_subject]
+        }
+
+        classes_by_subjects['array'].append(subject_data)
+
     return JsonResponse(classes_by_subjects)

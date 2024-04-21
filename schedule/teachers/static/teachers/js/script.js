@@ -21,7 +21,6 @@ function addOptions(options) {
     options.forEach(function (option) {
         values.push(option.value)
     });
-    console.log(values);
     $.ajax({
         type: 'GET',
         url: '/teachers/getDataFromDB/',
@@ -29,7 +28,6 @@ function addOptions(options) {
             selectedValues: values
         },
         success: function (response) {
-            // console.log(response);
             response['array'].forEach(function (elem) {
                 subject = elem.subject;
                 classes = elem.classes;
