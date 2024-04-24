@@ -16,7 +16,7 @@ observer.observe(document, config);
 
 //Отправка выбранных функций и изменение контента
 function addOptions(options) {
-    values=[];
+    values = [];
     options = Array.from(options);
     options.forEach(function (option) {
         values.push(option.value)
@@ -32,7 +32,7 @@ function addOptions(options) {
                 subject = elem.subject;
                 classes = elem.classes;
 
-                var pElement = $('<p id="p-select-' + subject.id + '">');
+                var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
                 var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
                 var selectElement = $('<select name="select-' + subject.id + '" multiple id="id_select-' + subject.id + '">');
 
@@ -104,4 +104,10 @@ function setListeners() {
 }
 
 
-
+function handleFormSubmit(event) {
+    console.log("вот мы типа в обработчике формы")
+    // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
+    // var form = document.body.querySelectorAll('form');
+    var form = document.body.querySelectorAll('select[id^="id_select-"][id$="to"]');
+    console.log(form);
+}

@@ -4,6 +4,7 @@ from django.template import RequestContext
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 
+from teachers.forms import TeacherForm
 from teachers.models import Teacher, Class, Discipline
 from teachers.utils import DateMixin
 
@@ -54,9 +55,10 @@ class UpdateTeacher(DateMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        form_values = {field: getattr(form.instance, field) for field in form.fields}
-
-        print(form_values)
+        # form_values = {field: getattr(form.instance, field) for field in form.fields}
+        #
+        # print(form_values)
+        # print(form)
 
         return response
 
@@ -118,3 +120,25 @@ def getDataFromDB(request):
         classes_by_subjects['array'].append(subject_data)
 
     return JsonResponse(classes_by_subjects)
+
+
+def test_for_forms(request, slug):
+    # print('hello')
+    if request.method == 'POST':
+        greetings = request.POST.getlist('form')
+        data = greetings.POST.getlist('id_select-3_to')
+        print(greetings)
+        return render(request, 'teachers/all.html', )
+    else:
+        teacher = get_object_or_404(Teacher, slug=slug)
+        form = TeacherForm(instance=teacher)
+        return render(request, 'teachers/update.html', context={'form': form})
+
+
+def my_test_process(request):
+    # if request.method == 'POST':
+    #     greetings = request.POST.get('form')
+    #     # data = greetings.POST.getlist('id_select-3_to')
+    #     print(greetings)
+    #     return render(request, 'teachers/all.html', )
+    return HttpResponse('ok')

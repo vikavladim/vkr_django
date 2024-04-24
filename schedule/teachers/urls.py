@@ -11,4 +11,6 @@ urlpatterns = [
     path('<int:id>/delete', delete, name='teacher_delete'),
     #
     path('getDataFromDB/', getDataFromDB, name='getDataFromDB'),
+    # path('<slug:slug>/update', test_for_forms, name='teacher_update'),
+    path('my_test_process/', my_test_process, name='my_test_process'),
 ]
