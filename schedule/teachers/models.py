@@ -129,3 +129,17 @@ class Program(models.Model):
 
     def __str__(self):
         return f'{self.class_id} - {self.discipline_id} ({self.load} hours)'
+
+
+
+class TeacherSubjectClass(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='Преподаватель')
+    _class = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
+    subject = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
+
+    class Meta:
+        verbose_name = 'Учитель-Предмет-Класс'
+        verbose_name_plural = 'Учителя-Предметы-Классы'
+
+    def __str__(self):
+        return f'{self.teacher_id} - {self.subject_id} - {self.class_id}'

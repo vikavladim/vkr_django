@@ -105,9 +105,42 @@ function setListeners() {
 
 
 function handleFormSubmit(event) {
-    console.log("вот мы типа в обработчике формы")
-    // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
-    // var form = document.body.querySelectorAll('form');
-    var form = document.body.querySelectorAll('select[id^="id_select-"][id$="to"]');
-    console.log(form);
+    event.preventDefault(); // Предотвращение стандартного поведения отправки формы
+    var selects = document.body.querySelectorAll('select[id^="id_select-"][id$="to"]');
+    // var selectOptions = {};
+    var selectOptions = [];
+
+    selects.forEach(function (select) {
+        var options = Array.from(select.options).map(function (option) {
+            return option.value;
+        });
+
+        // selectOptions[select.id] = {
+        //     'id_subject': select.id,
+        //     'id_subjects': options
+        // };
+        selectOptions.push({
+            'id_subject': parseInt(select.id.match(/\d+/)[0]),
+            'classes': options
+        })
+    });
+
+    console.log(selectOptions);
+    var data = {
+        'teacher_id': document.getElementById('objectId').value,
+        'array': selectOptions,
+    };
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/teachers/my_test_process/', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('AJAX request successful');
+        }
+    };
+
+    xhr.send(JSON.stringify(data));
 }

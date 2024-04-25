@@ -1,11 +1,14 @@
+import json
+
 from django.http import HttpResponse, HttpResponseNotFound, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 
 from teachers.forms import TeacherForm
-from teachers.models import Teacher, Class, Discipline
+from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass
 from teachers.utils import DateMixin
 
 
@@ -49,7 +52,10 @@ class UpdateTeacher(DateMixin, UpdateView):
 
         # print(classes_by_subjects)
 
-        return self.get_mixin_context(context, teacher=context['teacher'], title=context['teacher'].fio,
+        return self.get_mixin_context(context,
+                                      teacher=context['teacher'],
+                                      title=context['teacher'].fio,
+                                      id=context['teacher'].id,
                                       classes_by_subjects=classes_by_subjects,
                                       menu_selected=self.request.path, **kwargs)
 
@@ -135,10 +141,20 @@ def test_for_forms(request, slug):
         return render(request, 'teachers/update.html', context={'form': form})
 
 
+@csrf_exempt
 def my_test_process(request):
-    # if request.method == 'POST':
-    #     greetings = request.POST.get('form')
-    #     # data = greetings.POST.getlist('id_select-3_to')
-    #     print(greetings)
-    #     return render(request, 'teachers/all.html', )
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        array = data.get('array')
+        teacher_id = data.get('teacher_id')
+        # print(teacher)
+        # print(array)
+        for subject in array:
+            for class_id in subject['classes']:
+                TeacherSubjectClass.objects.create(
+                    teacher=get_object_or_404(Teacher, id=teacher_id),
+                    subject=get_object_or_404(Discipline, id=subject['id_subject']),
+                    _class=get_object_or_404(Class, id=class_id),
+                )
+
     return HttpResponse('ok')
