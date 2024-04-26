@@ -104,18 +104,18 @@ class Discipline(models.Model):
         }
 
 
-class Subgroup(models.Model):
-    class_id = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
-    group_number = models.IntegerField(verbose_name='Номер группы')
-    discipline_id = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
-    teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='Преподаватель')
-
-    class Meta:
-        verbose_name = 'Подгруппа'
-        verbose_name_plural = 'Подгруппы'
-
-    def __str__(self):
-        return f'{self.class_id} - {self.discipline_id} - Group {self.group_number}'
+# class Subgroup(models.Model):
+#     class_id = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
+#     group_number = models.IntegerField(verbose_name='Номер группы')
+#     discipline_id = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
+#     teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='Преподаватель')
+#
+#     class Meta:
+#         verbose_name = 'Подгруппа'
+#         verbose_name_plural = 'Подгруппы'
+#
+#     def __str__(self):
+#         return f'{self.class_id} - {self.discipline_id} - Group {self.group_number}'
 
 
 class Program(models.Model):
@@ -142,4 +142,4 @@ class TeacherSubjectClass(models.Model):
         verbose_name_plural = 'Учителя-Предметы-Классы'
 
     def __str__(self):
-        return f'{self.teacher_id} - {self.subject_id} - {self.class_id}'
+        return f'{self.teacher} - {self.subject} - {self._class}'

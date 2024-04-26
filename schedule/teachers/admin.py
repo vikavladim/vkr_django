@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from teachers.models import *
 
 admin.site.register(Discipline)
-admin.site.register(Subgroup)
+# admin.site.register(Subgroup)
 admin.site.register(Program)
 
 

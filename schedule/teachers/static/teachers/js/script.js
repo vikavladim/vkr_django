@@ -25,12 +25,14 @@ function addOptions(options) {
         type: 'GET',
         url: '/teachers/getDataFromDB/',
         data: {
-            selectedValues: values
+            selectedValues: values,
+            teacherId: document.getElementById('teacherId').value
         },
         success: function (response) {
             response['array'].forEach(function (elem) {
                 subject = elem.subject;
                 classes = elem.classes;
+                selectedClasses = elem.selectedClassesId;
 
                 var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
                 var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
@@ -38,6 +40,9 @@ function addOptions(options) {
 
                 classes.forEach(function (classObj) {
                     var optionElement = $('<option value="' + classObj.id + '">' + classObj.str + '</option>');
+                    if (selectedClasses.includes(classObj.id)) {
+                        optionElement.attr('selected', 'selected');
+                    }
                     selectElement.append(optionElement);
                 });
 
@@ -127,7 +132,7 @@ function handleFormSubmit(event) {
 
     console.log(selectOptions);
     var data = {
-        'teacher_id': document.getElementById('objectId').value,
+        'teacher_id': document.getElementById('teacherId').value,
         'array': selectOptions,
     };
 

@@ -43,12 +43,12 @@ class UpdateTeacher(DateMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        classes_by_subjects = {}
-        subjects = context['teacher'].subject.all()
-
-        for subject in subjects:
-            classes = Class.objects.filter(subject=subject)
-            classes_by_subjects[subject] = list(classes)
+        # classes_by_subjects = {}
+        # subjects = context['teacher'].subject.all()
+        #
+        # for subject in subjects:
+        #     classes = Class.objects.filter(subject=subject)
+        #     classes_by_subjects[subject] = list(classes)
 
         # print(classes_by_subjects)
 
@@ -56,7 +56,7 @@ class UpdateTeacher(DateMixin, UpdateView):
                                       teacher=context['teacher'],
                                       title=context['teacher'].fio,
                                       id=context['teacher'].id,
-                                      classes_by_subjects=classes_by_subjects,
+                                      # classes_by_subjects=classes_by_subjects,
                                       menu_selected=self.request.path, **kwargs)
 
     def form_valid(self, form):
@@ -110,35 +110,26 @@ class TeacherListView(DateMixin, ListView):
 #     return render(request, 'teachers/create_list.html', context=context)
 
 def getDataFromDB(request):
-    selectedValues = request.GET.getlist('selectedValues[]')
+    selected_values = request.GET.getlist('selectedValues[]')
+    teacher_id = request.GET.get('teacherId')
+    teacher = get_object_or_404(Teacher, id=teacher_id)
 
     classes_by_subjects = {'array': [], }
 
-    for selectedValue in selectedValues:
+    for selectedValue in selected_values:
         subject = get_object_or_404(Discipline, id=selectedValue)
         classes_with_subject = Class.objects.filter(subject=subject)
+        selected_classes_strs = TeacherSubjectClass.objects.filter(subject=subject, teacher=teacher)
 
         subject_data = {
             'subject': subject.serializable,
-            'classes': [cls.serializable for cls in classes_with_subject]
+            'classes': [cls.serializable for cls in classes_with_subject],
+            'selectedClassesId': [selected_str._class.id for selected_str in selected_classes_strs],
         }
 
         classes_by_subjects['array'].append(subject_data)
 
     return JsonResponse(classes_by_subjects)
-
-
-def test_for_forms(request, slug):
-    # print('hello')
-    if request.method == 'POST':
-        greetings = request.POST.getlist('form')
-        data = greetings.POST.getlist('id_select-3_to')
-        print(greetings)
-        return render(request, 'teachers/all.html', )
-    else:
-        teacher = get_object_or_404(Teacher, slug=slug)
-        form = TeacherForm(instance=teacher)
-        return render(request, 'teachers/update.html', context={'form': form})
 
 
 @csrf_exempt
