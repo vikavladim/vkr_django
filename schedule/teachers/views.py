@@ -43,30 +43,15 @@ class UpdateTeacher(DateMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # classes_by_subjects = {}
-        # subjects = context['teacher'].subject.all()
-        #
-        # for subject in subjects:
-        #     classes = Class.objects.filter(subject=subject)
-        #     classes_by_subjects[subject] = list(classes)
-
-        # print(classes_by_subjects)
-
         return self.get_mixin_context(context,
                                       teacher=context['teacher'],
                                       title=context['teacher'].fio,
                                       id=context['teacher'].id,
-                                      # classes_by_subjects=classes_by_subjects,
                                       menu_selected=self.request.path, **kwargs)
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        # form_values = {field: getattr(form.instance, field) for field in form.fields}
-        #
-        # print(form_values)
-        # print(form)
-
-        return response
+    # def form_valid(self, form):
+    #     response = super().form_valid(form)
+    #     return response
 
 
 def delete(request, id):
@@ -91,23 +76,6 @@ class TeacherListView(DateMixin, ListView):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
 
-
-# def create_second_lists(request):
-#     if request.method == 'POST':
-#         form = TeacherFormSet(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('/teachers')
-#         else:
-#             print(form.errors)
-#     else:
-#         form = TeacherFormSet()
-#
-#     context = {
-#         'formset': form,
-#         'menu_selected': request.path,
-#     }
-#     return render(request, 'teachers/create_list.html', context=context)
 
 def getDataFromDB(request):
     selected_values = request.GET.getlist('selectedValues[]')
@@ -136,16 +104,58 @@ def getDataFromDB(request):
 def my_test_process(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        array = data.get('array')
+        subjects_array = data.get('array')
         teacher_id = data.get('teacher_id')
-        # print(teacher)
-        # print(array)
-        for subject in array:
+        teacher = get_object_or_404(Teacher, id=teacher_id)
+        old_objects = TeacherSubjectClass.objects.filter(teacher=teacher)
+        new_objects = []
+
+        for subject in subjects_array:
             for class_id in subject['classes']:
-                TeacherSubjectClass.objects.create(
-                    teacher=get_object_or_404(Teacher, id=teacher_id),
+                new_objects.append(TeacherSubjectClass(
+                    teacher=teacher,
                     subject=get_object_or_404(Discipline, id=subject['id_subject']),
                     _class=get_object_or_404(Class, id=class_id),
-                )
+                ))
+
+        # set_old = set(old_objects)
+        # set_new = set(new_objects)
+        #
+        # deleted_objects = set_old - set_new
+        # added_objects = set_new - set_old
+
+        deleted_objects = [obj for obj in old_objects if obj not in new_objects]
+        added_objects = [obj for obj in new_objects if obj not in old_objects]
+        print('deleted', deleted_objects)
+        print('  added', added_objects)
+        # deleted_objects = []
+        # added_objects = []
+        #
+        # for obj_old in old_objects:
+        #     found = False
+        #     for obj_new in new_objects:
+        #         if obj_old == obj_new:
+        #             # print('found', obj_old)
+        #             found = True
+        #             break
+        #     if not found:
+        #         deleted_objects.append(obj_old)
+        #
+        # for obj_new in new_objects:
+        #     found = False
+        #     for obj_old in old_objects:
+        #         if obj_old == obj_new:
+        #             # print('found', obj_new)
+        #             found = True
+        #             break
+        #     if not found:
+        #         added_objects.append(obj_new)
+        #
+        # print('deleted', deleted_objects)
+        # print('  added', added_objects)
+        #
+        # deleted_objects_ids = [obj.id for obj in deleted_objects]
+        # TeacherSubjectClass.objects.filter(id__in=deleted_objects_ids).delete()
+        # TeacherSubjectClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')

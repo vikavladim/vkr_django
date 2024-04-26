@@ -140,6 +140,17 @@ class TeacherSubjectClass(models.Model):
     class Meta:
         verbose_name = 'Учитель-Предмет-Класс'
         verbose_name_plural = 'Учителя-Предметы-Классы'
+        indexes = [
+            models.Index(fields=['teacher', '_class', 'subject'], name='unique_teacher_class_subject'),
+        ]
 
     def __str__(self):
         return f'{self.teacher} - {self.subject} - {self._class}'
+
+    def __eq__(self, other):
+        if isinstance(other, TeacherSubjectClass):
+            # Сравниваем поля или атрибуты объектов на равенство
+            return (self.teacher == other.teacher and
+                    self.subject == other.subject and
+                    self._class == other._class)
+        return NotImplemented
