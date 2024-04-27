@@ -1,15 +1,15 @@
 import io
 
 from django.forms import forms, widgets
-from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseNotFound, Http404, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, UpdateView
 from pytils.translit import slugify
 from xlsxwriter import Workbook
 
 from schedule.forms import AddClassForm, ClassFormSet, SubjectFormSet
-from teachers.models import Teacher, Class, Discipline
+from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass
 
 import pandas as pd
 
@@ -23,6 +23,7 @@ menus = [
     {'url': '/schedule', 'title': 'Расписание'},
     {'url': '/admin', 'title': 'Админка'},
 ]
+
 
 class HomeView(TemplateView):
     template_name = 'main_base.html'
@@ -118,13 +119,21 @@ class UpdateClass(DateMixin, UpdateView):
     model = Class
     template_name = 'classes/update.html'
     context_object_name = 'class'
-    fields = ['letter', 'slug', 'digit', 'subject']
+    fields = ['digit', 'letter', 'subject']
     success_url = reverse_lazy('classes')
+
     # form_class = UpdateClassForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(context, title=context['class'], menu_selected=self.request.path, **kwargs)
+        return self.get_mixin_context(
+            context,
+            title=context['class'],
+            menu_selected=self.request.path,
+            id=context['class'].id,
+            **kwargs
+        )
+
 
 def create_subject(request):
     for o in Discipline.objects.all():
@@ -146,3 +155,26 @@ def create_subject(request):
         'menu_selected': request.path,
     }
     return render(request, 'subjects/all.html', context=context)
+
+
+def getTeachersFromDB(request):
+    selected_values = request.GET.getlist('selectedValues[]')
+    obj_id = request.GET.get('classId')
+    obj = get_object_or_404(Class, id=obj_id)
+
+    teachers_by_subjects = {'array': [], }
+
+    for selectedValue in selected_values:
+        subject = get_object_or_404(Discipline, id=selectedValue)
+        teachers = Teacher.objects.filter(subject=subject)
+        selected_teacher_strs = TeacherSubjectClass.objects.filter(subject=subject, _class=obj).first()
+
+        subject_data = {
+            'subject': subject.serializable,
+            'teachers': [t.serializable for t in teachers],
+            'selectedTeacherId': selected_teacher_strs.teacher.id if selected_teacher_strs else None,
+        }
+
+        teachers_by_subjects['array'].append(subject_data)
+
+    return JsonResponse(teachers_by_subjects)

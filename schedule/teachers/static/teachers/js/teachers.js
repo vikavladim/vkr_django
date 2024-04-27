@@ -133,7 +133,7 @@ function handleFormSubmit(event) {
 
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/teachers/my_test_process/', true);
+    xhr.open('POST', '/teachers/classes_field_form/', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onreadystatechange = function () {

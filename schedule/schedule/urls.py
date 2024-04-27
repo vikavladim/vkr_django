@@ -24,7 +24,8 @@ urlpatterns = [
     path('export_to_excel/', export_to_excel),
     # path('create_class/', create_class),
     # path('classes/<slug:slug>/update', DetailClass.as_view(), name='class_read'),
-    path('classes/<slug:slug>/update', UpdateClass.as_view(), name='class_update'),
+    path('classes/<slug:slug>/update/', UpdateClass.as_view(), name='class_update'),
+    path('classes/getTeachersFromDB/', getTeachersFromDB, name='getTeachersFromDB'),
 ]
 
 if settings.DEBUG:

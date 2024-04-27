@@ -6,8 +6,6 @@ from django.template import RequestContext
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
-
-from teachers.forms import TeacherForm
 from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass
 from teachers.utils import DateMixin
 
@@ -48,10 +46,6 @@ class UpdateTeacher(DateMixin, UpdateView):
                                       title=context['teacher'].fio,
                                       id=context['teacher'].id,
                                       menu_selected=self.request.path, **kwargs)
-
-    # def form_valid(self, form):
-    #     response = super().form_valid(form)
-    #     return response
 
 
 def delete(request, id):
@@ -101,7 +95,7 @@ def getDataFromDB(request):
 
 
 @csrf_exempt
-def my_test_process(request):
+def classes_field_form(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         subjects_array = data.get('array')
@@ -120,6 +114,13 @@ def my_test_process(request):
 
         deleted_objects = [obj.id for obj in old_objects if obj not in new_objects]
         added_objects = [obj for obj in new_objects if obj not in old_objects]
+
+        all_objects = TeacherSubjectClass.objects.all()
+
+        for old_obj in all_objects:
+            for add_abj in added_objects:
+                if old_obj._class == add_abj._class and old_obj.subject == add_abj.subject:
+                    deleted_objects.append(old_obj.id)
 
         TeacherSubjectClass.objects.filter(id__in=deleted_objects).delete()
         TeacherSubjectClass.objects.bulk_create(added_objects)

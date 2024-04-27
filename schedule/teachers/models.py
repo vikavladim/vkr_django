@@ -35,6 +35,15 @@ class Teacher(models.Model):
 
         super(Teacher, self).save(*args, **kwargs)
 
+    @property
+    def serializable(self):
+        return {
+            'id': self.id,
+            'fio': self.fio,
+            'slug': self.slug,
+            'str': self.__str__()
+        }
+
 
 class Class(models.Model):
     digit = models.IntegerField(verbose_name='Цифра')
@@ -72,13 +81,13 @@ class Class(models.Model):
 
 class Discipline(models.Model):
     name = models.CharField(verbose_name='Название', max_length=255)
-    short_name = models.CharField(max_length=50, verbose_name='Краткое название',blank=True)
-    slug = models.SlugField(max_length=255, verbose_name='URL', unique=True,blank=True, db_index=True)
+    short_name = models.CharField(max_length=50, verbose_name='Краткое название', blank=True)
+    slug = models.SlugField(max_length=255, verbose_name='URL', unique=True, blank=True, db_index=True)
 
     class Meta:
         verbose_name = 'Дисциплина'
         verbose_name_plural = 'Дисциплины'
-        ordering = ['name',]
+        ordering = ['name', ]
 
     def __str__(self):
         return self.name
@@ -131,7 +140,6 @@ class Program(models.Model):
         return f'{self.class_id} - {self.discipline_id} ({self.load} hours)'
 
 
-
 class TeacherSubjectClass(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='Преподаватель')
     _class = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
@@ -141,7 +149,7 @@ class TeacherSubjectClass(models.Model):
         verbose_name = 'Учитель-Предмет-Класс'
         verbose_name_plural = 'Учителя-Предметы-Классы'
         indexes = [
-            models.Index(fields=['teacher', '_class', 'subject'], name='unique_teacher_class_subject'),
+            models.Index(fields=['_class', 'subject'], name='unique_class_subject'),
         ]
 
     def __str__(self):
@@ -150,7 +158,9 @@ class TeacherSubjectClass(models.Model):
     def __eq__(self, other):
         if isinstance(other, TeacherSubjectClass):
             # Сравниваем поля или атрибуты объектов на равенство
-            return (self.teacher == other.teacher and
+            return (
+                    self.teacher == other.teacher and
                     self.subject == other.subject and
-                    self._class == other._class)
+                    self._class == other._class
+            )
         return NotImplemented
