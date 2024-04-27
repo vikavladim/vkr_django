@@ -52,6 +52,7 @@ function addOptions(options) {
                 pElement.append(selectElement);
 
                 $('#form').append(pElement);
+                //нужно в id видимо написать русское слово в .str
                 SelectFilter.init("id_select-" + subject.id, "select-" + subject.id, 0, "/static/admin/");
             });
         },

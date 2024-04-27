@@ -16,7 +16,6 @@ observer.observe(document, config);
 
 //Отправка выбранных функций и изменение контента
 function addOptions(options) {
-    console.log(options);
     values = [];
     options = Array.from(options);
     options.forEach(function (option) {
@@ -38,6 +37,7 @@ function addOptions(options) {
                 var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
                 var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
                 var selectElement = $('<select name="select-' + subject.id + '" id="id_select-' + subject.id + '">');
+                selectElement.append($('<option>Не выбрано</option>'));
 
                 teachers.forEach(function (teacher) {
                     var optionElement = $('<option value="' + teacher.id + '">' + teacher.str + '</option>');
