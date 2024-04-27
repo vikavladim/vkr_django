@@ -118,44 +118,10 @@ def my_test_process(request):
                     _class=get_object_or_404(Class, id=class_id),
                 ))
 
-        # set_old = set(old_objects)
-        # set_new = set(new_objects)
-        #
-        # deleted_objects = set_old - set_new
-        # added_objects = set_new - set_old
-
-        deleted_objects = [obj for obj in old_objects if obj not in new_objects]
+        deleted_objects = [obj.id for obj in old_objects if obj not in new_objects]
         added_objects = [obj for obj in new_objects if obj not in old_objects]
-        print('deleted', deleted_objects)
-        print('  added', added_objects)
-        # deleted_objects = []
-        # added_objects = []
-        #
-        # for obj_old in old_objects:
-        #     found = False
-        #     for obj_new in new_objects:
-        #         if obj_old == obj_new:
-        #             # print('found', obj_old)
-        #             found = True
-        #             break
-        #     if not found:
-        #         deleted_objects.append(obj_old)
-        #
-        # for obj_new in new_objects:
-        #     found = False
-        #     for obj_old in old_objects:
-        #         if obj_old == obj_new:
-        #             # print('found', obj_new)
-        #             found = True
-        #             break
-        #     if not found:
-        #         added_objects.append(obj_new)
-        #
-        # print('deleted', deleted_objects)
-        # print('  added', added_objects)
-        #
-        # deleted_objects_ids = [obj.id for obj in deleted_objects]
-        # TeacherSubjectClass.objects.filter(id__in=deleted_objects_ids).delete()
-        # TeacherSubjectClass.objects.bulk_create(added_objects)
+
+        TeacherSubjectClass.objects.filter(id__in=deleted_objects).delete()
+        TeacherSubjectClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')

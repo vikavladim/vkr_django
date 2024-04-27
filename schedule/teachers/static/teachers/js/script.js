@@ -108,11 +108,10 @@ function setListeners() {
     });
 }
 
-
+// обработчик формы, отправляет дополнительные поля
 function handleFormSubmit(event) {
-    event.preventDefault(); // Предотвращение стандартного поведения отправки формы
+    // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
     var selects = document.body.querySelectorAll('select[id^="id_select-"][id$="to"]');
-    // var selectOptions = {};
     var selectOptions = [];
 
     selects.forEach(function (select) {
@@ -120,10 +119,6 @@ function handleFormSubmit(event) {
             return option.value;
         });
 
-        // selectOptions[select.id] = {
-        //     'id_subject': select.id,
-        //     'id_subjects': options
-        // };
         selectOptions.push({
             'id_subject': parseInt(select.id.match(/\d+/)[0]),
             'classes': options
