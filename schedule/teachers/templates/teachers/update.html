@@ -3,18 +3,22 @@
 
 {%block exta_head%}
 {% include 'classes/admin_includes.html' %}
-<script type="text/javascript" src="{% static '/teachers/js/teachers.js' %}?v={{ generate_unique_hash_or_timestamp"></script>
+<script type="text/javascript"
+        src="{% static '/teachers/js/teachers.js' %}?v={{ generate_unique_hash_or_timestamp"></script>
 {% endblock %}
 
 {% block content %}
 <h1 class="section__heading">{{title}}</h1>
 <form method="post" enctype="multipart/form-data" id="form" onsubmit="handleFormSubmit(event)">
-      <input type="hidden" id="teacherId" name="objectId" value="{{ id }}">
-
+    {% if id %}
+    <input type="hidden" id="teacherId" name="objectId" value="{{ id }}">
+    {% endif %}
     <p>
         <button type="submit">Отправить</button>
     </p>
-    <img src="{{ teacher.photo.url }}" alt="{{ teacher.fio }} photo" style=" max-height: 200px;">
+    {% if teacher.photo %}
+    <img src="{{ teacher.photo.url }}" alt="{{ teacher.fio }} photo" style="max-height: 200px;">
+    {% endif %}
     {% csrf_token %}
     {{ form.as_p }}
 

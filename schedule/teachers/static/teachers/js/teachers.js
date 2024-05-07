@@ -24,7 +24,7 @@ function addOptions(options) {
         url: '/teachers/getDataFromDB/',
         data: {
             selectedValues: values,
-            teacherId: document.getElementById('teacherId').value
+            teacherId:  document.getElementById('teacherId') ? document.getElementById('teacherId').value : null
         },
         success: function (response) {
             response['array'].forEach(function (elem) {

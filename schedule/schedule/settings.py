@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'schedule.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'schedule2',
+        'NAME': 'schedule3',
         'USER': 'postgres',
         'PASSWORD': '32767',
         'HOST': 'localhost',

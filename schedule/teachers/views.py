@@ -11,7 +11,7 @@ from teachers.utils import DateMixin
 
 
 class AddTeacher(DateMixin, CreateView):
-    template_name = 'teachers/create.html'
+    template_name = 'teachers/update.html'
     model = Teacher
     fields = ['fio', 'room', 'photo', 'subject']
     title = 'Создание учителя'
@@ -63,7 +63,8 @@ class TeacherListView(DateMixin, ListView):
 def getDataFromDB(request):
     selected_values = request.GET.getlist('selectedValues[]')
     teacher_id = request.GET.get('teacherId')
-    teacher = get_object_or_404(Teacher, id=teacher_id)
+    teacher = get_object_or_404(Teacher, id=teacher_id) if teacher_id else None
+
 
     classes_by_subjects = {'array': [], }
 
