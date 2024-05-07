@@ -21,17 +21,6 @@ class AddTeacher(DateMixin, CreateView):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
 
-
-# class DetailTeacher(DateMixin, DetailView):
-#     model = Teacher
-#     template_name = 'teachers/update.html'
-#     context_object_name = 'teacher'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         return self.get_mixin_context(context, title=context['teacher'].fio, menu_selected=self.request.path, **kwargs)
-
-
 class UpdateTeacher(DateMixin, UpdateView):
     model = Teacher
     fields = ['fio', 'room', 'photo', 'subject']

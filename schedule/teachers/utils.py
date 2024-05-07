@@ -12,6 +12,5 @@ class DateMixin:
             self.extra_context['selected_menu'] = self.selected_menu
 
     def get_mixin_context(self, context, **kwargs):
-        # context['selected_menu'] = None
         context.update(**kwargs)
         return context

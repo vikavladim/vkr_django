@@ -41,7 +41,7 @@ function addOptions(options) {
 
                 teachers.forEach(function (teacher) {
                     var optionElement = $('<option value="' + teacher.id + '">' + teacher.str + '</option>');
-                    if (teacher.id===selectedTeacherId) {
+                    if (teacher.id === selectedTeacherId) {
                         optionElement.attr('selected', 'selected');
                     }
                     selectElement.append(optionElement);
@@ -49,8 +49,15 @@ function addOptions(options) {
 
                 container = document.getElementById("form");
 
+                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week'+subject.id+'" value="1" min="1">');
+                var hoursLabel = $('<label for="hours-week">Часов в неделю:</label>');
+                
                 pElement.append(labelElement);
                 pElement.append(selectElement);
+
+
+                pElement.append(hoursLabel);
+                pElement.append(hoursInput);
 
                 $('#form').append(pElement);
             });

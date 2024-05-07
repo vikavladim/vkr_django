@@ -5,7 +5,6 @@ from django.db import models
 from django.urls import reverse
 from pytils.translit import slugify
 
-# нужно добавить сокращения предметов
 from django.db import models
 from django.urls import reverse
 
@@ -49,6 +48,7 @@ class Class(models.Model):
     digit = models.IntegerField(verbose_name='Цифра')
     letter = models.CharField(max_length=1, verbose_name='Буква')
     subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
+    # subject = models.ManyToManyField('Discipline', through='Program', blank=True, verbose_name='Предметы')
     slug = models.SlugField(max_length=255, unique=True, verbose_name='URL', db_index=True)
 
     class Meta:
@@ -128,16 +128,16 @@ class Discipline(models.Model):
 
 
 class Program(models.Model):
-    class_id = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
-    discipline_id = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
-    load = models.IntegerField(verbose_name='Нагрузка')
+    cls = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
+    discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
+    load = models.IntegerField(verbose_name='Нагрузка',blank=True, null=True)
 
     class Meta:
         verbose_name = 'Программа'
         verbose_name_plural = 'Программы'
 
     def __str__(self):
-        return f'{self.class_id} - {self.discipline_id} ({self.load} hours)'
+        return f'{self.cls} - {self.discipline} ({self.load} hours)'
 
 
 class TeacherSubjectClass(models.Model):

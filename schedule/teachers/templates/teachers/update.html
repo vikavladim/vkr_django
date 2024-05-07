@@ -14,7 +14,7 @@
     <p>
         <button type="submit">Отправить</button>
     </p>
-    <img src="{{ form.photo.url }}" alt="{{ teacher.fio }} photo">
+    <img src="{{ teacher.photo.url }}" alt="{{ teacher.fio }} photo" style=" max-height: 200px;">
     {% csrf_token %}
     {{ form.as_p }}
 
@@ -27,7 +27,7 @@
 
 <script type="text/javascript">
     $(window).on('load', function (e) {
-        SelectFilter.init("id_subject", "subject", 0, "/static/admin/");
+        SelectFilter.init("id_subject", "предметы", 0, "/static/admin/");
     });
 </script>
 

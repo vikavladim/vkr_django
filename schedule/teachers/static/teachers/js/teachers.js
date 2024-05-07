@@ -1,6 +1,4 @@
-// Ожидание появление списка предметов на странице
-const targetElement = document.getElementById('id_subject_to');
-
+// Ожидание появления списка предметов на странице
 const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach(mutation => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
@@ -35,7 +33,7 @@ function addOptions(options) {
                 selectedClasses = elem.selectedClassesId;
 
                 var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
-                var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
+                var labelElement = $('<label for="select-' + subject.id + '">' + subject.id + '</label>');
                 var selectElement = $('<select name="select-' + subject.id + '" multiple id="id_select-' + subject.id + '">');
 
                 classes.forEach(function (classObj) {
@@ -52,8 +50,7 @@ function addOptions(options) {
                 pElement.append(selectElement);
 
                 $('#form').append(pElement);
-                //нужно в id видимо написать русское слово в .str
-                SelectFilter.init("id_select-" + subject.id, "select-" + subject.id, 0, "/static/admin/");
+                SelectFilter.init("id_select-" + subject.id, "классы для "+subject.str, 0, "/static/admin/");
             });
         },
         error: function (err) {
@@ -126,7 +123,6 @@ function handleFormSubmit(event) {
         })
     });
 
-    console.log(selectOptions);
     var data = {
         'teacher_id': document.getElementById('teacherId').value,
         'array': selectOptions,

@@ -35,8 +35,6 @@ class HomeView(TemplateView):
 def classes(request):
     print(request.path)
     context = {
-        # 'upper_menu': upper_menu,
-        # 'sidebar_menu': sidebar_menu_base,
         'menu_selected': request.path,
     }
     return render(request, 'classes.html', context)

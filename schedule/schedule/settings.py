@@ -83,21 +83,9 @@ WSGI_APPLICATION = 'schedule.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': BASE_DIR / 'schedule',
-    #     'USER': 'postgres',
-    #     'PASSWORD': '32767',
-    #     'HOST': 'localhost',
-    #     'PORT': '3333',
-    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'schedule',
+        'NAME': 'schedule2',
         'USER': 'postgres',
         'PASSWORD': '32767',
         'HOST': 'localhost',
