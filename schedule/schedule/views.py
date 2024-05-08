@@ -168,11 +168,13 @@ def getTeachersFromDB(request):
         subject = get_object_or_404(Discipline, id=selectedValue)
         teachers = Teacher.objects.filter(subject=subject)
         selected_teacher_strs = TeacherSubjectClass.objects.filter(subject=subject, _class=obj).first()
+        load = Program.objects.filter(cls=obj, discipline=subject).first()
 
         subject_data = {
             'subject': subject.serializable,
             'teachers': [t.serializable for t in teachers],
             'selectedTeacherId': selected_teacher_strs.teacher.id if selected_teacher_strs else None,
+            'load': load.load if load else None
         }
 
         teachers_by_subjects['array'].append(subject_data)
