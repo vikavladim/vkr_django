@@ -26,6 +26,7 @@ urlpatterns = [
     # path('classes/<slug:slug>/update', DetailClass.as_view(), name='class_read'),
     path('classes/<slug:slug>/update/', UpdateClass.as_view(), name='class_update'),
     path('classes/getTeachersFromDB/', getTeachersFromDB, name='getTeachersFromDB'),
+    path('classes/teachers_field_form/', teachers_field_form, name='teachers_field_form'),
 ]
 
 if settings.DEBUG:

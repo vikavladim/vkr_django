@@ -1,15 +1,17 @@
 import io
+import json
 
 from django.forms import forms, widgets
 from django.http import HttpResponse, HttpResponseNotFound, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, DetailView, UpdateView
 from pytils.translit import slugify
 from xlsxwriter import Workbook
 
 from schedule.forms import AddClassForm, ClassFormSet, SubjectFormSet
-from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass
+from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass, Program
 
 import pandas as pd
 
@@ -176,3 +178,45 @@ def getTeachersFromDB(request):
         teachers_by_subjects['array'].append(subject_data)
 
     return JsonResponse(teachers_by_subjects)
+
+@csrf_exempt
+def teachers_field_form(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        subjects_array = data.get('array')
+        class_id = data.get('class_id')
+        cls = get_object_or_404(Class, id=class_id)
+        old_objects = TeacherSubjectClass.objects.filter(_class=cls)
+        new_objects = []
+
+        for subject in subjects_array:
+            sub = get_object_or_404(Discipline, id=subject['id_subject'])
+
+            program_obj, created = Program.objects.get_or_create(cls=cls, discipline=sub)
+            program_obj.load = subject['hours_week']
+            program_obj.save()
+
+            if subject['teacher']:
+                new_objects.append(TeacherSubjectClass(
+                    teacher=get_object_or_404(Teacher,id=subject['teacher']),
+                    subject=sub,
+                    _class=cls,
+                ))
+            else:
+                old_objects.filter(subject=sub, _class=cls).delete()
+
+
+        deleted_objects = [obj.id for obj in old_objects if obj not in new_objects]
+        added_objects = [obj for obj in new_objects if obj not in old_objects]
+
+        all_objects = TeacherSubjectClass.objects.all()
+
+        for old_obj in all_objects:
+            for add_abj in added_objects:
+                if old_obj._class == add_abj._class and old_obj.subject == add_abj.subject:
+                    deleted_objects.append(old_obj.id)
+
+        TeacherSubjectClass.objects.filter(id__in=deleted_objects).delete()
+        TeacherSubjectClass.objects.bulk_create(added_objects)
+
+    return HttpResponse('ok')

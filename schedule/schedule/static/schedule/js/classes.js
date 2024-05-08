@@ -37,7 +37,7 @@ function addOptions(options) {
                 var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
                 var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
                 var selectElement = $('<select name="select-' + subject.id + '" id="id_select-' + subject.id + '">');
-                selectElement.append($('<option>Не выбрано</option>'));
+                selectElement.append($('<option value="0">Не выбрано</option>'));
 
                 teachers.forEach(function (teacher) {
                     var optionElement = $('<option value="' + teacher.id + '">' + teacher.str + '</option>');
@@ -49,9 +49,9 @@ function addOptions(options) {
 
                 container = document.getElementById("form");
 
-                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week'+subject.id+'" value="1" min="1">');
+                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + subject.id + '" value="1" min="1">');
                 var hoursLabel = $('<label for="hours-week">Часов в неделю:</label>');
-                
+
                 pElement.append(labelElement);
                 pElement.append(selectElement);
 
@@ -116,38 +116,38 @@ function setListeners() {
 }
 
 // обработчик формы, отправляет дополнительные поля
-// function handleFormSubmit(event) {
-//     // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
-//     var selects = document.body.querySelectorAll('select[id^="id_select-"][id$="to"]');
-//     var selectOptions = [];
-//
-//     selects.forEach(function (select) {
-//         var options = Array.from(select.options).map(function (option) {
-//             return option.value;
-//         });
-//
-//         selectOptions.push({
-//             'id_subject': parseInt(select.id.match(/\d+/)[0]),
-//             'classes': options
-//         })
-//     });
-//
-//     console.log(selectOptions);
-//     var data = {
-//         'teacher_id': document.getElementById('teacherId').value,
-//         'array': selectOptions,
-//     };
-//
-//
-//     var xhr = new XMLHttpRequest();
-//     xhr.open('POST', '/teachers/classes_field_form/', true);
-//     xhr.setRequestHeader('Content-Type', 'application/json');
-//
-//     xhr.onreadystatechange = function () {
-//         if (xhr.readyState === 4 && xhr.status === 200) {
-//             console.log('AJAX request successful');
-//         }
-//     };
-//
-//     xhr.send(JSON.stringify(data));
-// }
+function handleFormSubmit(event) {
+    event.preventDefault(); // Предотвращение стандартного поведения отправки формы
+    var paragraphs = document.body.querySelectorAll('p[id^="p-select-"]');
+    console.log(paragraphs);
+    var selectOptions = [];
+
+    paragraphs.forEach(function (paragraph) {
+        var selectElement = paragraph.querySelector('select');
+        var selectedTeacher = selectElement.options[selectElement.selectedIndex].value;
+
+        selectOptions.push({
+            'id_subject': parseInt(paragraph.id.match(/\d+/)[0]),
+            'teacher': selectedTeacher === "0" ? null : selectedTeacher,
+            'hours_week': paragraph.querySelector('[id^="id_hours-week"]').value
+        })
+    });
+
+    var data = {
+        'class_id': document.getElementById('classId').value,
+        'array': selectOptions,
+    };
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/classes/teachers_field_form/', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('AJAX request successful');
+        }
+    };
+
+    xhr.send(JSON.stringify(data));
+}

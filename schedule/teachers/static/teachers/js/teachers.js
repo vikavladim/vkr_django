@@ -33,7 +33,7 @@ function addOptions(options) {
                 selectedClasses = elem.selectedClassesId;
 
                 var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
-                var labelElement = $('<label for="select-' + subject.id + '">' + subject.id + '</label>');
+                var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
                 var selectElement = $('<select name="select-' + subject.id + '" multiple id="id_select-' + subject.id + '">');
 
                 classes.forEach(function (classObj) {
