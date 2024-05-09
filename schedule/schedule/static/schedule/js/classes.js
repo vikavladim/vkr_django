@@ -33,7 +33,7 @@ function addOptions(options) {
                 subject = elem.subject;
                 teachers = elem.teachers;
                 selectedTeacherId = elem.selectedTeacherId;
-                load=elem.load;
+                let load = elem.load ? elem.load : 1;
 
                 var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
                 var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
@@ -50,7 +50,7 @@ function addOptions(options) {
 
                 container = document.getElementById("form");
 
-                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + subject.id + '" value="'+load+'" min="1">');
+                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + subject.id + '" value="' + load + '" min="1">');
                 var hoursLabel = $('<label for="hours-week">Часов в неделю:</label>');
 
                 pElement.append(labelElement);
