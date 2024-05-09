@@ -1,6 +1,6 @@
 // Ожидание появление списка предметов на странице
 // const targetElement = document.getElementById('id_subject_to');
- 6
+
 const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach(mutation => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
