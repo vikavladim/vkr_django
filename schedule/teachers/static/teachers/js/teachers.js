@@ -24,7 +24,7 @@ function addOptions(options) {
         url: '/teachers/getDataFromDB/',
         data: {
             selectedValues: values,
-            teacherId:  document.getElementById('teacherId') ? document.getElementById('teacherId').value : null
+            teacherId: document.getElementById('teacherId') ? document.getElementById('teacherId').value : null
         },
         success: function (response) {
             response['array'].forEach(function (elem) {
@@ -50,7 +50,16 @@ function addOptions(options) {
                 pElement.append(selectElement);
 
                 $('#form').append(pElement);
-                SelectFilter.init("id_select-" + subject.id, "классы для "+subject.str, 0, "/static/admin/");
+                SelectFilter.init("id_select-" + subject.id, "классы для " + subject.str, 0, "/static/admin/");
+
+                pElement = document.querySelector('#p-select-' + subject.id);
+                const divElement = pElement.querySelector('.selector');
+                const labelElement2 = pElement.querySelectorAll('label')[2];
+
+                console.log(divElement, labelElement2);
+                pElement.insertBefore(labelElement2, divElement);
+                labelElement2.style.fontSize = "16px";
+                labelElement2.style.fontWeight = "bold";
             });
         },
         error: function (err) {
@@ -62,6 +71,14 @@ function addOptions(options) {
 
 // Основная функция программы
 function setListeners() {
+    divElement = document.querySelector('div.selector');
+    pElement = divElement.parentNode;
+    const labelElement2 = pElement.querySelectorAll('label')[2];
+
+    pElement.insertBefore(labelElement2, divElement);
+    labelElement2.style.fontSize = "16px";
+    labelElement2.style.fontWeight = "bold";
+
     const selectorTo = document.querySelector('#id_subject_to');
 
     oldOptions = selectorTo.querySelectorAll('option');

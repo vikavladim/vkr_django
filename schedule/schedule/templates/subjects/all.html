@@ -18,9 +18,14 @@
         <tr>
             <td>{{ form.instance.id }}</td>
 
-            {% for field in form %}
+           {% for field in form %}
+            {% if field.is_hidden %}
+            {{ field }}
+            {% else %}
             <td>{{ field }}</td>
+            {% endif %}
             {% endfor %}
+
         </tr>
         {% endfor %}
     </table>

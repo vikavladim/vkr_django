@@ -1,6 +1,5 @@
-// Ожидание появление списка предметов на странице
 // const targetElement = document.getElementById('id_subject_to');
-
+// Ожидание появление списка предметов на странице
 const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach(mutation => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
@@ -72,6 +71,15 @@ function addOptions(options) {
 
 // Основная функция программы
 function setListeners() {
+    divElement=document.querySelector('div.selector');
+    pElement = divElement.parentNode;
+    const labelElement2 = pElement.querySelectorAll('label')[2];
+
+    pElement.insertBefore(labelElement2, divElement);
+    labelElement2.style.fontSize = "16px";
+    labelElement2.style.fontWeight = "bold";
+
+
     const selectorTo = document.querySelector('#id_subject_to');
 
     oldOptions = selectorTo.querySelectorAll('option');
