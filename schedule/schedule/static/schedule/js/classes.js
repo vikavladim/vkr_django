@@ -1,4 +1,3 @@
-// const targetElement = document.getElementById('id_subject_to');
 // Ожидание появление списка предметов на странице
 const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach(mutation => {
@@ -12,6 +11,8 @@ const observer = new MutationObserver((mutationsList, observer) => {
 
 const config = {childList: true, subtree: true};
 observer.observe(document, config);
+
+let selectorTo;
 
 //Отправка выбранных функций и изменение контента
 function addOptions(options) {
@@ -47,14 +48,11 @@ function addOptions(options) {
                     selectElement.append(optionElement);
                 });
 
-                container = document.getElementById("form");
-
                 var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + subject.id + '" value="' + load + '" min="1">');
                 var hoursLabel = $('<label for="hours-week">Часов в неделю:</label>');
 
                 pElement.append(labelElement);
                 pElement.append(selectElement);
-
 
                 pElement.append(hoursLabel);
                 pElement.append(hoursInput);
@@ -68,53 +66,50 @@ function addOptions(options) {
     });
 }
 
+// Обработчик выбора предметов в списке
+function handleSelectTo(mutationsList, observer) {
+    newOptions = selectorTo.querySelectorAll('option');
+    newOptions = Array.from(newOptions);
+
+    const addedOptions = [];
+    const removedOptions = [];
+
+    newOptions.forEach(el_A => {
+        if (!oldOptions.some(el_B => el_B.value === el_A.value)) {
+            addedOptions.push(el_A);
+        }
+    });
+
+    oldOptions.forEach(el_A => {
+        if (!newOptions.some(el_B => el_B.value === el_A.value)) {
+            removedOptions.push(el_A);
+        }
+    })
+
+    if (addedOptions.length > 0) {
+        addOptions(addedOptions);
+    }
+    if (removedOptions.length > 0) {
+        removedOptions.forEach(option => {
+            document.getElementById("p-select-" + option.value).remove();
+        });
+    }
+    oldOptions = newOptions;
+}
 
 // Основная функция программы
 function setListeners() {
-    divElement=document.querySelector('div.selector');
-    pElement = divElement.parentNode;
-    const labelElement2 = pElement.querySelectorAll('label')[2];
-
-    pElement.insertBefore(labelElement2, divElement);
+    const divElement = document.querySelector('div.selector');
+    const labelElement2 = divElement.nextElementSibling;
+    divElement.parentNode.insertBefore(labelElement2, divElement);
     labelElement2.style.fontSize = "16px";
     labelElement2.style.fontWeight = "bold";
 
-
-    const selectorTo = document.querySelector('#id_subject_to');
+    selectorTo = document.querySelector('#id_subject_to');
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
 
-    // Обработчик выбора предметов в списке
-    function handleSelectTo(mutationsList, observer) {
-        newOptions = selectorTo.querySelectorAll('option');
-        newOptions = Array.from(newOptions);
-
-        const addedOptions = [];
-        const removedOptions = [];
-
-        newOptions.forEach(el_A => {
-            if (!oldOptions.some(el_B => el_B.value === el_A.value)) {
-                addedOptions.push(el_A);
-            }
-        });
-
-        oldOptions.forEach(el_A => {
-            if (!newOptions.some(el_B => el_B.value === el_A.value)) {
-                removedOptions.push(el_A);
-            }
-        })
-
-        if (addedOptions.length > 0) {
-            addOptions(addedOptions);
-        }
-        if (removedOptions.length > 0) {
-            removedOptions.forEach(option => {
-                document.getElementById("p-select-" + option.value).remove();
-            });
-        }
-        oldOptions = newOptions;
-    }
 
     const observerTo = new MutationObserver(handleSelectTo);
     observerTo.observe(selectorTo, {childList: true});
