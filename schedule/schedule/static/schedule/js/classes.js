@@ -99,24 +99,18 @@ function handleSelectTo(mutationsList, observer) {
 
 // Основная функция программы
 function setListeners() {
-    const divElement = document.querySelector('div.selector');
-    const labelElement2 = divElement.nextElementSibling;
-    divElement.parentNode.insertBefore(labelElement2, divElement);
-    labelElement2.style.fontSize = "16px";
-    labelElement2.style.fontWeight = "bold";
-
     selectorTo = document.querySelector('#id_subject_to');
+
+    swapDivLabel(document.querySelector('div.selector'));
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
 
-
     const observerTo = new MutationObserver(handleSelectTo);
     observerTo.observe(selectorTo, {childList: true});
 
-    document.querySelectorAll('#id_subject_to').forEach(function (selectorTo) {
-        addOptions(selectorTo);
-    });
+    document.querySelectorAll('#id_subject_to')
+        .forEach(elem => addOptions(elem));
 }
 
 // обработчик формы, отправляет дополнительные поля

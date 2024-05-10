@@ -54,14 +54,7 @@ function addOptions(options) {
                 $('#form').append(pElement);
                 SelectFilter.init("id_select-" + subject.id, "классы для " + subject.str, 0, "/static/admin/");
 
-                pElement = document.querySelector('#p-select-' + subject.id);
-                const divElement = pElement.querySelector('.selector');
-                const labelElement2 = pElement.querySelectorAll('label')[2];
-
-                console.log(divElement, labelElement2);
-                pElement.insertBefore(labelElement2, divElement);
-                labelElement2.style.fontSize = "16px";
-                labelElement2.style.fontWeight = "bold";
+                swapDivLabel(document.querySelector(`#p-select-${subject.id} .selector`));
             });
         },
         error: function (err) {
@@ -101,21 +94,15 @@ function handleSelectTo(mutationsList, observer) {
     oldOptions = newOptions;
 }
 
-function swapDivLabel(divElement){
+function swapDivLabel(divElement) {
     labelElement = divElement.nextElementSibling;
     divElement.parentNode.insertBefore(labelElement, divElement);
     labelElement.style.fontSize = "16px";
     labelElement.style.fontWeight = "bold";
 }
 
-
 // Основная функция программы
 function setListeners() {
-    // const divElement = document.querySelector('div.selector');
-    // const labelElement2 = divElement.nextElementSibling;
-    // divElement.parentNode.insertBefore(labelElement2, divElement);
-    // labelElement2.style.fontSize = "16px";
-    // labelElement2.style.fontWeight = "bold";
     selectorTo = document.querySelector('#id_subject_to');
 
     swapDivLabel(document.querySelector('div.selector'));
@@ -126,9 +113,8 @@ function setListeners() {
     const observerTo = new MutationObserver(handleSelectTo);
     observerTo.observe(selectorTo, {childList: true});
 
-    document.querySelectorAll('#id_subject_to').forEach(function (selectorTo) {
-        addOptions(selectorTo);
-    });
+    document.querySelectorAll('#id_subject_to')
+        .forEach(elem => addOptions(elem));
 }
 
 // обработчик формы, отправляет дополнительные поля
