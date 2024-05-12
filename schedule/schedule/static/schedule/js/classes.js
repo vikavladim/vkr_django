@@ -1,18 +1,13 @@
-// Ожидание появление списка предметов на странице
-const observer = new MutationObserver((mutationsList, observer) => {
-    mutationsList.forEach(mutation => {
-        if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject_to')) {
-                setListeners();
-            }
-        }
-    });
-});
-
-const config = {childList: true, subtree: true};
-observer.observe(document, config);
+window.onload = setListeners;
 
 let selectorTo;
+
+function swapDivLabel(divElement) {
+    labelElement = divElement.nextElementSibling;
+    divElement.parentNode.insertBefore(labelElement, divElement);
+    labelElement.style.fontSize = "16px";
+    labelElement.style.fontWeight = "bold";
+}
 
 //Отправка выбранных функций и изменение контента
 function addOptions(options) {
@@ -66,25 +61,17 @@ function addOptions(options) {
     });
 }
 
+function differenceMassive(arr1, arr2) {
+    return arr1.filter(el => !arr2.some(el2 => el2.value === el.value));
+}
+
 // Обработчик выбора предметов в списке
 function handleSelectTo(mutationsList, observer) {
     newOptions = selectorTo.querySelectorAll('option');
     newOptions = Array.from(newOptions);
 
-    const addedOptions = [];
-    const removedOptions = [];
-
-    newOptions.forEach(el_A => {
-        if (!oldOptions.some(el_B => el_B.value === el_A.value)) {
-            addedOptions.push(el_A);
-        }
-    });
-
-    oldOptions.forEach(el_A => {
-        if (!newOptions.some(el_B => el_B.value === el_A.value)) {
-            removedOptions.push(el_A);
-        }
-    })
+    const addedOptions = differenceMassive(newOptions, oldOptions);
+    const removedOptions = differenceMassive(oldOptions, newOptions);
 
     if (addedOptions.length > 0) {
         addOptions(addedOptions);
@@ -99,9 +86,10 @@ function handleSelectTo(mutationsList, observer) {
 
 // Основная функция программы
 function setListeners() {
-    selectorTo = document.querySelector('#id_subject_to');
-
+    SelectFilter.init("id_subject", "предметы", 0, "/static/admin/");
     swapDivLabel(document.querySelector('div.selector'));
+
+    selectorTo = document.querySelector('#id_subject_to');
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
@@ -136,14 +124,17 @@ function handleFormSubmit(event) {
         'array': selectOptions,
     };
 
-
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/classes/teachers_field_form/', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('AJAX request successful');
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                // console.log('AJAX request successful');
+            } else {
+                console.error('AJAX request failed with status: ' + xhr.status);
+            }
         }
     };
 

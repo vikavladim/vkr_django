@@ -1,19 +1,4 @@
-// Ожидание появления списка предметов на странице
-// const observer = new MutationObserver((mutationsList, observer) => {
-//     mutationsList.forEach(mutation => {
-//         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-//             if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject_to')) {
-//                 setListeners();
-//             }
-//         }
-//     });
-// });
-//
-// const config = {childList: true, subtree: true};
-// observer.observe(document, config);
-
 window.onload = setListeners;
-
 
 let selectorTo;
 
@@ -79,18 +64,6 @@ function handleSelectTo(mutationsList, observer) {
     const addedOptions = differenceMassive(newOptions, oldOptions);
     const removedOptions = differenceMassive(oldOptions, newOptions);
 
-    // newOptions.forEach(el_A => {
-    //     if (!oldOptions.some(el_B => el_B.value === el_A.value)) {
-    //         addedOptions.push(el_A);
-    //     }
-    // });
-    //
-    // oldOptions.forEach(el_A => {
-    //     if (!newOptions.some(el_B => el_B.value === el_A.value)) {
-    //         removedOptions.push(el_A);
-    //     }
-    // })
-
     // if (addedOptions.length > 0) {//нужны ли эти проверки
     addOptions(addedOptions);
     // }
@@ -112,10 +85,9 @@ function swapDivLabel(divElement) {
 // Основная функция программы
 function setListeners() {
     SelectFilter.init("id_subject", "предметы", 0, "/static/admin/");
-    selectorTo = document.querySelector('#id_subject_to');
-
-    // console.log('ok');
     swapDivLabel(document.querySelector('div.selector'));
+
+    selectorTo = document.querySelector('#id_subject_to');
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
@@ -134,10 +106,6 @@ function handleFormSubmit(event) {
     var selectOptions = [];
 
     selects.forEach(function (select) {
-        // var options = Array.from(select.options).map(function (option) {
-        //     return option.value;
-        // });
-
         selectOptions.push({
             'id_subject': parseInt(select.id.match(/\d+/)[0]),
             'classes': Array.from(select.options).map(option => option.value)
