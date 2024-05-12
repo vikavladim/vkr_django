@@ -1,16 +1,19 @@
 // Ожидание появления списка предметов на странице
-const observer = new MutationObserver((mutationsList, observer) => {
-    mutationsList.forEach(mutation => {
-        if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject_to')) {
-                setListeners();
-            }
-        }
-    });
-});
+// const observer = new MutationObserver((mutationsList, observer) => {
+//     mutationsList.forEach(mutation => {
+//         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+//             if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject_to')) {
+//                 setListeners();
+//             }
+//         }
+//     });
+// });
+//
+// const config = {childList: true, subtree: true};
+// observer.observe(document, config);
 
-const config = {childList: true, subtree: true};
-observer.observe(document, config);
+window.onload = setListeners;
+
 
 let selectorTo;
 
@@ -63,30 +66,35 @@ function addOptions(options) {
     });
 }
 
+function differenceMassive(arr1, arr2) {
+    return arr1.filter(el => !arr2.some(el2 => el2.value === el.value));
+}
+
+
 // Обработчик выбора предметов в списке
 function handleSelectTo(mutationsList, observer) {
     newOptions = selectorTo.querySelectorAll('option');
     newOptions = Array.from(newOptions);
 
-    const addedOptions = [];
-    const removedOptions = [];
+    const addedOptions = differenceMassive(newOptions, oldOptions);
+    const removedOptions = differenceMassive(oldOptions, newOptions);
 
-    newOptions.forEach(el_A => {
-        if (!oldOptions.some(el_B => el_B.value === el_A.value)) {
-            addedOptions.push(el_A);
-        }
-    });
+    // newOptions.forEach(el_A => {
+    //     if (!oldOptions.some(el_B => el_B.value === el_A.value)) {
+    //         addedOptions.push(el_A);
+    //     }
+    // });
+    //
+    // oldOptions.forEach(el_A => {
+    //     if (!newOptions.some(el_B => el_B.value === el_A.value)) {
+    //         removedOptions.push(el_A);
+    //     }
+    // })
 
-    oldOptions.forEach(el_A => {
-        if (!newOptions.some(el_B => el_B.value === el_A.value)) {
-            removedOptions.push(el_A);
-        }
-    })
-
-    if (addedOptions.length > 0) {
-        addOptions(addedOptions);
-    }
-    if (removedOptions.length > 0) {
+    // if (addedOptions.length > 0) {//нужны ли эти проверки
+    addOptions(addedOptions);
+    // }
+    if (removedOptions.length > 0) {//нужны ли эти проверки
         removedOptions.forEach(option => {
             document.getElementById("p-select-" + option.value).remove();
         });
@@ -103,8 +111,10 @@ function swapDivLabel(divElement) {
 
 // Основная функция программы
 function setListeners() {
+    SelectFilter.init("id_subject", "предметы", 0, "/static/admin/");
     selectorTo = document.querySelector('#id_subject_to');
 
+    // console.log('ok');
     swapDivLabel(document.querySelector('div.selector'));
 
     oldOptions = selectorTo.querySelectorAll('option');
@@ -124,13 +134,13 @@ function handleFormSubmit(event) {
     var selectOptions = [];
 
     selects.forEach(function (select) {
-        var options = Array.from(select.options).map(function (option) {
-            return option.value;
-        });
+        // var options = Array.from(select.options).map(function (option) {
+        //     return option.value;
+        // });
 
         selectOptions.push({
             'id_subject': parseInt(select.id.match(/\d+/)[0]),
-            'classes': options
+            'classes': Array.from(select.options).map(option => option.value)
         })
     });
 
@@ -144,8 +154,12 @@ function handleFormSubmit(event) {
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('AJAX request successful');
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                // console.log('AJAX request successful');
+            } else {
+                console.error('AJAX request failed with status: ' + xhr.status);
+            }
         }
     };
 
