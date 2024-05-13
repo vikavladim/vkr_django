@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404, JsonRespons
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, DetailView, UpdateView
+from django.views.generic import TemplateView, DetailView, UpdateView, DeleteView
 from pytils.translit import slugify
 from xlsxwriter import Workbook
 
@@ -222,3 +222,24 @@ def teachers_field_form(request):
         TeacherSubjectClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')
+
+# class DeleteSubject(DateMixin, DeleteView):
+#     model = Discipline
+#     template_name = 'subjects/delete.html'
+#     success_url = reverse_lazy('subjects')
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         return self.get_mixin_context(
+#             context,
+#             # title=context['name'],
+#             menu_selected=self.request.path,
+#             # id=context['class'].id,
+#             **kwargs
+#         )
+@csrf_exempt
+def delete_subject(request, slug):
+    print(slug)
+    subject = get_object_or_404(Discipline, slug=slug)
+    subject.delete()
+    return redirect('/subjects')

@@ -57,7 +57,7 @@ function addOptions(options) {
             });
         },
         error: function (err) {
-            console.error('Произошла ошибка при получении данных из базы данных',err);
+            console.error('Произошла ошибка при получении данных из базы данных', err);
         }
     });
 }
@@ -74,14 +74,11 @@ function handleSelectTo() {
     const addedOptions = differenceMassive(newOptions, oldOptions);
     const removedOptions = differenceMassive(oldOptions, newOptions);
 
-    if (addedOptions.length > 0) {
-        addOptions(addedOptions);
-    }
-    if (removedOptions.length > 0) {
-        removedOptions.forEach(option => {
-            document.getElementById("p-select-" + option.value).remove();
-        });
-    }
+    addOptions(addedOptions);
+    removedOptions.forEach(option => {
+        document.getElementById("p-select-" + option.value).remove();
+    });
+
     oldOptions = newOptions;
 }
 

@@ -18,13 +18,31 @@
         <tr>
             <td>{{ form.instance.id }}</td>
 
-           {% for field in form %}
+            {% for field in form %}
             {% if field.is_hidden %}
             {{ field }}
             {% else %}
             <td>{{ field }}</td>
             {% endif %}
             {% endfor %}
+
+            <td>
+                {% if form.instance.slug %}
+                {% csrf_token %}
+                <button onclick="myFunction()">Удалить</button>
+                <script>
+                    function myFunction() {
+                        var isValid = confirm('Are you sure?');
+                        if (isValid) {
+                            window.location.replace("{% url 'subject_delete' slug=form.instance.slug %}");
+                            // window.location.href = "{% url 'subject_delete' slug=form.instance.slug %}";
+                        } else {
+                            alert("It won't delete. Yay!");
+                        }
+                    }
+                </script>
+                {% endif %}
+            </td>
 
         </tr>
         {% endfor %}

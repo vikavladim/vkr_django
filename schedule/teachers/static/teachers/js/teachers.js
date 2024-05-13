@@ -65,14 +65,10 @@ function handleSelectTo() {
     const addedOptions = differenceMassive(newOptions, oldOptions);
     const removedOptions = differenceMassive(oldOptions, newOptions);
 
-    // if (addedOptions.length > 0) {//нужны ли эти проверки
     addOptions(addedOptions);
-    // }
-    if (removedOptions.length > 0) {//нужны ли эти проверки
-        removedOptions.forEach(option => {
-            document.getElementById("p-select-" + option.value).remove();
-        });
-    }
+    removedOptions.forEach(option => {
+        document.getElementById("p-select-" + option.value).remove();
+    });
     oldOptions = newOptions;
 }
 
