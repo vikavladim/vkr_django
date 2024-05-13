@@ -39,14 +39,15 @@ function addOptions(options) {
                 pElement.append(labelElement);
                 pElement.append(selectElement);
 
-                $('#form').append(pElement);
-                SelectFilter.init("id_select-" + subject.id, "классы для " + subject.str, 0, "/static/admin/");
+                // $('#form').append(pElement);
+                $('#but2').before(pElement);
 
+                SelectFilter.init("id_select-" + subject.id, "классы для " + subject.str, 0, "/static/admin/");
                 swapDivLabel(document.querySelector(`#p-select-${subject.id} .selector`));
             });
         },
         error: function (err) {
-            console.error('Произошла ошибка при получении данных из базы данных');
+            console.error('Произошла ошибка при получении данных из базы данных', err);
         }
     });
 }
@@ -57,7 +58,7 @@ function differenceMassive(arr1, arr2) {
 
 
 // Обработчик выбора предметов в списке
-function handleSelectTo(mutationsList, observer) {
+function handleSelectTo() {
     newOptions = selectorTo.querySelectorAll('option');
     newOptions = Array.from(newOptions);
 
@@ -100,7 +101,7 @@ function setListeners() {
 }
 
 // обработчик формы, отправляет дополнительные поля
-function handleFormSubmit(event) {
+function handleFormSubmit() {
     // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
     var selects = document.body.querySelectorAll('select[id^="id_select-"][id$="to"]');
     var selectOptions = [];

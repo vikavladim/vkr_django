@@ -52,11 +52,12 @@ function addOptions(options) {
                 pElement.append(hoursLabel);
                 pElement.append(hoursInput);
 
-                $('#form').append(pElement);
+                // $('#form').append(pElement);
+                $('#but2').before(pElement);
             });
         },
         error: function (err) {
-            console.error('Произошла ошибка при получении данных из базы данных');
+            console.error('Произошла ошибка при получении данных из базы данных',err);
         }
     });
 }
@@ -66,7 +67,7 @@ function differenceMassive(arr1, arr2) {
 }
 
 // Обработчик выбора предметов в списке
-function handleSelectTo(mutationsList, observer) {
+function handleSelectTo() {
     newOptions = selectorTo.querySelectorAll('option');
     newOptions = Array.from(newOptions);
 
@@ -102,10 +103,9 @@ function setListeners() {
 }
 
 // обработчик формы, отправляет дополнительные поля
-function handleFormSubmit(event) {
-    event.preventDefault(); // Предотвращение стандартного поведения отправки формы
+function handleFormSubmit() {
+    // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
     var paragraphs = document.body.querySelectorAll('p[id^="p-select-"]');
-    console.log(paragraphs);
     var selectOptions = [];
 
     paragraphs.forEach(function (paragraph) {
