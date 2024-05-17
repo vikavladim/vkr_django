@@ -1,5 +1,9 @@
 {% extends "main_base.html" %}
+{% load static %}
 
+{% block exta_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/table.css' %}">
+{% endblock %}
 
 {% block content %}
 <form action="" method="post">

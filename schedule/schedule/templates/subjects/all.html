@@ -1,4 +1,11 @@
 {% extends "main_base.html" %}
+{%load static%}
+
+{%block exta_head%}
+<script type="text/javascript"
+        src="{% static '/schedule/js/subjects.js' %}?v={{ generate_unique_hash_or_timestamp"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/table.css' %}">
+{% endblock %}
 
 {% block content %}
 <form action="" method="post">
@@ -28,17 +35,18 @@
 
             <td>
                 {% if form.instance.slug %}
-                {% csrf_token %}
+<!--                {% csrf_token %}-->
                 <button onclick="myFunction()">Удалить</button>
+                <!--                <a href="{% url 'subject_delete' slug=form.instance.slug %}" class="button">Удалить</a>-->
                 <script>
                     function myFunction() {
-                        var isValid = confirm('Are you sure?');
-                        if (isValid) {
-                            window.location.replace("{% url 'subject_delete' slug=form.instance.slug %}");
-                            // window.location.href = "{% url 'subject_delete' slug=form.instance.slug %}";
-                        } else {
-                            alert("It won't delete. Yay!");
-                        }
+                        // var isValid = confirm('Are you sure?');
+                        // if (isValid) {
+                            // window.location.replace("{% url 'subject_delete' slug=form.instance.slug %}");
+                            window.location = "{% url 'subject_delete' slug=form.instance.slug %}";
+                        // } else {
+                        //     alert("It won't delete. Yay!");
+                        // }
                     }
                 </script>
                 {% endif %}

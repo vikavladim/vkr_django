@@ -134,7 +134,7 @@ class UpdateClass(DateMixin, UpdateView):
             **kwargs
         )
 
-
+@csrf_exempt
 def create_subject(request):
     for o in Discipline.objects.all():
         o.slug = slugify(o.name)
@@ -242,4 +242,5 @@ def delete_subject(request, slug):
     print(slug)
     subject = get_object_or_404(Discipline, slug=slug)
     subject.delete()
-    return redirect('/subjects')
+    # return redirect('/subjects')
+    return JsonResponse({'message': 'Object deleted successfully'})

@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
+    'localhost',
 ]
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -43,10 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'teachers.apps.MyappConfig',
     'debug_toolbar',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -55,6 +58,26 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://localhost:80',
+]
+
+# CORS_ALLOWED_ORIGIN_REGEXES = [
+#     r"^http://127.0.0.1:8000/",
+# ]
+# CORS_ALLOW_CREDENTIALS: True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://127.0.0.1:8000",
+# ]
+#
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://127.0.0.1:8000",
+# ]
 
 ROOT_URLCONF = 'schedule.urls'
 

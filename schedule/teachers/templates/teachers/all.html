@@ -1,6 +1,11 @@
 {% extends "main_base.html" %}
 {%load static%}
 
+{% block exta_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'teachers/css/product_cards.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'teachers/css/paginators.css' %}">
+{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" type="text/css"
       href="{% static 'schedule/css/style.css' %}?v={{ generate_unique_hash_or_timestamp }}">

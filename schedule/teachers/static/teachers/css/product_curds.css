@@ -1,0 +1,48 @@
+/* container component */
+.container {
+    max-width: 1140px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* grid component */
+.grid {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: -8px;
+    margin-right: -8px;
+    margin-bottom: -16px;
+    margin-top: 0;
+}
+
+.grid__item {
+    flex-basis: calc(100% / (var(--rows)) - 16px);
+    min-width: 240px;
+    margin-right: 8px;
+    margin-left: 8px;
+    margin-bottom: 16px;
+}
+
+/* product component */
+.product {
+    position: relative;
+    padding: 16px;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+}
+
+.product__name {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.product__price {
+    margin: 0;
+}
