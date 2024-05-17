@@ -66,15 +66,15 @@ img {
     margin-left: 10px;
 }
 
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: beige;
-    width: 100%;
-    min-height: var(--top-height);
-    z-index: 1000;
-}
+/*header {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    background-color: beige;*/
+/*    width: 100%;*/
+/*    min-height: var(--top-height);*/
+/*    z-index: 1000;*/
+/*}*/
 
 .link {
     text-decoration: none;
@@ -103,7 +103,6 @@ form {
 }
 
 
-
 /*a.button {*/
 /*    padding: 1px 6px;*/
 /*    border: 1px outset buttonborder;*/
@@ -125,3 +124,25 @@ form {
 /*    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);*/
 /*    cursor: pointer;*/
 /*}*/
+
+/*хэдеры*/
+#header {
+    white-space: nowrap;
+    overflow: hidden;
+    background-color: beige;
+    z-index: 1000;
+}
+
+#headerContent {
+    flex: 1;
+}
+
+#showMoreButton {
+    display: none;
+}
+
+#header.expanded {
+    white-space: normal;
+    text-overflow: clip;
+    overflow: visible;
+}
