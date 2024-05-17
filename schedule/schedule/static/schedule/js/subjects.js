@@ -46,3 +46,15 @@
 //     window.addEventListener('resize', checkHeaderOverflow);
 //     checkHeaderOverflow();
 // }
+// window.onload = baseFunction;
+// // Функция для обновления верхнего отступа основного содержимого
+// function updateMainMarginTop() {
+//     const header = document.querySelector('header');
+//     const headerHeight = header.offsetHeight;
+//     const mainContent = document.querySelector('div.content');
+//     mainContent.style.marginTop = headerHeight + 'px';
+// }
+// function baseFunction() {
+//     window.addEventListener('load', updateMainMarginTop);
+//     window.addEventListener('resize', updateMainMarginTop);
+// }
