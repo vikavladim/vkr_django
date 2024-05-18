@@ -27,8 +27,8 @@ urlpatterns = [
     path('classes/<slug:slug>/update/', UpdateClass.as_view(), name='class_update'),
     path('classes/getTeachersFromDB/', getTeachersFromDB, name='getTeachersFromDB'),
     path('classes/teachers_field_form/', teachers_field_form, name='teachers_field_form'),
-    # path('subjects/<slug:slug>/delete/', DeleteSubject.as_view(), name='subject_delete'),
-    path('subjects/<slug:slug>/delete/', delete_subject, name='subject_delete'),
+    path('subjects/<slug:slug>/delete/', DeleteSubject.as_view(), name='subject_delete'),
+    # path('subjects/<slug:slug>/delete/', delete_subject, name='subject_delete'),
 ]
 
 if settings.DEBUG:

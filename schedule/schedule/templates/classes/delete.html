@@ -5,7 +5,7 @@
 <h1 class="section__heading">{{object}}</h1>
 <form method="post">
     {% csrf_token %}
-    <p>Вы действительно хотите удалить этот предмет ({{object}})?</p>
+    <p>Вы действительно хотите удалить этот класс ({{object}})?</p>
     {{ form.as_p }}
     <input type="submit" name="delete" value="Удалить">
     <input type="submit" name="cancel" value="Отмена">

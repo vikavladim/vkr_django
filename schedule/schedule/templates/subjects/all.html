@@ -36,19 +36,20 @@
             <td>
                 {% if form.instance.slug %}
 <!--                {% csrf_token %}-->
-                <button onclick="myFunction()">Удалить</button>
-                <!--                <a href="{% url 'subject_delete' slug=form.instance.slug %}" class="button">Удалить</a>-->
-                <script>
-                    function myFunction() {
-                        // var isValid = confirm('Are you sure?');
-                        // if (isValid) {
-                            // window.location.replace("{% url 'subject_delete' slug=form.instance.slug %}");
-                            window.location = "{% url 'subject_delete' slug=form.instance.slug %}";
-                        // } else {
-                        //     alert("It won't delete. Yay!");
-                        // }
-                    }
-                </script>
+<!--                <button onclick="myFunction()">Удалить</button>-->
+<!--                <button onclick="{% url 'subject_delete' slug=form.instance.slug %}" >Удалить</button>-->
+                                <a href="{% url 'subject_delete' slug=form.instance.slug %}" class="button">Удалить</a>
+<!--                <script>-->
+<!--                    function myFunction() {-->
+<!--                        // var isValid = confirm('Are you sure?');-->
+<!--                        // if (isValid) {-->
+<!--                            // window.location.replace("{% url 'subject_delete' slug=form.instance.slug %}");-->
+<!--                            window.location = "{% url 'subject_delete' slug=form.instance.slug %}";-->
+<!--                        // } else {-->
+<!--                        //     alert("It won't delete. Yay!");-->
+<!--                        // }-->
+<!--                    }-->
+<!--                </script>-->
                 {% endif %}
             </td>
 

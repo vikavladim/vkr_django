@@ -223,24 +223,30 @@ def teachers_field_form(request):
 
     return HttpResponse('ok')
 
-# class DeleteSubject(DateMixin, DeleteView):
-#     model = Discipline
-#     template_name = 'subjects/delete.html'
-#     success_url = reverse_lazy('subjects')
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         return self.get_mixin_context(
-#             context,
-#             # title=context['name'],
-#             menu_selected=self.request.path,
-#             # id=context['class'].id,
-#             **kwargs
-#         )
-@csrf_exempt
-def delete_subject(request, slug):
-    print(slug)
-    subject = get_object_or_404(Discipline, slug=slug)
-    subject.delete()
-    # return redirect('/subjects')
-    return JsonResponse({'message': 'Object deleted successfully'})
+class DeleteSubject(DateMixin, DeleteView):
+    model = Discipline
+    template_name = 'subjects/delete.html'
+    success_url = reverse_lazy('subjects')
+
+    def post(self, request, *args, **kwargs):
+        if 'cancel' in request.POST:
+            return redirect(self.success_url)
+        return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(
+            context,
+            # title=context['name'],
+            menu_selected=self.request.path,
+            # id=context['class'].id,
+            **kwargs
+        )
+
+# @csrf_exempt
+# def delete_subject(request, slug):
+#     print(slug)
+#     subject = get_object_or_404(Discipline, slug=slug)
+#     subject.delete()
+#     # return redirect('/subjects')
+#     return JsonResponse({'message': 'Object deleted successfully'})

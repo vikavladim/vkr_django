@@ -17,7 +17,7 @@ window.onload = baseFunction;
 function updateMainMarginTop() {
     const header = document.querySelector('header');
     const headerHeight = header.offsetHeight;
-    const mainContent = document.querySelector('div.content');
+    const mainContent = document.querySelector('section.section');
     mainContent.style.marginTop = headerHeight + 'px';
 }
 function baseFunction() {
