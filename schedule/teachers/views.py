@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass
 from teachers.utils import DateMixin
 
@@ -116,3 +116,21 @@ def classes_field_form(request):
         TeacherSubjectClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')
+
+class DeleteTeacher(DateMixin, DeleteView):
+    model = Teacher
+    template_name = 'teachers/delete.html'
+    success_url = reverse_lazy('teachers')
+
+    def post(self, request, *args, **kwargs):
+        if 'cancel' in request.POST:
+            return redirect(self.success_url)
+        return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(
+            context,
+            menu_selected=self.request.path,
+            **kwargs
+        )

@@ -1,7 +1,7 @@
 class DateMixin:
     title = None
     selected_menu = None
-    paginate_by = 2
+    paginate_by = 10
     extra_context = {}
 
     def __init__(self):

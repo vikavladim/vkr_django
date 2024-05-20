@@ -243,6 +243,26 @@ class DeleteSubject(DateMixin, DeleteView):
             **kwargs
         )
 
+class DeleteClass(DateMixin, DeleteView):
+    model = Class
+    template_name = 'classes/delete.html'
+    success_url = reverse_lazy('classes')
+
+    def post(self, request, *args, **kwargs):
+        if 'cancel' in request.POST:
+            return redirect(self.success_url)
+        return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(
+            context,
+            # title=context['name'],
+            menu_selected=self.request.path,
+            # id=context['class'].id,
+            **kwargs
+        )
+
 # @csrf_exempt
 # def delete_subject(request, slug):
 #     print(slug)

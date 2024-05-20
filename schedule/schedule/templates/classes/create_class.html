@@ -35,7 +35,11 @@
             <td>{{ field }}</td>
             {% endif %}
             {% endfor %}
-
+            <td>
+                {% if form.instance.slug %}
+                <a href="{% url 'class_delete' slug=form.instance.slug %}" class="button">Удалить</a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>

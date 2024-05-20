@@ -37,8 +37,8 @@
             {% for teacher in teachers %}
 
             <li class="grid__item">
-                <a class="link" href="{% url 'teacher_update' slug=teacher.slug %}">
-                    <article class="product">
+                <article class="product">
+                    <a class="link" href="{% url 'teacher_update' slug=teacher.slug %}">
                         {%if teacher.photo%}
                         <img class="product__image"
                              src="{{ teacher.photo.url }}"
@@ -46,8 +46,9 @@
                         {%endif%}
                         <h2 class="product__name">{{teacher.fio}}</h2>
                         <p class="product__price">Учитель</p>
-                    </article>
-                </a>
+                    </a>
+                    <a href="{% url 'teacher_delete' slug=teacher.slug %}" class="button">Удалить</a>
+                </article>
             </li>
 
             {% endfor %}
