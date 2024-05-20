@@ -44,8 +44,12 @@
                              src="{{ teacher.photo.url }}"
                              alt="{{ teacher.fio }} photo"/>
                         {%endif%}
-                        <h2 class="product__name">{{teacher.fio}}</h2>
-                        <p class="product__price">Учитель</p>
+                        <!--                        <h2 class="product__name">{{teacher.fio}}</h2>-->
+                        {% for word in teacher.fio.split %}
+                        <h2 class="product__name">{{ word }}</h2>
+                        {% endfor %}
+                        <p class="product__price">{{teacher.position}}</p>
+                        <p class="product__price">Кабинет {{teacher.room}}</p>
                     </a>
                     <a href="{% url 'teacher_delete' slug=teacher.slug %}" class="button">Удалить</a>
                 </article>

@@ -13,7 +13,7 @@ from teachers.utils import DateMixin
 class AddTeacher(DateMixin, CreateView):
     template_name = 'teachers/update.html'
     model = Teacher
-    fields = ['fio', 'room', 'photo', 'subject']
+    fields = ['fio', 'position', 'room', 'photo', 'subject']
     title = 'Создание учителя'
     success_url = reverse_lazy('teachers')
 
@@ -23,7 +23,7 @@ class AddTeacher(DateMixin, CreateView):
 
 class UpdateTeacher(DateMixin, UpdateView):
     model = Teacher
-    fields = ['fio', 'room', 'photo', 'subject']
+    fields = ['fio', 'position', 'room', 'photo', 'subject']
     template_name = 'teachers/update.html'
     success_url = reverse_lazy('teachers')
 

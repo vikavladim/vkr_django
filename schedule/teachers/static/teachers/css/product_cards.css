@@ -22,7 +22,7 @@
 
 .grid__item {
     flex-basis: calc(100% / (var(--rows)) - 16px);
-    min-width: 240px;
+    /*min-width: 240px;*/
     margin-right: 8px;
     margin-left: 8px;
     margin-bottom: 16px;

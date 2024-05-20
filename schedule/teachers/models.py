@@ -11,6 +11,7 @@ from django.urls import reverse
 
 class Teacher(models.Model):
     fio = models.CharField(verbose_name='ФИО', max_length=255)
+    position = models.CharField(verbose_name='Должность', max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     photo = models.ImageField(upload_to='images/%Y/%m/%d', null=True, blank=True, verbose_name='Фото')
     room = models.PositiveIntegerField(verbose_name='Кабинет', null=True, blank=True)
