@@ -1,4 +1,17 @@
-window.onload = setListeners;
+// window.onload = setListeners;
+
+const observer = new MutationObserver((mutationsList, observer) => {
+    mutationsList.forEach(mutation => {
+        if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject')) {
+                setListeners();
+            }
+        }
+    });
+});
+
+const config = {childList: true, subtree: true};
+observer.observe(document, config);
 
 let selectorTo;
 

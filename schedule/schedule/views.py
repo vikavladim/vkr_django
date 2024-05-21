@@ -1,19 +1,16 @@
 import io
 import json
 
-from django.forms import forms, widgets
 from django.http import HttpResponse, HttpResponseNotFound, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, DetailView, UpdateView, DeleteView
+from django.views.generic import TemplateView, DetailView, UpdateView, DeleteView, CreateView
 from pytils.translit import slugify
 from xlsxwriter import Workbook
 
-from schedule.forms import AddClassForm, ClassFormSet, SubjectFormSet
-from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass, Program
-
-import pandas as pd
+from schedule.forms import SubjectFormSet
+from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass, Program, Grade
 
 from teachers.utils import DateMixin
 
@@ -34,28 +31,56 @@ class HomeView(TemplateView):
     }
 
 
-def classes(request):
-    print(request.path)
+def class_list(request):
+    classes = Class.objects.all()
+    students = {}
+
+    for cls in classes:
+        if cls.digit not in students:
+            students[cls.digit] = []
+        students[cls.digit].append(cls)
+
     context = {
+        'title': 'Классы',
+        'students': students,
         'menu_selected': request.path,
     }
-    return render(request, 'classes.html', context)
+
+    return render(request, 'classes/class_list.html', context)
 
 
-def subjects(request):
-    print(request.path)
-    context = {
-        'menu_selected': request.path,
-    }
-    return render(request, 'main_base.html', context)
+class CreateClass(DateMixin, CreateView):
+    model = Class
+    template_name = 'classes/update.html'
+    context_object_name = 'class'
+    fields = ['digit', 'letter', 'subject']
+    success_url = reverse_lazy('classes')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(
+            context,
+            title='Создание класса',
+            menu_selected=self.request.path,
+            **kwargs
+        )
 
 
-def schedule(request):
-    print(request.path)
-    context = {
-        'menu_selected': request.path,
-    }
-    return render(request, 'main_base.html', context)
+class CreateGrade(DateMixin, CreateView):
+    model = Grade
+    template_name = 'grades/create_grade.html'
+    context_object_name = 'grade'
+    fields = ['name', 'subject']
+    success_url = reverse_lazy('classes')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(
+            context,
+            title='Создание параллели',
+            menu_selected=self.request.path,
+            **kwargs
+        )
 
 
 def export_to_excel(request):
@@ -97,22 +122,30 @@ def export_to_excel(request):
     return response
 
 
-def create_class(request):
-    if request.method == 'POST':
-        form = ClassFormSet(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/classes')
-        else:
-            print(form.errors)
-    else:
-        form = ClassFormSet()
+# def create_class(request):
+#     if request.method == 'POST':
+#         form = ClassFormSet(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('/classes')
+#         else:
+#             print(form.errors)
+#     else:
+#         form = ClassFormSet()
+#
+#     context = {
+#         'formset': form,
+#         'menu_selected': request.path,
+#     }
+#     return render(request, 'classes/create_class.html', context=context)
 
+
+def schedule(request):
+    print(request.path)
     context = {
-        'formset': form,
         'menu_selected': request.path,
     }
-    return render(request, 'classes/create_class.html', context=context)
+    return render(request, 'main_base.html', context)
 
 
 class UpdateClass(DateMixin, UpdateView):
@@ -133,6 +166,7 @@ class UpdateClass(DateMixin, UpdateView):
             id=context['class'].id,
             **kwargs
         )
+
 
 @csrf_exempt
 def create_subject(request):
@@ -181,6 +215,7 @@ def getTeachersFromDB(request):
 
     return JsonResponse(teachers_by_subjects)
 
+
 @csrf_exempt
 def teachers_field_form(request):
     if request.method == 'POST':
@@ -200,13 +235,12 @@ def teachers_field_form(request):
 
             if subject['teacher']:
                 new_objects.append(TeacherSubjectClass(
-                    teacher=get_object_or_404(Teacher,id=subject['teacher']),
+                    teacher=get_object_or_404(Teacher, id=subject['teacher']),
                     subject=sub,
                     _class=cls,
                 ))
             else:
                 old_objects.filter(subject=sub, _class=cls).delete()
-
 
         deleted_objects = [obj.id for obj in old_objects if obj not in new_objects]
         added_objects = [obj for obj in new_objects if obj not in old_objects]
@@ -222,6 +256,7 @@ def teachers_field_form(request):
         TeacherSubjectClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')
+
 
 class DeleteSubject(DateMixin, DeleteView):
     model = Discipline
@@ -242,6 +277,7 @@ class DeleteSubject(DateMixin, DeleteView):
             # id=context['class'].id,
             **kwargs
         )
+
 
 class DeleteClass(DateMixin, DeleteView):
     model = Class
