@@ -3,23 +3,23 @@ from django.utils.safestring import mark_safe
 
 from teachers.models import *
 
-admin.site.register(Discipline)
-admin.site.register(Class)
-admin.site.register(Program)
+# admin.site.register(Discipline)
+# admin.site.register(Class)
+# admin.site.register(Program)
 
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    fields = ('fio', 'photo', 'post_photo', 'room', 'subject')
+    fields = ('fio', 'photo', 'post_photo', 'room', 'discipline')
     list_display = ('id', 'fio', 'post_photo', 'room', 'date_create', 'date_update')
     list_display_links = ('id',)
     list_editable = ('fio', 'room')
     ordering = ('fio', 'room')
     actions = ('send_message',)
     search_fields = ('fio',)
-    list_filter = ('subject__name', 'date_create', 'date_update')
+    list_filter = ('discipline__name', 'date_create', 'date_update')
     # prepopulated_fields = {'slug': ('fio',)}
-    filter_horizontal = ('subject',)
+    filter_horizontal = ('discipline',)
     readonly_fields = ('post_photo',)
     save_on_top = True
 

@@ -17,7 +17,7 @@ class Teacher(models.Model):
     room = models.PositiveIntegerField(verbose_name='Кабинет', null=True, blank=True)
     date_create = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     date_update = models.DateField(auto_now=True, verbose_name='Дата обновления')
-    subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
+    discipline = models.ManyToManyField('discipline.Discipline', blank=True, verbose_name='Предметы')
 
     class Meta:
         verbose_name = 'Учитель'
@@ -45,75 +45,6 @@ class Teacher(models.Model):
         }
 
 
-class Class(models.Model):
-    digit = models.IntegerField(verbose_name='Цифра')
-    letter = models.CharField(max_length=1, verbose_name='Буква')
-    subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
-    # subject = models.ManyToManyField('Discipline', through='Program', blank=True, verbose_name='Предметы')
-    slug = models.SlugField(max_length=255, unique=True, verbose_name='URL', db_index=True)
-
-    class Meta:
-        verbose_name = 'Класс'
-        verbose_name_plural = 'Классы'
-        ordering = ['digit', 'letter']
-
-    def __str__(self):
-        return f'{self.digit}{self.letter}'
-
-    def save(self, *args, **kwargs):
-        # if not self.slug:
-        self.slug = slugify(self.__str__())
-
-        super(Class, self).save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse('class_read', kwargs={'slug': self.slug})
-
-    @property
-    def serializable(self):
-        return {
-            'id': self.id,
-            'digit': self.digit,
-            'letter': self.letter,
-            'slug': self.slug,
-            'str': self.__str__()
-        }
-
-
-class Discipline(models.Model):
-    name = models.CharField(verbose_name='Название', max_length=255)
-    short_name = models.CharField(max_length=50, verbose_name='Краткое название', blank=True)
-    slug = models.SlugField(max_length=255, verbose_name='URL', unique=True, blank=True, db_index=True)
-
-    class Meta:
-        verbose_name = 'Дисциплина'
-        verbose_name_plural = 'Дисциплины'
-        ordering = ['name', ]
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.short_name:
-            self.short_name = self.name
-        self.slug = slugify(self.__str__())
-
-        super(Discipline, self).save(*args, **kwargs)
-
-    # def get_absolute_url(self):
-    #     return reverse('subject_read', kwargs={'slug': self.slug})
-
-    @property
-    def serializable(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'short_name': self.short_name,
-            'slug': self.slug,
-            'str': self.__str__()
-        }
-
-
 # class Subgroup(models.Model):
 #     class_id = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
 #     group_number = models.IntegerField(verbose_name='Номер группы')
@@ -128,66 +59,43 @@ class Discipline(models.Model):
 #         return f'{self.class_id} - {self.discipline_id} - Group {self.group_number}'
 
 
-class Program(models.Model):
-    cls = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
-    discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
-    load = models.IntegerField(verbose_name='Нагрузка', blank=True, null=True)
-
-    class Meta:
-        verbose_name = 'Программа'
-        verbose_name_plural = 'Программы'
-
-    def __str__(self):
-        return f'{self.cls} - {self.discipline} ({self.load} hours)'
-
-
-class TeacherSubjectClass(models.Model):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='Преподаватель')
-    _class = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
-    subject = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
-
-    class Meta:
-        verbose_name = 'Учитель-Предмет-Класс'
-        verbose_name_plural = 'Учителя-Предметы-Классы'
-        indexes = [
-            models.Index(fields=['_class', 'subject'], name='unique_class_subject'),
-        ]
-
-    def __str__(self):
-        return f'{self.teacher} - {self.subject} - {self._class}'
-
-    def __eq__(self, other):
-        if isinstance(other, TeacherSubjectClass):
-            # Сравниваем поля или атрибуты объектов на равенство
-            return (
-                    self.teacher == other.teacher and
-                    self.subject == other.subject and
-                    self._class == other._class
-            )
-        return NotImplemented
+# class Program(models.Model):
+#     cls = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
+#     discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
+#     load = models.IntegerField(verbose_name='Нагрузка', blank=True, null=True)
+#     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='Преподаватель',null=True, blank=True)
+#
+#
+#     class Meta:
+#         verbose_name = 'Программа'
+#         verbose_name_plural = 'Программы'
+#
+#     def __str__(self):
+#         return f'{self.cls} - {self.discipline} ({self.load} hours)'
 
 
-class Grade(models.Model):
-    name = models.CharField(verbose_name='Название', max_length=255)
-    slug = models.SlugField(max_length=255, verbose_name='URL', unique=True, db_index=True)
-    subject = models.ManyToManyField('Discipline', blank=True, verbose_name='Предметы')
+# class TeacherSubjectClass(models.Model):
+#     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='Преподаватель',null=True, blank=True)
+#     _class = models.ForeignKey(Class, on_delete=models.CASCADE, verbose_name='Класс')
+#     subject = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
+#
+#     class Meta:
+#         verbose_name = 'Учитель-Предмет-Класс'
+#         verbose_name_plural = 'Учителя-Предметы-Классы'
+#         indexes = [
+#             models.Index(fields=['_class', 'subject'], name='unique_class_subject'),
+#         ]
+#
+#     def __str__(self):
+#         return f'{self.teacher} - {self.subject} - {self._class}'
+#
+#     def __eq__(self, other):
+#         if isinstance(other, TeacherSubjectClass):
+#             # Сравниваем поля или атрибуты объектов на равенство
+#             return (
+#                     self.teacher == other.teacher and
+#                     self.subject == other.subject and
+#                     self._class == other._class
+#             )
+#         return NotImplemented
 
-    class Meta:
-        verbose_name = 'Параллель'
-        verbose_name_plural = 'Параллели'
-
-    def __str__(self):
-        return {self.name}
-
-
-class GradeProgram(models.Model):
-    grade = models.ForeignKey(Grade, on_delete=models.CASCADE, verbose_name='Параллель')
-    discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE, verbose_name='Дисциплина')
-    load = models.IntegerField(verbose_name='Нагрузка', blank=True, null=True)
-
-    class Meta:
-        verbose_name = 'Программа параллели'
-        verbose_name_plural = 'Программы параллелей'
-
-    def __str__(self):
-        return f'{self.grade} - {self.discipline} ({self.load} hours)'

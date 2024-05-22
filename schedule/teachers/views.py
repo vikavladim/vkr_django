@@ -1,13 +1,15 @@
 import json
 
-from django.http import HttpResponse, HttpResponseNotFound, Http404, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template import RequestContext
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
-from teachers.models import Teacher, Class, Discipline, TeacherSubjectClass
-from teachers.utils import DateMixin
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+
+from cls.models import Class, TeacherSubjectClass
+from discipline.models import Discipline
+from teachers.models import Teacher
+from schedule.utils import DateMixin
 
 
 class AddTeacher(DateMixin, CreateView):

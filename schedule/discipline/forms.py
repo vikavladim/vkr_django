@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import modelformset_factory, widgets
 
-from teachers.models import Class, Discipline
+from discipline.models import Discipline
 
 
 # class AddClassForm(forms.ModelForm):
@@ -9,7 +9,7 @@ from teachers.models import Class, Discipline
 #         model = Class
 #         fields = ['id', 'digit', 'letter']
 
-class AddSubjectForm(forms.ModelForm):
+class AddDisciplineForm(forms.ModelForm):
     class Meta:
         model = Discipline
         fields = ['id', 'name', 'short_name']
@@ -17,6 +17,6 @@ class AddSubjectForm(forms.ModelForm):
 
 # ClassFormSet = modelformset_factory(Class, form=AddClassForm,
 #                                     extra=1)
-SubjectFormSet = modelformset_factory(Discipline, form=AddSubjectForm,
+SubjectFormSet = modelformset_factory(Discipline, form=AddDisciplineForm,
                                     extra=3)
 

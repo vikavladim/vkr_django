@@ -1,0 +1,62 @@
+{% extends "main_base.html" %}
+{%load static%}
+
+{%block exta_head%}
+<script type="text/javascript"
+        src="{% static '/schedule/js/subjects.js' %}?v={{ generate_unique_hash_or_timestamp"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/table.css' %}">
+{% endblock %}
+
+{% block content %}
+<form action="" method="post">
+    <button type="submit">Сохранить</button>
+    <table>
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <tr>
+            <th>Id</th>
+            {% for field in formset.empty_form.visible_fields %}
+            {% if field.label %}
+            <th>{{ field.label }}</th>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% for form in formset %}
+        <tr>
+            <td>{{ form.instance.id }}</td>
+
+            {% for field in form %}
+            {% if field.is_hidden %}
+            {{ field }}
+            {% else %}
+            <td>{{ field }}</td>
+            {% endif %}
+            {% endfor %}
+
+            <td>
+                {% if form.instance.slug %}
+<!--                {% csrf_token %}-->
+<!--                <button onclick="myFunction()">Удалить</button>-->
+<!--                <button onclick="{% url 'subject_delete' slug=form.instance.slug %}" >Удалить</button>-->
+                                <a href="{% url 'subject_delete' slug=form.instance.slug %}" class="button">Удалить</a>
+<!--                <script>-->
+<!--                    function myFunction() {-->
+<!--                        // var isValid = confirm('Are you sure?');-->
+<!--                        // if (isValid) {-->
+<!--                            // window.location.replace("{% url 'subject_delete' slug=form.instance.slug %}");-->
+<!--                            window.location = "{% url 'subject_delete' slug=form.instance.slug %}";-->
+<!--                        // } else {-->
+<!--                        //     alert("It won't delete. Yay!");-->
+<!--                        // }-->
+<!--                    }-->
+<!--                </script>-->
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+    <button type="submit">Сохранить</button>
+</form>
+
+{% endblock %}

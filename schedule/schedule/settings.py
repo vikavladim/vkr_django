@@ -42,14 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'teachers.apps.MyappConfig',
+    'teachers.apps.TeacherConfig',
+    'discipline.apps.DisciplineConfig',
+    'cls.apps.ClsConfig',
+    'level.apps.LevelConfig',
     'debug_toolbar',
-    "corsheaders",
+    # "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
+    # "corsheaders.middleware.CorsMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -59,13 +62,13 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
-
-CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
-    'http://localhost:80',
-]
+# CORS_ORIGIN_ALLOW_ALL = False
+#
+# CORS_ORIGIN_WHITELIST = [
+#     'http://127.0.0.1:8000',
+#     'http://localhost:8000',
+#     'http://localhost:80',
+# ]
 
 # CORS_ALLOWED_ORIGIN_REGEXES = [
 #     r"^http://127.0.0.1:8000/",
@@ -108,7 +111,7 @@ WSGI_APPLICATION = 'schedule.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'schedule3',
+        'NAME': 'schedule',
         'USER': 'postgres',
         'PASSWORD': '32767',
         'HOST': 'localhost',
