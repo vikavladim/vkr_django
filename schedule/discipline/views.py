@@ -4,38 +4,38 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DeleteView
 from pytils.translit import slugify
 
-from discipline.forms import SubjectFormSet
+from discipline.forms import DisciplineFormSet
 from discipline.models import Discipline
 from schedule.utils import DateMixin
 
 
 @csrf_exempt
-def create_subject(request):
+def create_discipline(request):
     for o in Discipline.objects.all():
         o.slug = slugify(o.name)
         o.save()
 
     if request.method == 'POST':
-        form = SubjectFormSet(request.POST)
+        form = DisciplineFormSet(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/subjects')
+            return redirect('/disciplines')
         else:
             print(form.errors)
     else:
-        form = SubjectFormSet()
+        form = DisciplineFormSet()
 
     context = {
         'formset': form,
         'menu_selected': request.path,
     }
-    return render(request, 'subjects/all.html', context=context)
+    return render(request, 'discipline/all.html', context=context)
 
 
-class DeleteSubject(DateMixin, DeleteView):
+class DeleteDiscipline(DateMixin, DeleteView):
     model = Discipline
-    template_name = 'subjects/delete.html'
-    success_url = reverse_lazy('subjects')
+    template_name = 'discipline/delete.html'
+    success_url = reverse_lazy('disciplines')
 
     def post(self, request, *args, **kwargs):
         if 'cancel' in request.POST:

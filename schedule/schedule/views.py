@@ -16,7 +16,7 @@ menus = [
     {'url': '/home', 'title': 'Главная'},
     {'url': '/teachers', 'title': 'Учителя'},
     {'url': '/classes', 'title': 'Классы'},
-    {'url': '/subjects', 'title': 'Предметы'},
+    {'url': '/disciplines', 'title': 'Предметы'},
     {'url': '/schedule', 'title': 'Расписание'},
     {'url': '/admin', 'title': 'Админка'},
 ]

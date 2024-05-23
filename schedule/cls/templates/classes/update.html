@@ -6,7 +6,7 @@
         src="{% static 'schedule/js/classes.js' %}?v={{ generate_unique_hash_or_timestamp"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'schedule/css/selectors.css' %}">
 
-{% include 'classes/admin_includes.html' %}
+{% include 'admin_includes.html' %}
 {% endblock %}
 
 {% block content %}
@@ -21,6 +21,8 @@
     </p>
     {% csrf_token %}
     {{ form.as_p }}
+
+
 
     <p>
         <button id="but2" type="submit">Отправить</button>

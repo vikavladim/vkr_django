@@ -1,8 +1,8 @@
 from django.urls import path
 
-from discipline.views import create_subject, DeleteSubject
+from discipline.views import create_discipline, DeleteDiscipline
 
 urlpatterns = [
-    path('', create_subject, name='subjects'),
-    path('<slug:slug>/delete/', DeleteSubject.as_view(), name='subject_delete'),
+    path('', create_discipline, name='disciplines'),
+    path('<slug:slug>/delete/', DeleteDiscipline.as_view(), name='discipline_delete'),
 ]

@@ -17,6 +17,6 @@ class AddDisciplineForm(forms.ModelForm):
 
 # ClassFormSet = modelformset_factory(Class, form=AddClassForm,
 #                                     extra=1)
-SubjectFormSet = modelformset_factory(Discipline, form=AddDisciplineForm,
+DisciplineFormSet = modelformset_factory(Discipline, form=AddDisciplineForm,
                                     extra=3)
 

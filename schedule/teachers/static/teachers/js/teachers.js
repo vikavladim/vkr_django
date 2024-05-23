@@ -3,7 +3,7 @@
 const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach(mutation => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject')) {
+            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_discipline')) {
                 setListeners();
             }
         }
@@ -31,13 +31,13 @@ function addOptions(options) {
         },
         success: function (response) {
             response['array'].forEach(function (elem) {
-                subject = elem.subject;
+                discipline = elem.discipline;
                 classes = elem.classes;
                 selectedClasses = elem.selectedClassesId;
 
-                var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
-                var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
-                var selectElement = $('<select name="select-' + subject.id + '" multiple id="id_select-' + subject.id + '">');
+                var pElement = $('<p id="p-select-' + discipline.id + '" name="p-select-' + discipline.id + '">');
+                var labelElement = $('<label for="select-' + discipline.id + '">' + discipline.str + '</label>');
+                var selectElement = $('<select name="select-' + discipline.id + '" multiple id="id_select-' + discipline.id + '">');
 
                 classes.forEach(function (classObj) {
                     var optionElement = $('<option value="' + classObj.id + '">' + classObj.str + '</option>');
@@ -55,8 +55,8 @@ function addOptions(options) {
                 // $('#form').append(pElement);
                 $('#but2').before(pElement);
 
-                SelectFilter.init("id_select-" + subject.id, "классы для " + subject.str, 0, "/static/admin/");
-                swapDivLabel(document.querySelector(`#p-select-${subject.id} .selector`));
+                SelectFilter.init("id_select-" + discipline.id, "классы для " + discipline.str, 0, "/static/admin/");
+                swapDivLabel(document.querySelector(`#p-select-${discipline.id} .selector`));
             });
         },
         error: function (err) {
@@ -94,10 +94,10 @@ function swapDivLabel(divElement) {
 
 // Основная функция программы
 function setListeners() {
-    SelectFilter.init("id_subject", "предметы", 0, "/static/admin/");
+    SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
     swapDivLabel(document.querySelector('div.selector'));
 
-    selectorTo = document.querySelector('#id_subject_to');
+    selectorTo = document.querySelector('#id_discipline_to');
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
@@ -105,7 +105,7 @@ function setListeners() {
     const observerTo = new MutationObserver(handleSelectTo);
     observerTo.observe(selectorTo, {childList: true});
 
-    document.querySelectorAll('#id_subject_to')
+    document.querySelectorAll('#id_discipline_to')
         .forEach(elem => addOptions(elem));
 }
 
@@ -117,7 +117,7 @@ function handleFormSubmit() {
 
     selects.forEach(function (select) {
         selectOptions.push({
-            'id_subject': parseInt(select.id.match(/\d+/)[0]),
+            'id_discipline': parseInt(select.id.match(/\d+/)[0]),
             'classes': Array.from(select.options).map(option => option.value)
         })
     });

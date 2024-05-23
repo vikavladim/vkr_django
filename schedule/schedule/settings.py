@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'teachers.apps.TeacherConfig',
     'discipline.apps.DisciplineConfig',
     'cls.apps.ClsConfig',
-    'level.apps.LevelConfig',
     'debug_toolbar',
     # "corsheaders",
 ]

@@ -32,8 +32,6 @@
                 </a>
             </li>
 
-
-            <!--                             src="{% static 'teachers/images/1.jpg' %}"-->
             {% for teacher in teachers %}
 
             <li class="grid__item">
@@ -44,7 +42,6 @@
                              src="{{ teacher.photo.url }}"
                              alt="{{ teacher.fio }} photo"/>
                         {%endif%}
-                        <!--                        <h2 class="product__name">{{teacher.fio}}</h2>-->
                         {% for word in teacher.fio.split %}
                         <h2 class="product__name">{{ word }}</h2>
                         {% endfor %}

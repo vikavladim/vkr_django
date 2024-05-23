@@ -21,3 +21,13 @@ class Discipline(models.Model):
         self.slug = slugify(self.__str__())
 
         super(Discipline, self).save(*args, **kwargs)
+
+    @property
+    def serializable(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'short_name': self.short_name,
+            'slug': self.slug,
+            'str': self.__str__()
+        }

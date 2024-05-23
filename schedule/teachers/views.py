@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from cls.models import Class, TeacherSubjectClass
+from cls.models import Class, TeacherDisciplineClass
 from discipline.models import Discipline
 from teachers.models import Teacher
 from schedule.utils import DateMixin
@@ -15,7 +15,7 @@ from schedule.utils import DateMixin
 class AddTeacher(DateMixin, CreateView):
     template_name = 'teachers/update.html'
     model = Teacher
-    fields = ['fio', 'position', 'room', 'photo', 'subject']
+    fields = ['fio', 'position', 'room', 'photo', 'discipline']
     title = 'Создание учителя'
     success_url = reverse_lazy('teachers')
 
@@ -25,7 +25,7 @@ class AddTeacher(DateMixin, CreateView):
 
 class UpdateTeacher(DateMixin, UpdateView):
     model = Teacher
-    fields = ['fio', 'position', 'room', 'photo', 'subject']
+    fields = ['fio', 'position', 'room', 'photo', 'discipline']
     template_name = 'teachers/update.html'
     success_url = reverse_lazy('teachers')
 
@@ -68,54 +68,54 @@ def getDataFromDB(request):
     teacher = get_object_or_404(Teacher, id=teacher_id) if teacher_id else None
 
 
-    classes_by_subjects = {'array': [], }
+    classes_by_disciplines = {'array': [], }
 
     for selectedValue in selected_values:
-        subject = get_object_or_404(Discipline, id=selectedValue)
-        classes_with_subject = Class.objects.filter(subject=subject)
-        selected_classes_strs = TeacherSubjectClass.objects.filter(subject=subject, teacher=teacher)
+        discipline = get_object_or_404(Discipline, id=selectedValue)
+        classes_with_discipline = Class.objects.filter(discipline=discipline)
+        selected_classes_strs = TeacherDisciplineClass.objects.filter(discipline=discipline, teacher=teacher)
 
-        subject_data = {
-            'subject': subject.serializable,
-            'classes': [cls.serializable for cls in classes_with_subject],
+        discipline_data = {
+            'discipline': discipline.serializable,
+            'classes': [cls.serializable for cls in classes_with_discipline],
             'selectedClassesId': [selected_str._class.id for selected_str in selected_classes_strs],
         }
 
-        classes_by_subjects['array'].append(subject_data)
+        classes_by_disciplines['array'].append(discipline_data)
 
-    return JsonResponse(classes_by_subjects)
+    return JsonResponse(classes_by_disciplines)
 
 
 @csrf_exempt
 def classes_field_form(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        subjects_array = data.get('array')
+        disciplines_array = data.get('array')
         teacher_id = data.get('teacher_id')
         teacher = get_object_or_404(Teacher, id=teacher_id)
-        old_objects = TeacherSubjectClass.objects.filter(teacher=teacher)
+        old_objects = TeacherDisciplineClass.objects.filter(teacher=teacher)
         new_objects = []
 
-        for subject in subjects_array:
-            for class_id in subject['classes']:
-                new_objects.append(TeacherSubjectClass(
+        for discipline in disciplines_array:
+            for class_id in discipline['classes']:
+                new_objects.append(TeacherDisciplineClass(
                     teacher=teacher,
-                    subject=get_object_or_404(Discipline, id=subject['id_subject']),
+                    discipline=get_object_or_404(Discipline, id=discipline['id_discipline']),
                     _class=get_object_or_404(Class, id=class_id),
                 ))
 
         deleted_objects = [obj.id for obj in old_objects if obj not in new_objects]
         added_objects = [obj for obj in new_objects if obj not in old_objects]
 
-        all_objects = TeacherSubjectClass.objects.all()
+        all_objects = TeacherDisciplineClass.objects.all()
 
         for old_obj in all_objects:
             for add_abj in added_objects:
-                if old_obj._class == add_abj._class and old_obj.subject == add_abj.subject:
+                if old_obj._class == add_abj._class and old_obj.discipline == add_abj.discipline:
                     deleted_objects.append(old_obj.id)
 
-        TeacherSubjectClass.objects.filter(id__in=deleted_objects).delete()
-        TeacherSubjectClass.objects.bulk_create(added_objects)
+        TeacherDisciplineClass.objects.filter(id__in=deleted_objects).delete()
+        TeacherDisciplineClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')
 

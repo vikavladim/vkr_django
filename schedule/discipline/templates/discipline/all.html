@@ -1,0 +1,46 @@
+{% extends "main_base.html" %}
+{%load static%}
+
+{%block exta_head%}
+<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/table.css' %}">
+{% endblock %}
+
+{% block content %}
+<form action="" method="post">
+    <button type="submit">Сохранить</button>
+    <table>
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <tr>
+            <th>Id</th>
+            {% for field in formset.empty_form.visible_fields %}
+            {% if field.label %}
+            <th>{{ field.label }}</th>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% for form in formset %}
+        <tr>
+            <td>{{ form.instance.id }}</td>
+
+            {% for field in form %}
+            {% if field.is_hidden %}
+            {{ field }}
+            {% else %}
+            <td>{{ field }}</td>
+            {% endif %}
+            {% endfor %}
+
+            <td>
+                {% if form.instance.slug %}
+                <a href="{% url 'discipline_delete' slug=form.instance.slug %}" class="button">Удалить</a>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+    <button type="submit">Сохранить</button>
+</form>
+
+{% endblock %}

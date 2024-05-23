@@ -1,10 +1,13 @@
-from django.http import JsonResponse
+import json
+
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, CreateView, DeleteView
 
 from discipline.models import Discipline
-from models import Class
+from .models import Class, Level, TeacherDisciplineClass
 from schedule.utils import DateMixin
 from teachers.models import Teacher
 
@@ -13,7 +16,7 @@ class UpdateClass(DateMixin, UpdateView):
     model = Class
     template_name = 'classes/update.html'
     context_object_name = 'class'
-    fields = ['digit', 'letter', 'subject']
+    fields = ['digit', 'letter', 'discipline']
     success_url = reverse_lazy('classes')
 
     def get_context_data(self, **kwargs):
@@ -31,7 +34,7 @@ class CreateClass(DateMixin, CreateView):
     model = Class
     template_name = 'classes/update.html'
     context_object_name = 'class'
-    fields = ['digit', 'letter', 'subject']
+    fields = ['level','digit', 'letter']
     success_url = reverse_lazy('classes')
 
     def get_context_data(self, **kwargs):
@@ -39,10 +42,10 @@ class CreateClass(DateMixin, CreateView):
         return self.get_mixin_context(
             context,
             title='Создание класса',
+            'disciplines':Disciplines.objects.all(),
             menu_selected=self.request.path,
             **kwargs
         )
-
 
 
 class DeleteClass(DateMixin, DeleteView):
@@ -87,63 +90,79 @@ def getTeachersFromDB(request):
     obj_id = request.GET.get('classId')
     obj = get_object_or_404(Class, id=obj_id)
 
-    teachers_by_subjects = {'array': [], }
+    teachers_by_disciplines = {'array': [], }
 
     for selectedValue in selected_values:
-        subject = get_object_or_404(Discipline, id=selectedValue)
-        teachers = Teacher.objects.filter(subject=subject)
-        selected_teacher_strs = TeacherSubjectClass.objects.filter(subject=subject, _class=obj).first()
-        load = Program.objects.filter(cls=obj, discipline=subject).first()
+        discipline = get_object_or_404(Discipline, id=selectedValue)
+        teachers = Teacher.objects.filter(discipline=discipline)
+        selected_teacher_strs = TeacherDisciplineClass.objects.filter(discipline=discipline, _class=obj).first()
+        load = Program.objects.filter(cls=obj, discipline=discipline).first()
 
-        subject_data = {
-            'subject': subject.serializable,
+        discipline_data = {
+            'discipline': discipline.serializable,
             'teachers': [t.serializable for t in teachers],
             'selectedTeacherId': selected_teacher_strs.teacher.id if selected_teacher_strs else None,
             'load': load.load if load else None
         }
 
-        teachers_by_subjects['array'].append(subject_data)
+        teachers_by_disciplines['array'].append(discipline_data)
 
-    return JsonResponse(teachers_by_subjects)
+    return JsonResponse(teachers_by_disciplines)
 
 
 @csrf_exempt
 def teachers_field_form(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        subjects_array = data.get('array')
+        disciplines_array = data.get('array')
         class_id = data.get('class_id')
         cls = get_object_or_404(Class, id=class_id)
-        old_objects = TeacherSubjectClass.objects.filter(_class=cls)
+        old_objects = TeacherDisciplineClass.objects.filter(_class=cls)
         new_objects = []
 
-        for subject in subjects_array:
-            sub = get_object_or_404(Discipline, id=subject['id_subject'])
+        for discipline in disciplines_array:
+            sub = get_object_or_404(Discipline, id=discipline['id_discipline'])
 
             program_obj, created = Program.objects.get_or_create(cls=cls, discipline=sub)
-            program_obj.load = subject['hours_week']
+            program_obj.load = discipline['hours_week']
             program_obj.save()
 
-            if subject['teacher']:
-                new_objects.append(TeacherSubjectClass(
-                    teacher=get_object_or_404(Teacher, id=subject['teacher']),
-                    subject=sub,
+            if discipline['teacher']:
+                new_objects.append(TeacherDisciplineClass(
+                    teacher=get_object_or_404(Teacher, id=discipline['teacher']),
+                    discipline=sub,
                     _class=cls,
                 ))
             else:
-                old_objects.filter(subject=sub, _class=cls).delete()
+                old_objects.filter(discipline=sub, _class=cls).delete()
 
         deleted_objects = [obj.id for obj in old_objects if obj not in new_objects]
         added_objects = [obj for obj in new_objects if obj not in old_objects]
 
-        all_objects = TeacherSubjectClass.objects.all()
+        all_objects = TeacherDisciplineClass.objects.all()
 
         for old_obj in all_objects:
             for add_abj in added_objects:
-                if old_obj._class == add_abj._class and old_obj.subject == add_abj.subject:
+                if old_obj._class == add_abj._class and old_obj.discipline == add_abj.discipline:
                     deleted_objects.append(old_obj.id)
 
-        TeacherSubjectClass.objects.filter(id__in=deleted_objects).delete()
-        TeacherSubjectClass.objects.bulk_create(added_objects)
+        TeacherDisciplineClass.objects.filter(id__in=deleted_objects).delete()
+        TeacherDisciplineClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')
+
+class CreateLevel(DateMixin, CreateView):
+    model = Level
+    template_name = 'classes/create_level.html'
+    context_object_name = 'grade'
+    fields = ['name', 'discipline']
+    success_url = reverse_lazy('classes')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(
+            context,
+            title='Создание параллели',
+            menu_selected=self.request.path,
+            **kwargs
+        )
