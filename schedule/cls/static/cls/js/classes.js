@@ -14,6 +14,7 @@ const config = {childList: true, subtree: true};
 observer.observe(document, config);
 
 let selectorTo;
+let pSelector;
 
 function swapDivLabel(divElement) {
     labelElement = divElement.nextElementSibling;
@@ -101,6 +102,8 @@ function setListeners() {
     swapDivLabel(document.querySelector('div.selector'));
 
     selectorTo = document.querySelector('#id_subject_to');
+    pSelector=document.querySelector('div.selector').parentNode;
+    console.log(pSelector);
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
@@ -149,4 +152,8 @@ function handleFormSubmit() {
     };
 
     xhr.send(JSON.stringify(data));
+}
+
+function disableSubjects() {
+
 }

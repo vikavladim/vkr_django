@@ -34,7 +34,7 @@ class CreateClass(DateMixin, CreateView):
     model = Class
     template_name = 'classes/update.html'
     context_object_name = 'class'
-    fields = ['level','digit', 'letter']
+    fields = ['level', 'digit', 'letter']
     success_url = reverse_lazy('classes')
 
     def get_context_data(self, **kwargs):
@@ -42,7 +42,7 @@ class CreateClass(DateMixin, CreateView):
         return self.get_mixin_context(
             context,
             title='Создание класса',
-            'disciplines':Disciplines.objects.all(),
+            disciplines=Discipline.objects.all(),
             menu_selected=self.request.path,
             **kwargs
         )
@@ -150,6 +150,7 @@ def teachers_field_form(request):
         TeacherDisciplineClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')
+
 
 class CreateLevel(DateMixin, CreateView):
     model = Level
