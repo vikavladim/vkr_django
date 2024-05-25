@@ -23,17 +23,12 @@
     {{ form.as_p }}
 
     <p>
-    <div class="selector">
-        <div class="selector-available"></div>
-    </div>
     <label for="id_discipline">Предметы:</label>
     <select name="discipline" id="id_discipline_from" multiple="" class="filtered">
         {% for discipline in disciplines %}
         <option value="{{discipline.id}}">{{discipline}}</option>
         {% endfor %}
     </select>
-
-
     </p>
 
     <p>

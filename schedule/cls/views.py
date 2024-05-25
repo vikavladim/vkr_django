@@ -154,9 +154,9 @@ def teachers_field_form(request):
 
 class CreateLevel(DateMixin, CreateView):
     model = Level
-    template_name = 'classes/create_level.html'
+    template_name = 'levels/create_level.html'
     context_object_name = 'grade'
-    fields = ['name', 'discipline']
+    fields = ['name', ]
     success_url = reverse_lazy('classes')
 
     def get_context_data(self, **kwargs):
@@ -164,6 +164,7 @@ class CreateLevel(DateMixin, CreateView):
         return self.get_mixin_context(
             context,
             title='Создание параллели',
+            disciplines=Discipline.objects.all(),
             menu_selected=self.request.path,
             **kwargs
         )
