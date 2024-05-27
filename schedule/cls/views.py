@@ -205,8 +205,6 @@ def load_field_form(request):
 
         level, _ = Level.objects.get_or_create(name=level_name)
 
-        new_objects = []
-
         for discipline in disciplines_array:
             dis = get_object_or_404(Discipline, id=discipline['id_discipline'])
 
