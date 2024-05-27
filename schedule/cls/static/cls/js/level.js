@@ -1,7 +1,7 @@
 const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach(mutation => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject')) {
+            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_discipline')) {
                 setListeners();
             }
         }
@@ -26,42 +26,31 @@ function addOptions(options) {
     options.forEach(function (option) {
         values.push(option.value)
     });
+    level = document.getElementById('levelId');
     $.ajax({
         type: 'GET',
-        url: '/grades/getHoursFromDB/',
+        url: '/classes/getHoursFromDB/',
         data: {
             selectedValues: values,
-            gradeId: document.getElementById('gradeId').value
+            levelId: level ? level.value : null
         },
         success: function (response) {
             response['array'].forEach(function (elem) {
-                subject = elem.subject;
-                let load = elem.load ? elem.load : 1;
+                discipline = elem.discipline;
+                let load = elem.load;
 
-                var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
-                var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
-                // var selectElement = $('<select name="select-' + subject.id + '" id="id_select-' + subject.id + '">');
-                // selectElement.append($('<option value="0">Не выбрано</option>'));
+                var pElement = $('<p id="p-select-' + discipline.id + '" name="p-select-' + discipline.id + '">');
+                var labelElement = $('<label for="select-' + discipline.id + '">' + discipline.str + '</label>');
 
-                // teachers.forEach(function (teacher) {
-                //     var optionElement = $('<option value="' + teacher.id + '">' + teacher.str + '</option>');
-                //     if (teacher.id === selectedTeacherId) {
-                //         optionElement.attr('selected', 'selected');
-                //     }
-                //     selectElement.append(optionElement);
-                // });
-
-                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + subject.id + '" value="' + load + '" min="1">');
+                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + discipline.id + '" value="' + load + '" min="1">');
                 var hoursLabel = $('<label for="hours-week">Часов в неделю:</label>');
 
                 pElement.append(labelElement);
-                pElement.append(selectElement);
 
                 pElement.append(hoursLabel);
                 pElement.append(hoursInput);
 
-                // $('#form').append(pElement);
-                $('#but2').before(pElement);
+                $('#but2').parent().before(pElement);
             });
         },
         error: function (err) {
@@ -70,30 +59,31 @@ function addOptions(options) {
     });
 }
 
+function differenceMassive(arr1, arr2) {
+    return arr1.filter(el => !arr2.some(el2 => el2.value === el.value));
+}
+
 // обработчик формы, отправляет дополнительные поля
 function handleFormSubmit() {
-    // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
+    event.preventDefault(); // Предотвращение стандартного поведения отправки формы
     var paragraphs = document.body.querySelectorAll('p[id^="p-select-"]');
     var selectOptions = [];
 
     paragraphs.forEach(function (paragraph) {
-        var selectElement = paragraph.querySelector('select');
-        var selectedTeacher = selectElement.options[selectElement.selectedIndex].value;
-
         selectOptions.push({
-            'id_subject': parseInt(paragraph.id.match(/\d+/)[0]),
-            'teacher': selectedTeacher === "0" ? null : selectedTeacher,
-            'hours_week': paragraph.querySelector('[id^="id_hours-week"]').value
+            'id_discipline': parseInt(paragraph.id.match(/\d+/)[0]),
+            'load': paragraph.querySelector('[id^="id_hours-week"]').value
         })
     });
+    console.log(document.getElementById('id_name'));
 
     var data = {
-        'class_id': document.getElementById('classId').value,
+        'level_name': document.getElementById('id_name').value,
         'array': selectOptions,
     };
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/classes/teachers_field_form/', true);
+    xhr.open('POST', '/classes/load_field_form/', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onreadystatechange = function () {
@@ -109,12 +99,27 @@ function handleFormSubmit() {
     xhr.send(JSON.stringify(data));
 }
 
+function handleSelectTo() {
+    newOptions = selectorTo.querySelectorAll('option');
+    newOptions = Array.from(newOptions);
+
+    const addedOptions = differenceMassive(newOptions, oldOptions);
+    const removedOptions = differenceMassive(oldOptions, newOptions);
+
+    addOptions(addedOptions);
+    removedOptions.forEach(option => {
+        document.getElementById("p-select-" + option.value).remove();
+    });
+
+    oldOptions = newOptions;
+}
+
 // Основная функция программы
 function setListeners() {
-    SelectFilter.init("id_subject", "предметы", 0, "/static/admin/");
+    SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
     swapDivLabel(document.querySelector('div.selector'));
 
-    selectorTo = document.querySelector('#id_subject_to');
+    selectorTo = document.querySelector('#id_discipline_to');
 
     oldOptions = selectorTo.querySelectorAll('option');
     oldOptions = Array.from(oldOptions);
@@ -122,6 +127,6 @@ function setListeners() {
     const observerTo = new MutationObserver(handleSelectTo);
     observerTo.observe(selectorTo, {childList: true});
 
-    document.querySelectorAll('#id_subject_to')
+    document.querySelectorAll('#id_discipline_to')
         .forEach(elem => addOptions(elem));
 }

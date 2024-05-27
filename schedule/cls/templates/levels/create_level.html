@@ -12,9 +12,9 @@
 {% block content %}
 <h1 class="section__heading">{{title}}</h1>
 <form method="post" enctype="multipart/form-data" id="form" onsubmit="handleFormSubmit(event)">
-    {% if id %}
-    <input type="hidden" id="classId" name="objectId" value="{{ id }}">
-    {% endif %}
+<!--    {% if id %}-->
+    <input type="hidden" id="levelId" name="objectId" value="{{ id }}">
+<!--    {% endif %}-->
 
     <p>
         <button type="submit">Отправить</button>
@@ -24,7 +24,7 @@
 
     <p>
     <label for="id_discipline">Предметы:</label>
-    <select name="discipline" id="id_discipline_from" multiple="" class="filtered">
+    <select name="discipline" id="id_discipline" multiple="" class="filtered">
         {% for discipline in disciplines %}
         <option value="{{discipline.id}}">{{discipline}}</option>
         {% endfor %}

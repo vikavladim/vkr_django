@@ -3,7 +3,7 @@
 const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach(mutation => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_subject')) {
+            if (Array.from(mutation.addedNodes).some(node => node.id === 'id_discipline')) {
                 setListeners();
             }
         }
@@ -39,14 +39,14 @@ function addOptions(options) {
         },
         success: function (response) {
             response['array'].forEach(function (elem) {
-                subject = elem.subject;
+                discipline = elem.discipline;
                 teachers = elem.teachers;
                 selectedTeacherId = elem.selectedTeacherId;
                 let load = elem.load ? elem.load : 1;
 
-                var pElement = $('<p id="p-select-' + subject.id + '" name="p-select-' + subject.id + '">');
-                var labelElement = $('<label for="select-' + subject.id + '">' + subject.str + '</label>');
-                var selectElement = $('<select name="select-' + subject.id + '" id="id_select-' + subject.id + '">');
+                var pElement = $('<p id="p-select-' + discipline.id + '" name="p-select-' + discipline.id + '">');
+                var labelElement = $('<label for="select-' + discipline.id + '">' + discipline.str + '</label>');
+                var selectElement = $('<select name="select-' + discipline.id + '" id="id_select-' + discipline.id + '">');
                 selectElement.append($('<option value="0">Не выбрано</option>'));
 
                 teachers.forEach(function (teacher) {
@@ -57,7 +57,7 @@ function addOptions(options) {
                     selectElement.append(optionElement);
                 });
 
-                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + subject.id + '" value="' + load + '" min="1">');
+                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + discipline.id + '" value="' + load + '" min="1">');
                 var hoursLabel = $('<label for="hours-week">Часов в неделю:</label>');
 
                 pElement.append(labelElement);
@@ -98,10 +98,10 @@ function handleSelectTo() {
 
 // Основная функция программы
 function setListeners() {
-    SelectFilter.init("id_subject", "предметы", 0, "/static/admin/");
+    SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
     swapDivLabel(document.querySelector('div.selector'));
 
-    selectorTo = document.querySelector('#id_subject_to');
+    selectorTo = document.querySelector('#id_discipline_to');
     pSelector=document.querySelector('div.selector').parentNode;
     console.log(pSelector);
 
@@ -111,7 +111,7 @@ function setListeners() {
     const observerTo = new MutationObserver(handleSelectTo);
     observerTo.observe(selectorTo, {childList: true});
 
-    document.querySelectorAll('#id_subject_to')
+    document.querySelectorAll('#id_discipline_to')
         .forEach(elem => addOptions(elem));
 }
 
@@ -126,7 +126,7 @@ function handleFormSubmit() {
         var selectedTeacher = selectElement.options[selectElement.selectedIndex].value;
 
         selectOptions.push({
-            'id_subject': parseInt(paragraph.id.match(/\d+/)[0]),
+            'id_discipline': parseInt(paragraph.id.match(/\d+/)[0]),
             'teacher': selectedTeacher === "0" ? null : selectedTeacher,
             'hours_week': paragraph.querySelector('[id^="id_hours-week"]').value
         })
@@ -154,6 +154,6 @@ function handleFormSubmit() {
     xhr.send(JSON.stringify(data));
 }
 
-function disableSubjects() {
+function disableDisciplines() {
 
 }

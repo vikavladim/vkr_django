@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, CreateView, DeleteView
 
 from discipline.models import Discipline
-from .models import Class, Level, TeacherDisciplineClass
+from .models import Class, Level, TeacherDisciplineClass, LevelProgram
 from schedule.utils import DateMixin
 from teachers.models import Teacher
 
@@ -168,3 +168,50 @@ class CreateLevel(DateMixin, CreateView):
             menu_selected=self.request.path,
             **kwargs
         )
+
+
+def getHoursFromDB(request):
+    selected_values = request.GET.getlist('selectedValues[]')
+    obj_id = request.GET.get('levelId')
+    if obj_id:
+        obj = get_object_or_404(Level, id=obj_id)
+    else:
+        obj = Level.objects.last()
+    # obj = Level.objects.filter(id=obj_id).first()
+    # obj = get_object_or_404(Level, id=obj_id)
+
+    hours_by_disciplines = {'array': [], }
+
+    for selectedValue in selected_values:
+        discipline = get_object_or_404(Discipline, id=selectedValue)
+        load = LevelProgram.objects.filter(level=obj, discipline=discipline).first()
+
+        discipline_data = {
+            'discipline': discipline.serializable,
+            'load': load.load if load else 1
+        }
+
+        hours_by_disciplines['array'].append(discipline_data)
+
+    return JsonResponse(hours_by_disciplines)
+
+
+@csrf_exempt
+def load_field_form(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        disciplines_array = data.get('array')
+        level_name = data.get('level_name')
+
+        level, _ = Level.objects.get_or_create(name=level_name)
+
+        new_objects = []
+
+        for discipline in disciplines_array:
+            dis = get_object_or_404(Discipline, id=discipline['id_discipline'])
+
+            program_obj, _ = LevelProgram.objects.get_or_create(level=level, discipline=dis, load=discipline['load'])
+            program_obj.load = discipline['hours_week']
+            program_obj.save()
+
+    return HttpResponse('ok')

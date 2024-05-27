@@ -24,7 +24,7 @@
 
     <p>
     <label for="id_discipline">Предметы:</label>
-    <select name="discipline" id="id_discipline_from" multiple="" class="filtered">
+    <select name="discipline" id="id_discipline" multiple="" class="filtered">
         {% for discipline in disciplines %}
         <option value="{{discipline.id}}">{{discipline}}</option>
         {% endfor %}
