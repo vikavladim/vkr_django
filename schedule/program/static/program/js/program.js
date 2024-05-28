@@ -26,7 +26,7 @@ function addOptions(options) {
     options.forEach(function (option) {
         values.push(option.value)
     });
-    program = document.getElementById('programId');
+    let program = document.getElementById('programId');
     $.ajax({
         type: 'GET',
         url: '/programs/getHoursFromDB/',

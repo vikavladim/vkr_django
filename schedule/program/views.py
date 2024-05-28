@@ -107,14 +107,17 @@ class UpdateProgram(DateMixin, UpdateView):
         program = self.get_object()
 
         all_disciplines = Discipline.objects.all()
-        select_disciplines = ProgramDisciplines.objects.filter(program=program)
+        select_disciplines_ids = ProgramDisciplines.objects.filter(program=program).values_list('discipline_id',
+                                                                                                flat=True)
+        print(all_disciplines, select_disciplines_ids)
 
         return self.get_mixin_context(
             context,
             title='Создание параллели',
             # disciplines=Discipline.objects.all(),
             all_disciplines=Discipline.objects.all(),
-            select_disciplines=ProgramDisciplines.objects.filter(program=program),
+            select_disciplines_ids=ProgramDisciplines.objects.filter(program=program).values_list('discipline_id',
+                                                                                                  flat=True),
             menu_selected=self.request.path,
             **kwargs
         )
