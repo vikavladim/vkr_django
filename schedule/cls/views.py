@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, CreateView, DeleteView
 
 from discipline.models import Discipline
-from .models import Class, Level, TeacherDisciplineClass, LevelProgram
+from .models import Class, TeacherDisciplineClass
 from schedule.utils import DateMixin
 from teachers.models import Teacher
 
@@ -148,68 +148,5 @@ def teachers_field_form(request):
 
         TeacherDisciplineClass.objects.filter(id__in=deleted_objects).delete()
         TeacherDisciplineClass.objects.bulk_create(added_objects)
-
-    return HttpResponse('ok')
-
-
-class CreateLevel(DateMixin, CreateView):
-    model = Level
-    template_name = 'levels/create_level.html'
-    context_object_name = 'grade'
-    fields = ['name', ]
-    success_url = reverse_lazy('classes')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(
-            context,
-            title='Создание параллели',
-            disciplines=Discipline.objects.all(),
-            menu_selected=self.request.path,
-            **kwargs
-        )
-
-
-def getHoursFromDB(request):
-    selected_values = request.GET.getlist('selectedValues[]')
-    obj_id = request.GET.get('levelId')
-    if obj_id:
-        obj = get_object_or_404(Level, id=obj_id)
-    else:
-        obj = Level.objects.last()
-    # obj = Level.objects.filter(id=obj_id).first()
-    # obj = get_object_or_404(Level, id=obj_id)
-
-    hours_by_disciplines = {'array': [], }
-
-    for selectedValue in selected_values:
-        discipline = get_object_or_404(Discipline, id=selectedValue)
-        load = LevelProgram.objects.filter(level=obj, discipline=discipline).first()
-
-        discipline_data = {
-            'discipline': discipline.serializable,
-            'load': load.load if load else 1
-        }
-
-        hours_by_disciplines['array'].append(discipline_data)
-
-    return JsonResponse(hours_by_disciplines)
-
-
-@csrf_exempt
-def load_field_form(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        disciplines_array = data.get('array')
-        level_name = data.get('level_name')
-
-        level, _ = Level.objects.get_or_create(name=level_name)
-
-        for discipline in disciplines_array:
-            dis = get_object_or_404(Discipline, id=discipline['id_discipline'])
-
-            program_obj, _ = LevelProgram.objects.get_or_create(level=level, discipline=dis, load=discipline['load'])
-            program_obj.load = discipline['hours_week']
-            program_obj.save()
 
     return HttpResponse('ok')

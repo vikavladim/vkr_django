@@ -14,6 +14,7 @@ urlpatterns = [
     path('home/', HomeView.as_view(), name='home'),
     path('teachers/', include('teachers.urls')),
     path('classes/', include('cls.urls')),
+    path('programs/', include('program.urls')),
     path('disciplines/', include('discipline.urls')),
     path('schedule/', schedule),
     path("__debug__/", include("debug_toolbar.urls")),

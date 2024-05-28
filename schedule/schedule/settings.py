@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'teachers.apps.TeacherConfig',
     'discipline.apps.DisciplineConfig',
+    'program.apps.ProgramConfig',
     'cls.apps.ClsConfig',
     'debug_toolbar',
     # "corsheaders",

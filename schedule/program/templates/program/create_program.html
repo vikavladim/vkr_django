@@ -1,0 +1,46 @@
+{%extends "main_base.html"%}
+{%load static%}
+
+{%block exta_head%}
+<script type="text/javascript"
+        src="{% static 'program/js/program.js' %}?v={{ generate_unique_hash_or_timestamp"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/selectors.css' %}">
+
+{% include 'admin_includes.html' %}
+{% endblock %}
+
+{% block content %}
+<h1 class="section__heading">{{title}}</h1>
+<form method="post" enctype="multipart/form-data" id="form" onsubmit="handleFormSubmit(event)">
+    <!--    {% if id %}-->
+    <input type="hidden" id="programId" name="objectId" value="{{ id }}">
+    <!--    {% endif %}-->
+
+    <p>
+        <button type="submit">Отправить</button>
+    </p>
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <p>
+        <label for="id_discipline">Предметы:</label>
+        <select name="discipline" id="id_discipline" multiple="" class="filtered">
+            <script>console.log('{{all_disciplines}}')</script>
+            <script>console.log('{{select_disciplines}}')</script>
+            {% for discipline in all_disciplines %}
+            {% if discipline in select_disciplines.discipline %}
+            <option value="{{discipline.id}}" selected>{{discipline}}</option>
+            {% else %}
+            <option value="{{discipline.id}}">{{discipline}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </p>
+
+    <p>
+        <button id="but2" type="submit">Отправить</button>
+    </p>
+
+</form>
+
+{% endblock %}
