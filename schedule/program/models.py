@@ -33,3 +33,12 @@ class ProgramDisciplines(models.Model):
 
     def __str__(self):
         return f'{self.program} - {self.discipline} ({self.load} часов)'
+
+    def __eq__(self, other):
+        if isinstance(other, ProgramDisciplines):
+            return (
+                    self.program == other.program and
+                    self.discipline == other.discipline and
+                    self.load == other.load
+            )
+        return NotImplemented
