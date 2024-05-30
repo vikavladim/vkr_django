@@ -30,55 +30,57 @@ function swapDivLabel(divElement) {
 
 //Отправка выбранных функций и изменение контента
 function addOptions(options) {
-    // values = [];
-    // options = Array.from(options);
-    // options.forEach(function (option) {
-    //     values.push(option.value)
-    // });
-    // $.ajax({
-    //     type: 'GET',
-    //     url: '/classes/getTeachersFromDB/',
-    //     data: {
-    //         selectedValues: values,
-    //         classId: document.getElementById('classId').value
-    //     },
-    //     success: function (response) {
-    //         response['array'].forEach(function (elem) {
-    //             discipline = elem.discipline;
-    //             teachers = elem.teachers;
-    //             selectedTeacherId = elem.selectedTeacherId;
-    //             let load = elem.load ? elem.load : 1;
-    //
-    //             var pElement = $('<p id="p-select-' + discipline.id + '" name="p-select-' + discipline.id + '">');
-    //             var labelElement = $('<label for="select-' + discipline.id + '">' + discipline.str + '</label>');
-    //             var selectElement = $('<select name="select-' + discipline.id + '" id="id_select-' + discipline.id + '">');
-    //             selectElement.append($('<option value="0">Не выбрано</option>'));
-    //
-    //             teachers.forEach(function (teacher) {
-    //                 var optionElement = $('<option value="' + teacher.id + '">' + teacher.str + '</option>');
-    //                 if (teacher.id === selectedTeacherId) {
-    //                     optionElement.attr('selected', 'selected');
-    //                 }
-    //                 selectElement.append(optionElement);
-    //             });
-    //
-    //             var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + discipline.id + '" value="' + load + '" min="1">');
-    //             var hoursLabel = $('<label for="hours-week">Часов в неделю:</label>');
-    //
-    //             pElement.append(labelElement);
-    //             pElement.append(selectElement);
-    //
-    //             pElement.append(hoursLabel);
-    //             pElement.append(hoursInput);
-    //
-    //             // $('#form').append(pElement);
-    //             $('#but2').before(pElement);
-    //         });
-    //     },
-    //     error: function (err) {
-    //         console.error('Произошла ошибка при получении данных из базы данных', err);
-    //     }
-    // });
+    values = [];
+    options = Array.from(options);
+    options.forEach(function (option) {
+        values.push(option.value)
+    });
+    classElem=document.getElementById('classId');
+    $.ajax({
+        type: 'GET',
+        url: '/classes/getTeachersFromDB/',
+        data: {
+            selectedValues: values,
+            classId: classElem? classElem.value : null,
+            programId: programIdElem.value,
+        },
+        success: function (response) {
+            response['array'].forEach(function (elem) {
+                discipline = elem.discipline;
+                teachers = elem.teachers;
+                selectedTeacherId = elem.selectedTeacherId;
+                let load = elem.load ? elem.load : 1;
+
+                var pElement = $('<p id="p-select-' + discipline.id + '" name="p-select-' + discipline.id + '">');
+                var labelElement = $('<label for="select-' + discipline.id + '">' + discipline.str + '</label>');
+                var selectElement = $('<select name="select-' + discipline.id + '" id="id_select-' + discipline.id + '">');
+                selectElement.append($('<option value="0">Не выбрано</option>'));
+
+                teachers.forEach(function (teacher) {
+                    var optionElement = $('<option value="' + teacher.id + '">' + teacher.str + '</option>');
+                    if (teacher.id === selectedTeacherId) {
+                        optionElement.attr('selected', 'selected');
+                    }
+                    selectElement.append(optionElement);
+                });
+
+                var hoursInput = $('<input type="number" name="hours-week" id="id_hours-week' + discipline.id + '" value="' + load + '" min="1">');
+                var hoursLabel = $('<label for="hours-week">Часов в неделю:</label>');
+
+                pElement.append(labelElement);
+                pElement.append(selectElement);
+
+                pElement.append(hoursLabel);
+                pElement.append(hoursInput);
+
+                // $('#form').append(pElement);
+                $('#but2').before(pElement);
+            });
+        },
+        error: function (err) {
+            console.error('Произошла ошибка при получении данных из базы данных', err);
+        }
+    });
 }
 
 function differenceMassive(arr1, arr2) {
@@ -157,43 +159,6 @@ function changeAllChildren(element, state) {
 
 // изменение дисциплин и нагрузки по программам
 function changeDisciplines() {
-    // var xhr = new XMLHttpRequest();
-    // xhr.open("POST", "/classes/change_disciplines/", true);
-    // xhr.setRequestHeader("Content-Type", "application/json");
-
-    // xhr.onload = function () {
-    //     if (xhr.status >= 200 && xhr.status < 300) {
-    //         var response = JSON.parse(xhr.responseText);
-    //         var allDisciplines = response.all_disciplines;
-    //         var selectDisciplinesIds = response.select_disciplines_ids;
-    //
-    //         pSelector.querySelector('div.selector').remove();
-    //
-    //         var selectElement = document.createElement('select');
-    //         selectElement.id = 'id_discipline';
-    //         selectElement.name = 'discipline';
-    //         selectElement.multiple = true;
-    //         selectElement.classList.add('filtered');
-    //
-    //         pSelector.appendChild(selectElement);
-    //
-    //         allDisciplines.forEach(function (discipline) {
-    //             var option = document.createElement('option');
-    //             option.value = discipline.id;
-    //             option.text = discipline.name;
-    //             if (selectDisciplinesIds.includes(discipline.id)) {
-    //                 option.selected = true;
-    //             }
-    //             selectElement.appendChild(option);
-    //         });
-    //     } else {
-    //         console.error('Ошибка при выполнении запроса:', xhr.statusText);
-    //     }
-    // };
-    // context = {program_id: document.getElementById('id_program').value}
-    //
-    // xhr.send(JSON.stringify(context));
-
     fetch('/classes/change_disciplines/', {
     method: 'POST',
     headers: {
@@ -232,7 +197,6 @@ function changeDisciplines() {
     });
 
     SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
-
 })
 .catch(error => {
     console.error('Ошибка при выполнении запроса:', error);

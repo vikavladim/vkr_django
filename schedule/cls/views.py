@@ -88,16 +88,22 @@ def class_list(request):
 
 def getTeachersFromDB(request):
     selected_values = request.GET.getlist('selectedValues[]')
-    obj_id = request.GET.get('classId')
-    obj = get_object_or_404(Class, id=obj_id)
+    cls_id = request.GET.get('classId')
+    program_id = request.GET.get('programId')
+    if program_id != 0:
+        program = get_object_or_404(Program, id=program_id)
+    else:
+        program = Program.objects.last()
+
+    cls = Class.objects.filter(id=cls_id).first()
 
     teachers_by_disciplines = {'array': [], }
 
     for selectedValue in selected_values:
         discipline = get_object_or_404(Discipline, id=selectedValue)
         teachers = Teacher.objects.filter(discipline=discipline)
-        selected_teacher_strs = TeacherDisciplineClass.objects.filter(discipline=discipline, _class=obj).first()
-        load = Program.objects.filter(cls=obj, discipline=discipline).first()
+        selected_teacher_strs = TeacherDisciplineClass.objects.filter(discipline=discipline, cls=cls).first()
+        load = ProgramDisciplines.objects.filter(program=program, discipline=discipline).first()
 
         discipline_data = {
             'discipline': discipline.serializable,
