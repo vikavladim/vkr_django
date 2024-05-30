@@ -96,7 +96,8 @@ def load_field_form(request):
                 program_obj = ProgramDisciplines.objects.filter(program=program, discipline=dis).first()
 
                 if program_obj:
-                    old_disciplines = old_disciplines.remove(program_obj)
+                    # old_disciplines = old_disciplines.remove(program_obj)
+                    old_disciplines.remove(program_obj)
                     if program_obj.load != discipline['load']:
                         program_obj.load = discipline['load']
                         program_obj.save()
@@ -112,13 +113,10 @@ def load_field_form(request):
 
         else:
             program = Program.objects.create(digit=digit, name=program_name)
-            # program, _ = Program.objects.get_or_create(digit=digit, name=program_name)
             for discipline in disciplines_array:
                 dis = get_object_or_404(Discipline, id=discipline['id_discipline'])
-
                 program_obj = ProgramDisciplines.objects.create(program=program, discipline=dis,
                                                                 load=discipline['load'])
-                                                               load=discipline['load'])
                 program_obj.load = discipline['load']
                 program_obj.save()
 
