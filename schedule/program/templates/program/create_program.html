@@ -15,7 +15,10 @@
     <!--    {% if id %}-->
     <!--    {% endif %}-->
     <input type="hidden" id="objectId" name="objectId" value="{{ object.id }}">
-
+    {%if program%}
+    <p>Дата создания: {{program.date_create}}</p>
+    <p>Дата изменения: {{program.date_update}}</p>
+    {%endif%}
     <p>
         <button type="submit">Отправить</button>
     </p>
@@ -25,13 +28,13 @@
     <p>
         <label for="id_discipline">Предметы:</label>
         <select name="discipline" id="id_discipline" multiple="" class="filtered">
-          {% for discipline in all_disciplines %}
-        {% if discipline.id in select_disciplines_ids %}
+            {% for discipline in all_disciplines %}
+            {% if discipline.id in select_disciplines_ids %}
             <option value="{{ discipline.id }}" selected>{{ discipline }}</option>
-        {% else %}
+            {% else %}
             <option value="{{ discipline.id }}">{{ discipline }}</option>
-        {% endif %}
-    {% endfor %}
+            {% endif %}
+            {% endfor %}
         </select>
     </p>
 

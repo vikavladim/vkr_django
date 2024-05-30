@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.http import HttpResponse, JsonResponse
@@ -81,13 +82,16 @@ def load_field_form(request):
         disciplines_array = data.get('array')
         program_id = data.get('id')
         program_name = data.get('program_name')
-        digit = data.get('digit')
+        digit = int(data.get('digit'))
 
         if program_id:
+            is_updated = False
             program = get_object_or_404(Program, id=program_id)
-            program.digit = digit
-            program.name = program_name
-            program.save()
+            if program.digit != digit or program.name != program_name:
+                is_updated = True
+                program.digit = digit
+                program.name = program_name
+                program.save()
 
             old_disciplines = list(ProgramDisciplines.objects.filter(program=program))
 
@@ -96,20 +100,23 @@ def load_field_form(request):
                 program_obj = ProgramDisciplines.objects.filter(program=program, discipline=dis).first()
 
                 if program_obj:
-                    # old_disciplines = old_disciplines.remove(program_obj)
                     old_disciplines.remove(program_obj)
-                    if program_obj.load != discipline['load']:
+                    if int(program_obj.load) != int(discipline['load']):
                         program_obj.load = discipline['load']
                         program_obj.save()
+                        is_updated = True
                 else:
                     ProgramDisciplines.objects.create(program=program, discipline=dis,
-                                                                                   load=discipline['load'])
+                                                      load=discipline['load'])
+                    is_updated = True
 
             if old_disciplines:
                 ProgramDisciplines.objects.filter(id__in=[obj.id for obj in old_disciplines]).delete()
-            # deleted_ids = [obj.id for obj in old_disciplines]
-            # print(deleted_ids)
-            # ProgramDisciplines.objects.filter(id__in=deleted_ids).delete()
+                is_updated = True
+
+            if is_updated:
+                program.date_update = datetime.datetime.now()
+                program.save()
 
         else:
             program = Program.objects.create(digit=digit, name=program_name)
@@ -126,7 +133,6 @@ def load_field_form(request):
 class UpdateProgram(DateMixin, UpdateView):
     model = Program
     template_name = 'program/create_program.html'
-    # context_object_name = 'program'
     fields = ['digit', 'name', ]
     success_url = reverse_lazy('programs')
 
@@ -134,19 +140,13 @@ class UpdateProgram(DateMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         program = self.get_object()
 
-        all_disciplines = Discipline.objects.all()
-        # select_disciplines = ProgramDisciplines.objects.filter(program=program)
-        select_disciplines_ids = ProgramDisciplines.objects.filter(program=program).values_list('discipline_id',
-                                                                                                flat=True)
-        # print(all_disciplines, select_disciplines_ids)
-
         return self.get_mixin_context(
             context,
             title='Обновление программы',
             all_disciplines=Discipline.objects.all(),
-            # select_disciplines=select_disciplines,
             select_disciplines_ids=ProgramDisciplines.objects.filter(program=program).values_list('discipline_id',
                                                                                                   flat=True),
+            program=program,
             menu_selected=self.request.path,
             **kwargs
         )

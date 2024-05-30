@@ -7,6 +7,8 @@ class Program(models.Model):
     digit = models.IntegerField(verbose_name='Параллель')
     name = models.CharField(verbose_name='Название', max_length=255)
     slug = models.SlugField(max_length=255, verbose_name='URL', unique=True, db_index=True)
+    date_create = models.DateField(auto_now_add=True, verbose_name='Дата создания')
+    date_update = models.DateField(auto_now=True, verbose_name='Дата обновления')
 
     class Meta:
         verbose_name = 'Программы'
@@ -26,6 +28,7 @@ class ProgramDisciplines(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE, verbose_name='Программа')
     discipline = models.ForeignKey('discipline.Discipline', on_delete=models.CASCADE, verbose_name='Дисциплина')
     load = models.IntegerField(verbose_name='Нагрузка', blank=True, null=True)
+
 
     class Meta:
         verbose_name = 'Программа и дисциплины'
