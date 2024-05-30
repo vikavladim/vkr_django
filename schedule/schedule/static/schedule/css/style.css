@@ -101,3 +101,10 @@ form {
     text-overflow: clip;
     overflow: visible;
 }
+
+/*для неактвности ссылок внутри селектора*/
+.disabled-link {
+    pointer-events: none;
+    /*cursor: not-allowed;*/
+     color: lightgray;
+}

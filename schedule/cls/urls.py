@@ -9,4 +9,5 @@ urlpatterns = [
     path('getTeachersFromDB/', getTeachersFromDB, name='getTeachersFromDB'),
     path('teachers_field_form/', teachers_field_form, name='teachers_field_form'),
     path('<slug:slug>/delete/', DeleteClass.as_view(), name='class_delete'),
+    path('change_disciplines/', changeDisciplines, name='change_disciplines'),
 ]

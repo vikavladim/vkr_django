@@ -12,7 +12,7 @@ class Class(models.Model):
     digit = models.IntegerField(verbose_name='Цифра')
     letter = models.CharField(max_length=1, verbose_name='Буква')
     slug = models.SlugField(max_length=255, unique=True, verbose_name='URL', db_index=True)
-    program = models.ForeignKey('program.Program', on_delete=models.CASCADE, verbose_name='Параллель',blank=True)
+    program = models.ForeignKey('program.Program', on_delete=models.CASCADE, verbose_name='Параллель', blank=True)
 
     class Meta:
         verbose_name = 'Класс'

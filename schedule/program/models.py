@@ -15,6 +15,7 @@ class Program(models.Model):
         verbose_name_plural = 'Программы'
         ordering = ['digit','name']
 
+
     def __str__(self):
         return f'{self.digit} - {self.name}'
 

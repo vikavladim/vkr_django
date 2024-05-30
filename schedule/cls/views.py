@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView, CreateView, DeleteView
 
 from discipline.models import Discipline
+from program.models import ProgramDisciplines, Program
 from .models import Class, TeacherDisciplineClass
 from schedule.utils import DateMixin
 from teachers.models import Teacher
@@ -34,7 +35,7 @@ class CreateClass(DateMixin, CreateView):
     model = Class
     template_name = 'classes/update.html'
     context_object_name = 'class'
-    fields = ['level', 'digit', 'letter']
+    fields = ['program', 'digit', 'letter']
     success_url = reverse_lazy('classes')
 
     def get_context_data(self, **kwargs):
@@ -150,3 +151,19 @@ def teachers_field_form(request):
         TeacherDisciplineClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')
+
+
+@csrf_exempt
+def changeDisciplines(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        program_id = data.get('program_id')
+        program = get_object_or_404(Program, id=program_id)
+
+        return JsonResponse({
+            'all_disciplines': [d.serializable for d in Discipline.objects.all()],
+            'select_disciplines_ids': list(
+                ProgramDisciplines.objects.filter(program=program).values_list('discipline_id', flat=True))
+        })
+
+    return HttpResponse('ne ok', status=400)

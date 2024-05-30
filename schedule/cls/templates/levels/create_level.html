@@ -1,40 +1,40 @@
-{%extends "main_base.html"%}
-{%load static%}
+<!--{%extends "main_base.html"%}-->
+<!--{%load static%}-->
 
-{%block exta_head%}
-<script type="text/javascript"
-        src="{% static 'cls/js/level.js' %}?v={{ generate_unique_hash_or_timestamp"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/selectors.css' %}">
+<!--{%block exta_head%}-->
+<!--<script type="text/javascript"-->
+<!--        src="{% static 'cls/js/level.js' %}?v={{ generate_unique_hash_or_timestamp"></script>-->
+<!--<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/selectors.css' %}">-->
 
-{% include 'admin_includes.html' %}
-{% endblock %}
+<!--{% include 'admin_includes.html' %}-->
+<!--{% endblock %}-->
 
-{% block content %}
-<h1 class="section__heading">{{title}}</h1>
-<form method="post" enctype="multipart/form-data" id="form" onsubmit="handleFormSubmit(event)">
-<!--    {% if id %}-->
-    <input type="hidden" id="levelId" name="objectId" value="{{ id }}">
-<!--    {% endif %}-->
+<!--{% block content %}-->
+<!--<h1 class="section__heading">{{title}}</h1>-->
+<!--<form method="post" enctype="multipart/form-data" id="form" onsubmit="handleFormSubmit(event)">-->
+<!--&lt;!&ndash;    {% if id %}&ndash;&gt;-->
+<!--    <input type="hidden" id="levelId" name="objectId" value="{{ id }}">-->
+<!--&lt;!&ndash;    {% endif %}&ndash;&gt;-->
 
-    <p>
-        <button type="submit">Отправить</button>
-    </p>
-    {% csrf_token %}
-    {{ form.as_p }}
+<!--    <p>-->
+<!--        <button type="submit">Отправить</button>-->
+<!--    </p>-->
+<!--    {% csrf_token %}-->
+<!--    {{ form.as_p }}-->
 
-    <p>
-    <label for="id_discipline">Предметы:</label>
-    <select name="discipline" id="id_discipline" multiple="" class="filtered">
-        {% for discipline in disciplines %}
-        <option value="{{discipline.id}}">{{discipline}}</option>
-        {% endfor %}
-    </select>
-    </p>
+<!--    <p>-->
+<!--    <label for="id_discipline">Предметы:</label>-->
+<!--    <select name="discipline" id="id_discipline" multiple="" class="filtered">-->
+<!--        {% for discipline in disciplines %}-->
+<!--        <option value="{{discipline.id}}">{{discipline}}</option>-->
+<!--        {% endfor %}-->
+<!--    </select>-->
+<!--    </p>-->
 
-    <p>
-        <button id="but2" type="submit">Отправить</button>
-    </p>
+<!--    <p>-->
+<!--        <button id="but2" type="submit">Отправить</button>-->
+<!--    </p>-->
 
-</form>
+<!--</form>-->
 
-{% endblock %}
+<!--{% endblock %}-->

@@ -1,40 +1,40 @@
-{% extends "main_base.html" %}
-{% load static %}
+<!--{% extends "main_base.html" %}-->
+<!--{% load static %}-->
 
-{% block exta_head %}
+<!--{% block exta_head %}-->
 
-<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/table.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/product_cards.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/selectors.css' %}">
+<!--<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/table.css' %}">-->
+<!--<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/product_cards.css' %}">-->
+<!--<link rel="stylesheet" type="text/css" href="{% static 'schedule/css/selectors.css' %}">-->
 
-{% endblock %}
+<!--{% endblock %}-->
 
-{% block content %}
-<div class="container">
-    <h1 class="section__heading">{{ title }}</h1>
-    <ul class="grid">
-        <li class="grid__item">
-            <article class="product">
-                <h2 class="product__name">Добавить</h2>
-                <ul>
-                    <li><a href="{% url 'create_level' %}">Параллель</a></li>
-                </ul>
-            </article>
-        </li>
+<!--{% block content %}-->
+<!--<div class="container">-->
+<!--    <h1 class="section__heading">{{ title }}</h1>-->
+<!--    <ul class="grid">-->
+<!--        <li class="grid__item">-->
+<!--            <article class="product">-->
+<!--                <h2 class="product__name">Добавить</h2>-->
+<!--                <ul>-->
+<!--                    <li><a href="{% url 'create_level' %}">Параллель</a></li>-->
+<!--                </ul>-->
+<!--            </article>-->
+<!--        </li>-->
 
-        {% for digit, levels in students.items %}
-        <li class="grid__item">
-            <article class="product">
-                <h2 class="product__name">Параллель {{ digit }}</h2>
-                <ul>
-                    {% for level in levels %}
-                    <li>{{ level }}</li>
-                    {% endfor %}
-                </ul>
-            </article>
-        </li>
-        {% endfor %}
+<!--        {% for digit, levels in students.items %}-->
+<!--        <li class="grid__item">-->
+<!--            <article class="product">-->
+<!--                <h2 class="product__name">Параллель {{ digit }}</h2>-->
+<!--                <ul>-->
+<!--                    {% for level in levels %}-->
+<!--                    <li>{{ level }}</li>-->
+<!--                    {% endfor %}-->
+<!--                </ul>-->
+<!--            </article>-->
+<!--        </li>-->
+<!--        {% endfor %}-->
 
-    </ul>
-</div>
-{% endblock %}
+<!--    </ul>-->
+<!--</div>-->
+<!--{% endblock %}-->
