@@ -83,22 +83,48 @@ function handleFormSubmit() {
         'array': selectOptions,
     };
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/programs/load_field_form/', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('POST', '/programs/load_field_form/', false);
+    // xhr.setRequestHeader('Content-Type', 'application/json');
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                // console.log('AJAX request successful');
+    // xhr.onreadystatechange = function () {
+    //     if (xhr.readyState === 4) {
+    //         if (xhr.status === 200) {
+    //             console.log('AJAX request successful');
+    //         // window.location.href = '/programs';
+    //         } else {
+    //             console.error('AJAX request failed with status: ' + xhr.status);
+    //         }
+    //     }
+    // };
+
+    // xhr.send(JSON.stringify(data));
+    //
+    // xhr.onload = function () {
+    //     if (xhr.status >= 200 && xhr.status < 300) {
+    //         window.location.href = '/programs';
+    //     } else {
+    //         console.error('Ошибка в запросе: ' + xhr.status);
+    //     }
+    // };
+
+    fetch('/programs/load_field_form/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/programs';
             } else {
-                console.error('AJAX request failed with status: ' + xhr.status);
+                console.error('Ошибка в запросе: ' + response.status);
             }
-        }
-    };
-
-    xhr.send(JSON.stringify(data));
-    window.location.href = '/programs';
+        })
+        .catch(error => {
+            console.error('Произошла ошибка при выполнении запроса:', error);
+        });
 }
 
 function handleSelectTo() {
