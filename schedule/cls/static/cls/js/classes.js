@@ -75,7 +75,7 @@ function addOptions(options) {
                 pElement.append(hoursInput);
 
                 // $('#form').append(pElement);
-                $('#but2').before(pElement);
+                $('#but2').parent().before(pElement);
             });
         },
         error: function (err) {
@@ -131,18 +131,9 @@ function changeProgram() {
     state = programIdElem.value === 0 || programIdElem.value === '';
     if (!state) {
         changeDisciplines();
-        // setListeners()
-        //     SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
-
-    }
-     else {
+    } else {
         changeAllChildren(disciplineSelect, true);
     }
-    // if (lastState === true && newState === false) {
-    //     changeAllChildren(disciplineSelect, false);
-    // } else if (lastState === false && newState === true) {
-    //     changeAllChildren(disciplineSelect, true);
-    // }
 }
 
 function changeAllChildren(element, state) {
@@ -180,7 +171,8 @@ function changeDisciplines() {
             var selectDisciplinesIds = data.select_disciplines_ids;
 
             pSelector.querySelector('div.selector').remove();
-
+            var paragraphs = document.body.querySelectorAll('p[id^="p-select-"]');
+            paragraphs.forEach(p => p.remove());
             var selectElement = document.createElement('select');
             selectElement.id = 'id_discipline';
             selectElement.name = 'discipline';
@@ -202,10 +194,6 @@ function changeDisciplines() {
             if (state === false) {
                 changeAllChildren(disciplineSelect, false);
             }
-            // else if (lastState === false && newState === true) {
-            //     changeAllChildren(disciplineSelect, true);
-            // }
-            // SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
         })
         .catch(error => {
             console.error('Ошибка при выполнении запроса:', error);
@@ -239,22 +227,6 @@ function handleFormSubmit() {
         'letter': document.getElementById('id_letter').value,
         'array': selectOptions,
     };
-
-    // var xhr = new XMLHttpRequest();
-    // xhr.open('POST', '/classes/teachers_field_form/', true);
-    // xhr.setRequestHeader('Content-Type', 'application/json');
-    //
-    // xhr.onreadystatechange = function () {
-    //     if (xhr.readyState === 4) {
-    //         if (xhr.status === 200) {
-    //             // console.log('AJAX request successful');
-    //         } else {
-    //             console.error('AJAX request failed with status: ' + xhr.status);
-    //         }
-    //     }
-    // };
-    //
-    // xhr.send(JSON.stringify(data));
 
     fetch('/classes/teachers_field_form/', {
         method: 'POST',

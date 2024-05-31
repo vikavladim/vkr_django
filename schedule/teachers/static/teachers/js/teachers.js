@@ -54,7 +54,7 @@ function addOptions(options) {
                 pElement.append(selectElement);
 
                 // $('#form').append(pElement);
-                $('#but2').before(pElement);
+                $('#but2').parent().before(pElement);
 
                 SelectFilter.init("id_select-" + discipline.id, "классы для " + discipline.str, 0, "/static/admin/");
                 swapDivLabel(document.querySelector(`#p-select-${discipline.id} .selector`));
