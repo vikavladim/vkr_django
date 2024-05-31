@@ -1,5 +1,6 @@
 import json
 
+from django.core.files import File
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -23,6 +24,10 @@ class AddTeacher(DateMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
+
+    def form_valid(self, form):
+        teacher = form.save()
+        return HttpResponse(teacher.id)
 
 
 class UpdateTeacher(DateMixin, UpdateView):
@@ -75,7 +80,8 @@ def getDataFromDB(request):
         discipline = get_object_or_404(Discipline, id=selectedValue)
         program_disciplines = ProgramDisciplines.objects.filter(discipline=discipline).values_list('program', flat=True)
 
-        classes_with_discipline = Class.objects.filter(program__in=program_disciplines)       # classes_with_discipline=ProgramDisciplines.objects.filter(discipline=discipline).select_related('program').class_set.all()
+        classes_with_discipline = Class.objects.filter(
+            program__in=program_disciplines)  # classes_with_discipline=ProgramDisciplines.objects.filter(discipline=discipline).select_related('program').class_set.all()
         selected_classes_strs = TeacherDisciplineClass.objects.filter(discipline=discipline, teacher=teacher)
 
         discipline_data = {
@@ -86,7 +92,6 @@ def getDataFromDB(request):
 
         classes_by_disciplines['array'].append(discipline_data)
 
-
     return JsonResponse(classes_by_disciplines)
 
 
@@ -95,8 +100,33 @@ def classes_field_form(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         disciplines_array = data.get('array')
+        disciplines_only = [dis['id_discipline'] for dis in disciplines_array]
         teacher_id = data.get('teacher_id')
+        # if teacher_id:
         teacher = get_object_or_404(Teacher, id=teacher_id)
+        # else:
+        #     disciplines = Discipline.objects.filter(id__in=disciplines_only)
+        #     teacher = Teacher.objects.create(
+        #         fio=data.get('fio'),
+        #         position=data.get('position'),
+        #         room=data.get('room'),
+        #         photo=request.FILES.get('photo')
+        #     )
+        #     with open(data.get('photo'), 'rb') as f:
+        #         teacher.photo.save('custom_filename.jpg', File(f))
+        # data = json.loads(request.body.decode('utf-8'))
+        #
+        # fio = data.get('fio')
+        # position = data.get('position')
+        # room = data.get('room')
+        # teacher_id = data.get('teacher_id')
+        # selectOptions = data.get('array')
+        #
+        # photo = request.FILES.get('photo')
+        # teacher = Teacher.objects.create(fio=fio, position=position, room=room, teacher_id=teacher_id, selectOptions=selectOptions, photo=photo)
+
+        teacher.discipline.set(Discipline.objects.filter(id__in=disciplines_only))
+
         old_objects = TeacherDisciplineClass.objects.filter(teacher=teacher)
         new_objects = []
 
