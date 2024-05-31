@@ -124,6 +124,11 @@ function setListeners() {
 
     document.querySelectorAll('#id_discipline_to')
         .forEach(elem => addOptions(elem));
+
+    if (document.getElementById('id_program').value) {
+        state = false;
+        changeAllChildren(disciplineSelect, false);
+    }
 }
 
 //обработчик выбора программы

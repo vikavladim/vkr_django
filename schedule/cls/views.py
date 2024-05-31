@@ -18,16 +18,37 @@ class UpdateClass(DateMixin, UpdateView):
     model = Class
     template_name = 'classes/update.html'
     context_object_name = 'class'
-    fields = ['digit', 'letter', 'discipline']
+    fields = ['program', 'digit', 'letter', ]
     success_url = reverse_lazy('classes')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        cls = context['class']
+        select_disciplines = ProgramDisciplines.objects.filter(program=cls.program),
+        disciplines = Discipline.objects.all()
+
+        # teacher_load_discipline = []
+        #
+        # for disc in select_disciplines:
+        #     teachers = Teacher.objects.filter(discipline=disc)
+        #     select_teacher = TeacherDisciplineClass.objects.filter(discipline=disc, cls=cls).first()
+        #     load_str = ProgramDisciplines.objects.filter(program=cls.program, discipline=disc).first()
+        #     load = load_str.load if load_str else 1
+        #
+        #     teacher_load_discipline.append({
+        #         'discipline': disc,
+        #         'load': load,
+        #         'teachers': teachers,
+        #         'select_teacher': select_teacher
+        #     })
+
         return self.get_mixin_context(
             context,
             title=context['class'],
             menu_selected=self.request.path,
-            id=context['class'].id,
+            select_disciplines_ids=ProgramDisciplines.objects.filter(program=cls.program).values_list('discipline_id', flat=True),
+            all_disciplines=disciplines,
+            id=cls.id,
             **kwargs
         )
 
@@ -44,7 +65,7 @@ class CreateClass(DateMixin, CreateView):
         return self.get_mixin_context(
             context,
             title='Создание класса',
-            disciplines=Discipline.objects.all(),
+            all_disciplines=Discipline.objects.all(),
             menu_selected=self.request.path,
             **kwargs
         )
@@ -172,6 +193,10 @@ def teachers_field_form(request):
 
         if class_id:
             cls = get_object_or_404(Class, id=class_id)
+            cls.digit=class_digit
+            cls.letter=letter
+            cls.program=program
+            cls.save()
         else:
             cls = Class.objects.create(digit=class_digit, letter=letter, program=program)
 
