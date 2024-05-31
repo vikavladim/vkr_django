@@ -8,6 +8,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from cls.models import Class, TeacherDisciplineClass
 from discipline.models import Discipline
+from program.models import ProgramDisciplines
 from teachers.models import Teacher
 from schedule.utils import DateMixin
 
@@ -72,11 +73,9 @@ def getDataFromDB(request):
 
     for selectedValue in selected_values:
         discipline = get_object_or_404(Discipline, id=selectedValue)
-        # classes_with_discipline = Class.objects.filter(discipline=discipline)
-        classes_with_discipline = Class.objects.all()
-                                   # .select_related('program'))
-                                   # .filter(discipline=discipline)
-        print(classes_with_discipline)
+        program_disciplines = ProgramDisciplines.objects.filter(discipline=discipline).values_list('program', flat=True)
+
+        classes_with_discipline = Class.objects.filter(program__in=program_disciplines)       # classes_with_discipline=ProgramDisciplines.objects.filter(discipline=discipline).select_related('program').class_set.all()
         selected_classes_strs = TeacherDisciplineClass.objects.filter(discipline=discipline, teacher=teacher)
 
         discipline_data = {
@@ -86,6 +85,7 @@ def getDataFromDB(request):
         }
 
         classes_by_disciplines['array'].append(discipline_data)
+
 
     return JsonResponse(classes_by_disciplines)
 

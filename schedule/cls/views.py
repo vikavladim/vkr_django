@@ -24,30 +24,13 @@ class UpdateClass(DateMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cls = context['class']
-        select_disciplines = ProgramDisciplines.objects.filter(program=cls.program),
-        disciplines = Discipline.objects.all()
-
-        # teacher_load_discipline = []
-        #
-        # for disc in select_disciplines:
-        #     teachers = Teacher.objects.filter(discipline=disc)
-        #     select_teacher = TeacherDisciplineClass.objects.filter(discipline=disc, cls=cls).first()
-        #     load_str = ProgramDisciplines.objects.filter(program=cls.program, discipline=disc).first()
-        #     load = load_str.load if load_str else 1
-        #
-        #     teacher_load_discipline.append({
-        #         'discipline': disc,
-        #         'load': load,
-        #         'teachers': teachers,
-        #         'select_teacher': select_teacher
-        #     })
 
         return self.get_mixin_context(
             context,
-            title=context['class'],
+            title=cls,
             menu_selected=self.request.path,
             select_disciplines_ids=ProgramDisciplines.objects.filter(program=cls.program).values_list('discipline_id', flat=True),
-            all_disciplines=disciplines,
+            all_disciplines=Discipline.objects.all(),
             id=cls.id,
             **kwargs
         )
@@ -113,45 +96,16 @@ def getTeachersFromDB(request):
     cls_id = request.GET.get('classId')
     program_id = request.GET.get('programId')
 
-    # if cls_id:
-    #     cls = get_object_or_404(Class, id=cls_id)
-    # else:
-    #     cls_digit = request.GET.get('clsDigit')
-    #     if cls_digit:
-    #         cls = Class.objects.filter(digit=cls_digit).last()
-    #         # умная мысль!!! не стирать!!!
-    #         # cls = Class.objects.filter(digit=cls_digit).order_by('date_update').last()
-    #     elif program_id:
-    #         program = get_object_or_404(Program, id=program_id)
-    #         cls = Class.objects.filter(program=program).last()
-    #         # умная мысль!!! не стирать!!!
-    #         # cls = Class.objects.filter(digit=program.digit).order_by('date_update').last()
-    #     else:
-    #         cls = Class.objects.last()
     if cls_id:
         cls = get_object_or_404(Class, id=cls_id)
     else:
         cls = None
-    # cls = Class.objects.filter(id=cls_id).first()
-
-    # if program_id != 0:
-    #     program = get_object_or_404(Program, id=program_id)
-    #     # program_disciplines = ProgramDisciplines.objects.filter(program=program)
-    #
-    #     for pd in selected_values:
-    #         teachers = Teacher.objects.filter(discipline=pd.discipline)
-    #         selected_teacher_strs = TeacherDisciplineClass.objects.filter(discipline=pd.discipline, cls=cls).first()
-    # else:
-    #     program = Program.objects.last()
-    #
-    # cls = Class.objects.filter(id=cls_id).first()
 
     teachers_and_load_by_disciplines = {'array': [], }
     if program_id:
         program = get_object_or_404(Program, id=program_id)
     else:
         program = None
-    # program=Program.objects.filter(id=program_id).first()
 
     for selectedValue in selected_values:
         discipline = get_object_or_404(Discipline, id=selectedValue)
