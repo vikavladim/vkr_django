@@ -147,52 +147,10 @@ function handleFormSubmit() {
                 console.log(xhr.responseText);
             }
         });
-        // var data = {
-        //     'teacher_id': teacherElem ? teacherElem.value : null,
-        //     'fio': document.getElementById('id_fio').value,
-        //     'position': document.getElementById('id_position').value,
-        //     'room': document.getElementById('id_room').value,
-        //     'photo': document.getElementById('id_photo').files[0],
-        //     'array': selectOptions,
-        // };
-        //
-        // var xhr = new XMLHttpRequest();
-        // xhr.open('POST', '/teachers/classes_field_form/', true);
-        // xhr.setRequestHeader('Content-Type', 'application/json');
-
-        // var teacherElem = document.getElementById('teacherId');
-        // var fio = document.getElementById('id_fio').value;
-        // var position = document.getElementById('id_position').value;
-        // var room = document.getElementById('id_room').value;
-        // var photoFile = document.getElementById('id_photo').files[0];
-        //
-        //
-        // var formData = new FormData();
-        // formData.append('teacher_id', teacherElem ? teacherElem.value : null);
-        // formData.append('fio', fio);
-        // formData.append('position', position);
-        // formData.append('room', room);
-        // formData.append('photo', photoFile);
-        // formData.append('array', JSON.stringify(selectOptions));
-        //
-        // var xhr = new XMLHttpRequest();
-        // xhr.open('POST', '/teachers/classes_field_form/', true);
-        // xhr.send(formData);
-        //
-        // xhr.onreadystatechange = function () {
-        //     if (xhr.readyState === 4) {
-        //         if (xhr.status === 200) {
-        //             // console.log('AJAX request successful');
-        //         } else {
-        //             console.error('AJAX request failed with status: ' + xhr.status);
-        //         }
-        //     }
-        // };
-
-        // xhr.send(JSON.stringify(data));
     }
 }
 
+// Отправка данных на сервер
 function sendData(data) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/teachers/classes_field_form/', true);
@@ -201,7 +159,6 @@ function sendData(data) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                // console.log('AJAX request successful');
                 window.location.href = '/teachers';
             } else {
                 console.error('AJAX request failed with status: ' + xhr.status);
