@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.http import JsonResponse, HttpResponse
@@ -156,25 +157,38 @@ def teachers_field_form(request):
         data = json.loads(request.body)
         disciplines_array = data.get('array')
         class_id = data.get('class_id')
-        cls = get_object_or_404(Class, id=class_id)
-        old_objects = TeacherDisciplineClass.objects.filter(_class=cls)
+        program_id = data.get('program_id')
+        class_digit = data.get('digit')
+        letter = data.get('letter')
+
+        # cls = get_object_or_404(Class, id=class_id)
+        if program_id==0:
+            program=Program.objects.create(digit=class_digit,name=f'Индивидуальная программа для {class_digit+letter} от {datetime.now()}')
+            for discipline in disciplines_array:
+                dis = get_object_or_404(Discipline, id=discipline['id_discipline'])
+                ProgramDisciplines.objects.create(program=program,discipline=dis,load=discipline['load'])
+        else:
+            program = get_object_or_404(Program, id=program_id)
+
+        if class_id:
+            cls = get_object_or_404(Class, id=class_id)
+        else:
+            cls = Class.objects.create(digit=class_digit, letter=letter, program=program)
+
+        old_objects = TeacherDisciplineClass.objects.filter(cls=cls)
         new_objects = []
 
         for discipline in disciplines_array:
             sub = get_object_or_404(Discipline, id=discipline['id_discipline'])
 
-            program_obj, created = Program.objects.get_or_create(cls=cls, discipline=sub)
-            program_obj.load = discipline['hours_week']
-            program_obj.save()
-
             if discipline['teacher']:
                 new_objects.append(TeacherDisciplineClass(
                     teacher=get_object_or_404(Teacher, id=discipline['teacher']),
                     discipline=sub,
-                    _class=cls,
+                    cls=cls,
                 ))
             else:
-                old_objects.filter(discipline=sub, _class=cls).delete()
+                old_objects.filter(discipline=sub, cls=cls).delete()
 
         deleted_objects = [obj.id for obj in old_objects if obj not in new_objects]
         added_objects = [obj for obj in new_objects if obj not in old_objects]
@@ -182,8 +196,8 @@ def teachers_field_form(request):
         all_objects = TeacherDisciplineClass.objects.all()
 
         for old_obj in all_objects:
-            for add_abj in added_objects:
-                if old_obj._class == add_abj._class and old_obj.discipline == add_abj.discipline:
+            for add_obj in added_objects:
+                if old_obj.cls == add_obj.cls and old_obj.discipline == add_obj.discipline:
                     deleted_objects.append(old_obj.id)
 
         TeacherDisciplineClass.objects.filter(id__in=deleted_objects).delete()

@@ -22,12 +22,13 @@ function addOptions(options) {
     options.forEach(function (option) {
         values.push(option.value)
     });
+    teacherElem = document.getElementById('teacherId');
     $.ajax({
         type: 'GET',
         url: '/teachers/getDataFromDB/',
         data: {
             selectedValues: values,
-            teacherId: document.getElementById('teacherId') ? document.getElementById('teacherId').value : null
+            teacherId: teacherElem ? teacherElem.value : null
         },
         success: function (response) {
             response['array'].forEach(function (elem) {

@@ -5,7 +5,7 @@ const observer = new MutationObserver((mutationsList, observer) => {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
             if (Array.from(mutation.addedNodes).some(node => node.id === 'id_discipline')) {
                 setListeners();
-                 observer.disconnect();
+                observer.disconnect();
             }
         }
     });
@@ -18,8 +18,7 @@ let selectorTo;
 let pSelector;
 let programIdElem;
 let disciplineSelect;
-let lastState = true;
-let newState = true;
+let state = true;
 
 function swapDivLabel(divElement) {
     labelElement = divElement.nextElementSibling;
@@ -35,16 +34,16 @@ function addOptions(options) {
     options.forEach(function (option) {
         values.push(option.value)
     });
-    classElem=document.getElementById('classId');
-    digitElem=document.getElementById('id_digit');
+    classElem = document.getElementById('classId');
+    digitElem = document.getElementById('id_digit');
     $.ajax({
         type: 'GET',
         url: '/classes/getTeachersFromDB/',
         data: {
             selectedValues: values,
-            classId: classElem? classElem.value : null,
+            classId: classElem ? classElem.value : null,
             programId: programIdElem.value,
-            cls_digit: digitElem? digitElem.value : null,
+            cls_digit: digitElem ? digitElem.value : null,
         },
         success: function (response) {
             response['array'].forEach(function (elem) {
@@ -129,19 +128,21 @@ function setListeners() {
 
 //обработчик выбора программы
 function changeProgram() {
-    lastState = newState;
-    newState = programIdElem.value === 0;
-    if (!newState) {
+    state = programIdElem.value === 0 || programIdElem.value === '';
+    if (!state) {
         changeDisciplines();
-        // setListeners();
+        // setListeners()
         //     SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
 
     }
-    if (lastState === true && newState === false) {
-        changeAllChildren(disciplineSelect, false);
-    } else if (lastState === false && newState === true) {
+     else {
         changeAllChildren(disciplineSelect, true);
     }
+    // if (lastState === true && newState === false) {
+    //     changeAllChildren(disciplineSelect, false);
+    // } else if (lastState === false && newState === true) {
+    //     changeAllChildren(disciplineSelect, true);
+    // }
 }
 
 function changeAllChildren(element, state) {
@@ -162,47 +163,53 @@ function changeAllChildren(element, state) {
 // изменение дисциплин и нагрузки по программам
 function changeDisciplines() {
     fetch('/classes/change_disciplines/', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ program_id: document.getElementById('id_program').value })
-})
-.then(response => {
-    if (response.ok) {
-        return response.json();
-    }
-    throw new Error('Network response was not ok.');
-})
-.then(data => {
-    var allDisciplines = data.all_disciplines;
-    var selectDisciplinesIds = data.select_disciplines_ids;
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({program_id: document.getElementById('id_program').value})
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            var allDisciplines = data.all_disciplines;
+            var selectDisciplinesIds = data.select_disciplines_ids;
 
-    pSelector.querySelector('div.selector').remove();
+            pSelector.querySelector('div.selector').remove();
 
-    var selectElement = document.createElement('select');
-    selectElement.id = 'id_discipline';
-    selectElement.name = 'discipline';
-    selectElement.multiple = true;
-    selectElement.classList.add('filtered');
+            var selectElement = document.createElement('select');
+            selectElement.id = 'id_discipline';
+            selectElement.name = 'discipline';
+            selectElement.multiple = true;
+            selectElement.classList.add('filtered');
 
-    pSelector.appendChild(selectElement);
+            pSelector.appendChild(selectElement);
 
-    allDisciplines.forEach(function (discipline) {
-        var option = document.createElement('option');
-        option.value = discipline.id;
-        option.text = discipline.name;
-        if (selectDisciplinesIds.includes(discipline.id)) {
-            option.selected = true;
-        }
-        selectElement.appendChild(option);
-    });
-
-    SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
-})
-.catch(error => {
-    console.error('Ошибка при выполнении запроса:', error);
-});
+            allDisciplines.forEach(function (discipline) {
+                var option = document.createElement('option');
+                option.value = discipline.id;
+                option.text = discipline.name;
+                if (selectDisciplinesIds.includes(discipline.id)) {
+                    option.selected = true;
+                }
+                selectElement.appendChild(option);
+            });
+            setListeners();
+            if (state === false) {
+                changeAllChildren(disciplineSelect, false);
+            }
+            // else if (lastState === false && newState === true) {
+            //     changeAllChildren(disciplineSelect, true);
+            // }
+            // SelectFilter.init("id_discipline", "предметы", 0, "/static/admin/");
+        })
+        .catch(error => {
+            console.error('Ошибка при выполнении запроса:', error);
+        });
 }
 
 
@@ -211,6 +218,8 @@ function handleFormSubmit() {
     // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
     var paragraphs = document.body.querySelectorAll('p[id^="p-select-"]');
     var selectOptions = [];
+    classElem = document.querySelector('#classId');
+    programIdElem = document.querySelector('#id_program');
 
     paragraphs.forEach(function (paragraph) {
         var selectElement = paragraph.querySelector('select');
@@ -219,28 +228,49 @@ function handleFormSubmit() {
         selectOptions.push({
             'id_discipline': parseInt(paragraph.id.match(/\d+/)[0]),
             'teacher': selectedTeacher === "0" ? null : selectedTeacher,
-            'hours_week': paragraph.querySelector('[id^="id_hours-week"]').value
+            'load': paragraph.querySelector('[id^="id_hours-week"]').value,
         })
     });
 
     var data = {
-        'class_id': document.getElementById('classId').value,
+        'class_id': classElem ? classElem.value : null,
+        'program_id': programIdElem.value,
+        'digit': document.getElementById('id_digit').value,
+        'letter': document.getElementById('id_letter').value,
         'array': selectOptions,
     };
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/classes/teachers_field_form/', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('POST', '/classes/teachers_field_form/', true);
+    // xhr.setRequestHeader('Content-Type', 'application/json');
+    //
+    // xhr.onreadystatechange = function () {
+    //     if (xhr.readyState === 4) {
+    //         if (xhr.status === 200) {
+    //             // console.log('AJAX request successful');
+    //         } else {
+    //             console.error('AJAX request failed with status: ' + xhr.status);
+    //         }
+    //     }
+    // };
+    //
+    // xhr.send(JSON.stringify(data));
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
+    fetch('/classes/teachers_field_form/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (response.ok) {
                 // console.log('AJAX request successful');
             } else {
-                console.error('AJAX request failed with status: ' + xhr.status);
+                console.error('AJAX request failed with status: ' + response.status);
             }
-        }
-    };
-
-    xhr.send(JSON.stringify(data));
+        })
+        .catch(error => {
+            console.error('Error during fetch:', error);
+        });
 }

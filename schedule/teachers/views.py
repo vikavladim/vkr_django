@@ -23,6 +23,7 @@ class AddTeacher(DateMixin, CreateView):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, menu_selected=self.request.path, **kwargs)
 
+
 class UpdateTeacher(DateMixin, UpdateView):
     model = Teacher
     fields = ['fio', 'position', 'room', 'photo', 'discipline']
@@ -67,12 +68,15 @@ def getDataFromDB(request):
     teacher_id = request.GET.get('teacherId')
     teacher = get_object_or_404(Teacher, id=teacher_id) if teacher_id else None
 
-
     classes_by_disciplines = {'array': [], }
 
     for selectedValue in selected_values:
         discipline = get_object_or_404(Discipline, id=selectedValue)
-        classes_with_discipline = Class.objects.filter(discipline=discipline)
+        # classes_with_discipline = Class.objects.filter(discipline=discipline)
+        classes_with_discipline = Class.objects.all()
+                                   # .select_related('program'))
+                                   # .filter(discipline=discipline)
+        print(classes_with_discipline)
         selected_classes_strs = TeacherDisciplineClass.objects.filter(discipline=discipline, teacher=teacher)
 
         discipline_data = {
@@ -118,6 +122,7 @@ def classes_field_form(request):
         TeacherDisciplineClass.objects.bulk_create(added_objects)
 
     return HttpResponse('ok')
+
 
 class DeleteTeacher(DateMixin, DeleteView):
     model = Teacher
