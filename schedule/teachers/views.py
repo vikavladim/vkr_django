@@ -81,7 +81,7 @@ def getDataFromDB(request):
         discipline_data = {
             'discipline': discipline.serializable,
             'classes': [cls.serializable for cls in classes_with_discipline],
-            'selectedClassesId': [selected_str._class.id for selected_str in selected_classes_strs],
+            'selectedClassesId': [selected_str.cls.id for selected_str in selected_classes_strs],
         }
 
         classes_by_disciplines['array'].append(discipline_data)
@@ -105,7 +105,7 @@ def classes_field_form(request):
                 new_objects.append(TeacherDisciplineClass(
                     teacher=teacher,
                     discipline=get_object_or_404(Discipline, id=discipline['id_discipline']),
-                    _class=get_object_or_404(Class, id=class_id),
+                    cls=get_object_or_404(Class, id=class_id),
                 ))
 
         deleted_objects = [obj.id for obj in old_objects if obj not in new_objects]
@@ -115,7 +115,7 @@ def classes_field_form(request):
 
         for old_obj in all_objects:
             for add_abj in added_objects:
-                if old_obj._class == add_abj._class and old_obj.discipline == add_abj.discipline:
+                if old_obj.cls == add_abj.cls and old_obj.discipline == add_abj.discipline:
                     deleted_objects.append(old_obj.id)
 
         TeacherDisciplineClass.objects.filter(id__in=deleted_objects).delete()
