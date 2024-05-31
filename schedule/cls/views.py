@@ -161,14 +161,14 @@ def teachers_field_form(request):
         class_digit = data.get('digit')
         letter = data.get('letter')
 
-        # cls = get_object_or_404(Class, id=class_id)
-        if program_id==0:
-            program=Program.objects.create(digit=class_digit,name=f'Индивидуальная программа для {class_digit+letter} от {datetime.now()}')
+        if program_id:
+            program = get_object_or_404(Program, id=program_id)
+        else:
+            program = Program.objects.create(digit=class_digit,
+                                             name=f'Индивидуальная программа для {class_digit + letter} от {datetime.datetime.now()}')
             for discipline in disciplines_array:
                 dis = get_object_or_404(Discipline, id=discipline['id_discipline'])
-                ProgramDisciplines.objects.create(program=program,discipline=dis,load=discipline['load'])
-        else:
-            program = get_object_or_404(Program, id=program_id)
+                ProgramDisciplines.objects.create(program=program, discipline=dis, load=discipline['load'])
 
         if class_id:
             cls = get_object_or_404(Class, id=class_id)

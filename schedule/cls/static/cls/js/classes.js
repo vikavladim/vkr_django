@@ -203,7 +203,7 @@ function changeDisciplines() {
 
 // обработчик формы, отправляет дополнительные поля
 function handleFormSubmit() {
-    // event.preventDefault(); // Предотвращение стандартного поведения отправки формы
+    event.preventDefault(); // Предотвращение стандартного поведения отправки формы
     var paragraphs = document.body.querySelectorAll('p[id^="p-select-"]');
     var selectOptions = [];
     classElem = document.querySelector('#classId');
@@ -238,6 +238,7 @@ function handleFormSubmit() {
         .then(response => {
             if (response.ok) {
                 // console.log('AJAX request successful');
+                window.location.href = '/classes';
             } else {
                 console.error('AJAX request failed with status: ' + response.status);
             }
