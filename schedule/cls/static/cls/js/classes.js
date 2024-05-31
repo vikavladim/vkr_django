@@ -36,6 +36,7 @@ function addOptions(options) {
         values.push(option.value)
     });
     classElem=document.getElementById('classId');
+    digitElem=document.getElementById('id_digit');
     $.ajax({
         type: 'GET',
         url: '/classes/getTeachersFromDB/',
@@ -43,13 +44,14 @@ function addOptions(options) {
             selectedValues: values,
             classId: classElem? classElem.value : null,
             programId: programIdElem.value,
+            cls_digit: digitElem? digitElem.value : null,
         },
         success: function (response) {
             response['array'].forEach(function (elem) {
                 discipline = elem.discipline;
                 teachers = elem.teachers;
                 selectedTeacherId = elem.selectedTeacherId;
-                let load = elem.load ? elem.load : 1;
+                let load = elem.load;
 
                 var pElement = $('<p id="p-select-' + discipline.id + '" name="p-select-' + discipline.id + '">');
                 var labelElement = $('<label for="select-' + discipline.id + '">' + discipline.str + '</label>');

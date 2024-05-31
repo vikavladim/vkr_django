@@ -90,31 +90,64 @@ def getTeachersFromDB(request):
     selected_values = request.GET.getlist('selectedValues[]')
     cls_id = request.GET.get('classId')
     program_id = request.GET.get('programId')
-    if program_id != 0:
+
+    # if cls_id:
+    #     cls = get_object_or_404(Class, id=cls_id)
+    # else:
+    #     cls_digit = request.GET.get('clsDigit')
+    #     if cls_digit:
+    #         cls = Class.objects.filter(digit=cls_digit).last()
+    #         # умная мысль!!! не стирать!!!
+    #         # cls = Class.objects.filter(digit=cls_digit).order_by('date_update').last()
+    #     elif program_id:
+    #         program = get_object_or_404(Program, id=program_id)
+    #         cls = Class.objects.filter(program=program).last()
+    #         # умная мысль!!! не стирать!!!
+    #         # cls = Class.objects.filter(digit=program.digit).order_by('date_update').last()
+    #     else:
+    #         cls = Class.objects.last()
+    if cls_id:
+        cls = get_object_or_404(Class, id=cls_id)
+    else:
+        cls = None
+    # cls = Class.objects.filter(id=cls_id).first()
+
+    # if program_id != 0:
+    #     program = get_object_or_404(Program, id=program_id)
+    #     # program_disciplines = ProgramDisciplines.objects.filter(program=program)
+    #
+    #     for pd in selected_values:
+    #         teachers = Teacher.objects.filter(discipline=pd.discipline)
+    #         selected_teacher_strs = TeacherDisciplineClass.objects.filter(discipline=pd.discipline, cls=cls).first()
+    # else:
+    #     program = Program.objects.last()
+    #
+    # cls = Class.objects.filter(id=cls_id).first()
+
+    teachers_and_load_by_disciplines = {'array': [], }
+    if program_id:
         program = get_object_or_404(Program, id=program_id)
     else:
-        program = Program.objects.last()
-
-    cls = Class.objects.filter(id=cls_id).first()
-
-    teachers_by_disciplines = {'array': [], }
+        program = None
+    # program=Program.objects.filter(id=program_id).first()
 
     for selectedValue in selected_values:
         discipline = get_object_or_404(Discipline, id=selectedValue)
         teachers = Teacher.objects.filter(discipline=discipline)
         selected_teacher_strs = TeacherDisciplineClass.objects.filter(discipline=discipline, cls=cls).first()
-        load = ProgramDisciplines.objects.filter(program=program, discipline=discipline).first()
+        load_str = ProgramDisciplines.objects.filter(program=program, discipline=discipline).first()
+        load = load_str.load if load_str else 1
 
         discipline_data = {
             'discipline': discipline.serializable,
             'teachers': [t.serializable for t in teachers],
             'selectedTeacherId': selected_teacher_strs.teacher.id if selected_teacher_strs else None,
-            'load': load.load if load else None
+            'load': load
         }
 
-        teachers_by_disciplines['array'].append(discipline_data)
+        teachers_and_load_by_disciplines['array'].append(discipline_data)
 
-    return JsonResponse(teachers_by_disciplines)
+    return JsonResponse(teachers_and_load_by_disciplines)
 
 
 @csrf_exempt
