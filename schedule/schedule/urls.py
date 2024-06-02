@@ -10,18 +10,18 @@ from schedule.views import *
 from teachers.views import *
 
 urlpatterns = [
-    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('admin/', admin.site.urls),
-    # path('', RedirectView.as_view(url='/home/', permanent=True)),
-    # path('home/', HomeView.as_view(), name='home'),
-    # path('teachers/', include('teachers.urls')),
-    # path('classes/', include('cls.urls')),
-    # path('programs/', include('program.urls')),
-    # path('disciplines/', include('discipline.urls')),
-    # path('schedule/', schedule),
+    path('', RedirectView.as_view(url='/home/', permanent=True)),
+    path('home/', HomeView.as_view(), name='home'),
+    path('teachers/', include('teachers.urls')),
+    path('classes/', include('cls.urls')),
+    path('programs/', include('program.urls')),
+    path('disciplines/', include('discipline.urls')),
+    path('schedule/', schedule),
     path("__debug__/", include("debug_toolbar.urls")),
     # path('export_to_excel/', export_to_excel),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
  ]
 
 if settings.DEBUG:

@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: quay.io/sclorg/postgresql-15-c9s
+    environment:
+        POSTGRESQL_USER: postgres
+        POSTGRESQL_PASSWORD: 32767
+        POSTGRESQL_DATABASE: schedule
+    volumes:
+      - postgres_data:/var/lib/pgsql/data
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SUPERUSER_USERNAME=1234
+      - DJANGO_SUPERUSER_PASSWORD=12345678
+      - DJANGO_SUPERUSER_EMAIL=12345678
+
+volumes:
+  postgres_data:
