@@ -3,7 +3,7 @@ from .views import *
 
 urlpatterns = [
     path('<slug:slug>/update/', UpdateClass.as_view(), name='class_update'),
-    path('<slug:slug>/update/', UpdateClass.as_view(), name='class_update'),
+    # path('<slug:slug>/update/', UpdateClass.as_view(), name='class_update'),
     path('', class_list, name='classes'),
     path('create_class', CreateClass.as_view(), name='create_class'),
     path('getTeachersFromDB/', getTeachersFromDB, name='getTeachersFromDB'),
