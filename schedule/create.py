@@ -1,3 +1,5 @@
+from cls.models import Class
+from discipline.models import Discipline
 from teachers.models import *
 
 teachers_data = [

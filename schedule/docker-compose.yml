@@ -1,4 +1,4 @@
-version: '3'
+version: '3что'
 services:
   db:
     image: quay.io/sclorg/postgresql-15-c9s

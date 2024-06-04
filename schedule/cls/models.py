@@ -26,9 +26,14 @@ class Class(models.Model):
     def save(self, *args, **kwargs):
         # if not self.slug:
         self.slug = slugify(self.__str__())
-        # if not self.program:
-        #     with transaction.atomic():
-        #         self.program=Program.create(name=f'Для {self.digit}{self.letter} ({datetime.datetime.now()})')
+        if not self.program:
+            print('hello')
+            with transaction.atomic():
+                self.program = Program.objects.create(digit=self.digit,
+                                             name=f'Индивидуальная программа для {self.digit + self.letter} от {datetime.datetime.now()}')
+                print(self.program)
+        else:
+            print('hello2')
         super(Class, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
