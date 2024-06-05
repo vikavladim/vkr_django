@@ -1,5 +1,6 @@
 from cls.models import Class
 from discipline.models import Discipline
+from program.models import Program
 from teachers.models import *
 
 teachers_data = [
@@ -130,12 +131,13 @@ for data in disciplines_data:
 
 # классы
 class_data = []
+Class.objects.all().delete()
 
 for digit in range(5, 12):
     for letter in ['А', 'Б', 'В', 'С', ]:
         class_data.append({
             'digit': digit,
-            'letter': letter
+            'letter': letter,
         })
 
 for data in class_data:

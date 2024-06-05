@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from django.db import models
 
 from django.db import models, transaction
@@ -19,21 +19,16 @@ class Class(models.Model):
         verbose_name_plural = 'Классы'
         ordering = ['digit', 'letter']
 
-
     def __str__(self):
         return f'{self.digit}{self.letter}'
 
     def save(self, *args, **kwargs):
-        # if not self.slug:
         self.slug = slugify(self.__str__())
-        if not self.program:
-            print('hello')
+
+        if not self._meta.get_field('program').value_from_object(self):
             with transaction.atomic():
                 self.program = Program.objects.create(digit=self.digit,
-                                             name=f'Индивидуальная программа для {self.digit + self.letter} от {datetime.datetime.now()}')
-                print(self.program)
-        else:
-            print('hello2')
+                                                      name=f'Индивидуальная программа для {self.digit}{self.letter} от {datetime.datetime.now()}')
         super(Class, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -48,7 +43,6 @@ class Class(models.Model):
             'slug': self.slug,
             'str': self.__str__()
         }
-
 
     # def get_absolute_url(self):
     #     return reverse('subject_read', kwargs={'slug': self.slug})
@@ -77,4 +71,3 @@ class TeacherDisciplineClass(models.Model):
                     self.cls == other.cls
             )
         return NotImplemented
-
