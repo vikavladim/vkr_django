@@ -128,10 +128,26 @@ function handleFormSubmit() {
     teacherElem = document.getElementById('teacherId');
     var data = {
         'teacher_id': teacherElem ? teacherElem.value : null,
+        // 'fio': formData.get('fio'),
+        // 'position': formData.get('position'),
+        // 'room': formData.get('room'),
+        // 'photo': formData.get('photo'),
         'array': selectOptions,
     };
     if (teacherElem) {
-        sendData(data);
+        $.ajax({
+            type: "POST",
+            url: window.location.pathname,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                sendData(data);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
     } else {
         $.ajax({
             type: "POST",
@@ -140,7 +156,7 @@ function handleFormSubmit() {
             processData: false,
             contentType: false,
             success: function (response) {
-                data['teacher_id']=response;
+                data['teacher_id'] = response;
                 sendData(data);
             },
             error: function (xhr, status, error) {

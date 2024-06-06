@@ -45,6 +45,12 @@ class UpdateTeacher(DateMixin, UpdateView):
                                       id=context['teacher'].id,
                                       menu_selected=self.request.path, **kwargs)
 
+    def form_valid(self, form):
+        teacher = self.get_object()
+        form.cleaned_data.pop('discipline', None)
+        self.object = form.save()
+        return super().form_valid(form)
+
 
 def delete(request, id):
     context = {

@@ -37,13 +37,15 @@
         <li class="grid__item">
             <article class="product">
                 <a class="link" href="{% url 'teacher_update' slug=teacher.slug %}">
-                    {%if teacher.photo%}
                     <div class="product__image" id="img{{teacher.id}}"></div>
                     <script>
                         var element = document.getElementById("img{{teacher.id}}");
+                    {%if teacher.photo%}
                         element.style.backgroundImage = 'url(/media/{{teacher.photo}})';
-                    </script>
+                    {%else%}
+                        element.style.backgroundImage = 'url({%static 'teachers/images/teacher.png'%})';
                     {%endif%}
+                    </script>
                     {% for word in teacher.fio.split %}
                     <h2 class="product__name">{{ word }}</h2>
                     {% endfor %}
