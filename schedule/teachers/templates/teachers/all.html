@@ -12,50 +12,65 @@
 
 <!--<section class="section">-->
 
-    <div class="layout-buttons">
-        <span class="active icon icon-list"></span>
-        <span class="icon icon-table"></span>
-    </div>
+<div class="layout-buttons">
+    <span class="active icon icon-list"></span>
+    <span class="icon icon-table"></span>
+</div>
 
-    <div class="container">
-        <h1 class="section__heading">{{title}}</h1>
-        <ul class="grid">
+<div class="container">
+    <h1 class="section__heading">{{title}}</h1>
+    <ul class="grid">
 
-            <li class="grid__item">
-                <a class="link" href="/teachers/create">
-                    <article class="product">
-                        <img class="product__image" src="{%static 'schedule/img/plus.svg'%}" alt="Кроссовки"/>
-                        <p class="product__price">Добавить нового учителя</p>
-                        <p class="product__price">Добавить нового учителя</p>
-                        <p class="product__price">Добавить нового учителя</p>
-                    </article>
-                </a>
-            </li>
-
-            {% for teacher in teachers %}
-
-            <li class="grid__item">
+        <li class="grid__item">
+            <a class="link" href="/teachers/create">
                 <article class="product">
-                    <a class="link" href="{% url 'teacher_update' slug=teacher.slug %}">
-                        {%if teacher.photo%}
-                        <img class="product__image"
-                             src="{{ teacher.photo.url }}"
-                             alt="{{ teacher.fio }} photo"/>
-                        {%endif%}
-                        {% for word in teacher.fio.split %}
-                        <h2 class="product__name">{{ word }}</h2>
-                        {% endfor %}
-                        <p class="product__price">{{teacher.position}}</p>
-                        <p class="product__price">Кабинет {{teacher.room}}</p>
-                    </a>
-                    <a href="{% url 'teacher_delete' slug=teacher.slug %}" class="button">Удалить</a>
+                    <img class="product__image" src="{%static 'schedule/img/plus.svg'%}" alt="Знак плюс"/>
+                    <p class="product__price">Добавить нового учителя</p>
+                    <p class="product__price">Добавить нового учителя</p>
+                    <p class="product__price">Добавить нового учителя</p>
                 </article>
-            </li>
+            </a>
+        </li>
 
-            {% endfor %}
+        {% for teacher in teachers %}
 
-        </ul>
-    </div>
+        <li class="grid__item">
+            <article class="product">
+                <a class="link" href="{% url 'teacher_update' slug=teacher.slug %}">
+                    {%if teacher.photo%}
+                    <div class="wrapper" style=""></div>
+                    <img class="product__image" src="https://w7.pngwing.com/pngs/415/71/png-transparent-black-and-white-symmetry-daytime-pattern-radioactive-light-effect-time-lapse-grayscale-texture-photography-triangle-thumbnail.png"/>
+                    <div class="product__image"
+                         style="background-image: url(https://luxe-host.ru/wp-content/uploads/a/5/6/a5619a016b1a1ce3fda806d453ef049b.jpeg);">
+                        <script>
+                            // Получаем элемент с классом product__image
+                            var productImage = document.querySelector('.product__image');
+
+                            // Устанавливаем стили для элемента
+                            productImage.style.backgroundImage = 'url({{ teacher.photo.url }})';
+                            productImage.style.backgroundRepeat = 'no-repeat';
+                            productImage.style.backgroundPosition = '-40px 0px';
+                            productImage.style.backgroundSize = 'cover';
+                        </script>
+                    </div>
+                    <!--                        <img-->
+                    <!--                             src="{{ teacher.photo.url }}"-->
+                    <!--                             alt="{{ teacher.fio }} photo"/>-->
+                    {%endif%}
+                    {% for word in teacher.fio.split %}
+                    <h2 class="product__name">{{ word }}</h2>
+                    {% endfor %}
+                    <p class="product__price">{{teacher.position}}</p>
+                    <p class="product__price">Кабинет {{teacher.room}}</p>
+                </a>
+                <a href="{% url 'teacher_delete' slug=teacher.slug %}" class="button">Удалить</a>
+            </article>
+        </li>
+
+        {% endfor %}
+
+    </ul>
+</div>
 <!--</section>-->
 
 {% endblock %}

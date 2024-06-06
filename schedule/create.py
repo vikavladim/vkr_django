@@ -3,6 +3,11 @@ from discipline.models import Discipline
 from program.models import Program
 from teachers.models import *
 
+Class.objects.all().delete()
+Program.objects.all().delete()
+Discipline.objects.all().delete()
+Teacher.objects.all().delete()
+
 teachers_data = [
     # {'fio': 'Баранова Елена Николаевна', 'position': 'педагог-психолог', 'room': 101},
     # {'fio': 'Безносова Ольга Александровна', 'position': 'педагог профессионального обучения', 'room': 102},
@@ -131,7 +136,6 @@ for data in disciplines_data:
 
 # классы
 class_data = []
-Class.objects.all().delete()
 
 for digit in range(5, 12):
     for letter in ['А', 'Б', 'В', 'С', ]:
