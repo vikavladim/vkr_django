@@ -38,24 +38,11 @@
             <article class="product">
                 <a class="link" href="{% url 'teacher_update' slug=teacher.slug %}">
                     {%if teacher.photo%}
-                    <div class="wrapper" style=""></div>
-                    <img class="product__image" src="https://w7.pngwing.com/pngs/415/71/png-transparent-black-and-white-symmetry-daytime-pattern-radioactive-light-effect-time-lapse-grayscale-texture-photography-triangle-thumbnail.png"/>
-                    <div class="product__image"
-                         style="background-image: url(https://luxe-host.ru/wp-content/uploads/a/5/6/a5619a016b1a1ce3fda806d453ef049b.jpeg);">
-                        <script>
-                            // Получаем элемент с классом product__image
-                            var productImage = document.querySelector('.product__image');
-
-                            // Устанавливаем стили для элемента
-                            productImage.style.backgroundImage = 'url({{ teacher.photo.url }})';
-                            productImage.style.backgroundRepeat = 'no-repeat';
-                            productImage.style.backgroundPosition = '-40px 0px';
-                            productImage.style.backgroundSize = 'cover';
-                        </script>
-                    </div>
-                    <!--                        <img-->
-                    <!--                             src="{{ teacher.photo.url }}"-->
-                    <!--                             alt="{{ teacher.fio }} photo"/>-->
+                    <div class="product__image" id="img{{teacher.id}}"></div>
+                    <script>
+                        var element = document.getElementById("img{{teacher.id}}");
+                        element.style.backgroundImage = 'url(/media/{{teacher.photo}})';
+                    </script>
                     {%endif%}
                     {% for word in teacher.fio.split %}
                     <h2 class="product__name">{{ word }}</h2>

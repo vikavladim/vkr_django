@@ -73,11 +73,16 @@
 /*}*/
 
 .product__image {
-/*  background-image: url(*/
-/*https://sun9-35.userapi.com/c639225/v639225063/253f6/AItR16N624I.jpg  );*/
+  /*background-image: url(https://sun9-35.userapi.com/c639225/v639225063/253f6/AItR16N624I.jpg  );*/
   background-repeat: no-repeat;
-  background-position: -40px 0px;
+  /*background-position: -40px 0px;*/
   background-size: cover;
+
+    width: 200px;
+    height: 200px;
+    border: 2px solid #515151;
+    margin: 1em 2em;
+    float: left;
 }
 
 /*.product__image img {*/
@@ -88,10 +93,5 @@
 /*    flex-shrink: 0;*/
 /*}*/
 
-.wrapper {
-    width: 200px;
-    height: 200px;
-    border: 5px solid #515151;
-    margin: 1em 2em;
-    float: left;
-}
+/*.wrapper {*/
+/*}*/
